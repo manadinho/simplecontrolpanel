@@ -1,57 +1,81 @@
-# SimpleControlPanel
+## Simple Control Panel
 
-[![Latest Version on Packagist][ico-version]][link-packagist]
-[![Total Downloads][ico-downloads]][link-downloads]
-[![Build Status][ico-travis]][link-travis]
-[![StyleCI][ico-styleci]][link-styleci]
+Forked from [GitHub](https://github.com/kjjdion/laravel-admin-panel)
 
-This is where your description should go. Take a look at [contributing.md](contributing.md) to see a to do list.
+Laravel Admin Panel ("LAP") is a drop-in admin panel package for Laravel which promotes rapid scaffolding & development.
 
-## Installation
+- [Demo](https://lap.kjjdion.com/admin)
+- [Screenshots](https://imgur.com/a/12mGWNW)
+- [Documentation](https://lap.kjjdion.com/docs)
+- [GitHub](https://github.com/kjjdion/laravel-admin-panel)
 
-Via Composer
+Features:
 
-``` bash
-$ composer require wikichua/simplecontrolpanel
-```
+- More enhancement
 
-## Usage
+Packages used:
 
-## Change log
+- [Laravel 5.7, 5.8 & Above](https://laravel.com/)
+- [Laravel Datatables](https://github.com/yajra/laravel-datatables)
+- [Laravel Nestedset](https://github.com/lazychaser/laravel-nestedset)
+- [Parsedown](http://parsedown.org/)
 
-Please see the [changelog](changelog.md) for more information on what has changed recently.
+Assets used:
 
-## Testing
+- Custom admin panel layout (inspired by [Nova](https://nova.laravel.com))
+- [Bootstrap 4](https://getbootstrap.com)
+- [Datatables](https://datatables.net) (with some tweaks for a better UX)
+- [FontAwesome 5](https://fontawesome.com)
 
-``` bash
-$ composer test
-```
+### Installation
 
-## Contributing
+Require via composer:
 
-Please see [contributing.md](contributing.md) for details and a todolist.
+    composer require kjjdion/laravel-admin-panel
 
-## Security
+Publish install files:
 
-If you discover any security related issues, please email author email instead of using the issue tracker.
+    php artisan vendor:publish --provider="Kjjdion\LaravelAdminPanel\LapServiceProvider" --tag="install"
 
-## Credits
+This will create the following files:
 
-- [author name][link-author]
-- [All Contributors][link-contributors]
+    config/lap.php
+    public/lap/*.*
+    resources/views/vendor/lap/*.*
+    app/Http/Controllers/Admin/BackendController.php
 
-## License
+Add the `AdminUser`, `DynamicFillable`, and `UserTimezone` traits to your `User` model:
 
-license. Please see the [license file](license.md) for more information.
+    use Kjjdion\LaravelAdminPanel\Traits\AdminUser;
+    use Kjjdion\LaravelAdminPanel\Traits\DynamicFillable;
+    use Kjjdion\LaravelAdminPanel\Traits\UserTimezone;
+    
+    class User extends Authenticatable
+    {
+        use Notifiable, AdminUser, DynamicFillable, UserTimezone;
 
-[ico-version]: https://img.shields.io/packagist/v/wikichua/simplecontrolpanel.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/wikichua/simplecontrolpanel.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/wikichua/simplecontrolpanel/master.svg?style=flat-square
-[ico-styleci]: https://styleci.io/repos/12345678/shield
+Run the migrations:
 
-[link-packagist]: https://packagist.org/packages/wikichua/simplecontrolpanel
-[link-downloads]: https://packagist.org/packages/wikichua/simplecontrolpanel
-[link-travis]: https://travis-ci.org/wikichua/simplecontrolpanel
-[link-styleci]: https://styleci.io/repos/12345678
-[link-author]: https://github.com/wikichua
-[link-contributors]: ../../contributors
+    php artisan migrate
+
+### Logging In
+
+Visit `(APP_URL)/admin` to access the admin panel.
+
+The default admin login is:
+
+    Email Address: admin@example.com
+    Password: admin123
+
+### Digging Deeper
+
+Please see the [documentation](https://lap.kjjdion.com/docs) for more information.
+
+### Contributing
+
+- [Buy me a coffee](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=NWJGV49MPZZSQ&source=url)
+- [Submit a pull request](https://github.com/kjjdion/laravel-admin-panel/pulls)
+
+### Support
+
+Please use [GitHub issues](https://github.com/kjjdion/laravel-admin-panel/issues) for support.
