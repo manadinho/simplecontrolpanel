@@ -35,7 +35,8 @@ return [
         'model' => 'app',
         'migrations' => 'database/migrations',
         'views' => 'resources/views/admin',
-        'menu' => 'resources/views/vendor/lap/layouts/menu.blade.php',
+        'menu' => 'resources/views/vendor/lap/layouts/menu',
+        'layout_menu' => 'resources/views/vendor/lap/layouts/menu.blade.php',
         'routes' => 'routes/web.php',
     ],
 

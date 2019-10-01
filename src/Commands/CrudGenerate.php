@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Artisan;
 
 class CrudGenerate extends Command
 {
-    protected $signature = 'crud:generate {model}';
+    protected $signature = 'crud:generate {model} {--force}';
     protected $description = 'Generate CRUD using config file.';
     protected $files;
     protected $config;
@@ -48,10 +48,10 @@ class CrudGenerate extends Command
         $this->line('CRUD generation for <info>' . $this->argument('model') . '</info> complete!');
 
         // ask to migrate
-        if ($this->confirm('Migrate now?')) {
-            Artisan::call('migrate', ['--path' => $this->lap['migrations']]);
-            $this->info('Migration complete!');
-        }
+        // if ($this->confirm('Migrate now?')) {
+        //     Artisan::call('migrate', ['--path' => $this->lap['migrations']]);
+        //     $this->info('Migration complete!');
+        // }
     }
 
     public function setSimpleReplaces()
@@ -333,6 +333,7 @@ class CrudGenerate extends Command
             $this->lap['controller'],
             $this->lap['model'],
             $this->lap['migrations'],
+            $this->lap['menu'],
             $this->lap['views'] . '/' . $this->replaces['{model_variables}'] . '/datatable',
         ];
 
@@ -347,27 +348,33 @@ class CrudGenerate extends Command
     {
         // create controller file
         $controller_file = $this->lap['controller'] . '/' . $this->replaces['{model_class}'] . 'Controller.php';
-        $controller_stub = $this->files->get($this->lap['stubs'] . '/controller.stub');
-        $this->files->put($controller_file, $this->replace($controller_stub));
-        $this->line('Controller file created: <info>' . $controller_file . '</info>');
+        if ($this->prompt($controller_file)) {
+            $controller_stub = $this->files->get($this->lap['stubs'] . '/controller.stub');
+            $this->files->put($controller_file, $this->replace($controller_stub));
+            $this->line('Controller file created: <info>' . $controller_file . '</info>');
+        }
     }
 
     public function createModelFile()
     {
         // create model file
         $model_file = $this->lap['model'] . '/' . $this->replaces['{model_class}'] . '.php';
-        $model_stub = $this->files->get($this->lap['stubs'] . '/model.stub');
-        $this->files->put($model_file, $this->replace($model_stub));
-        $this->line('Model file created: <info>' . $model_file . '</info>');
+        if ($this->prompt($model_file)) {
+            $model_stub = $this->files->get($this->lap['stubs'] . '/model.stub');
+            $this->files->put($model_file, $this->replace($model_stub));
+            $this->line('Model file created: <info>' . $model_file . '</info>');
+        }
     }
 
     public function createMigrationFile()
     {
         // create migration file
         $migrations_file = $this->lap['migrations'] . '/' . '0000_00_00_000000_create_' . $this->replaces['{model_variable}'] . '_table.php';
-        $migrations_stub = $this->files->get($this->lap['stubs'] . '/migrations.stub');
-        $this->files->put($migrations_file, $this->replace($migrations_stub));
-        $this->line('Migration file created: <info>' . $migrations_file . '</info>');
+        if ($this->prompt($migrations_file)) {
+            $migrations_stub = $this->files->get($this->lap['stubs'] . '/migrations.stub');
+            $this->files->put($migrations_file, $this->replace($migrations_stub));
+            $this->line('Migration file created: <info>' . $migrations_file . '</info>');
+        }
     }
 
     public function createViewFiles()
@@ -376,26 +383,32 @@ class CrudGenerate extends Command
         $view_path = $this->lap['views'] . '/' . $this->replaces['{model_variables}'];
         foreach ($this->files->allFiles($this->lap['stubs'] . '/views/models') as $file) {
             $new_file = $view_path . '/' . ltrim($file->getRelativePath() . '/' . str_replace('.stub', '.blade.php', $file->getFilename()), '/');
-            $this->files->put($new_file, $this->replace($file->getContents()));
+            if ($this->prompt($new_file)) {
+                $this->files->put($new_file, $this->replace($file->getContents()));
+                $this->line('View files created: <info>' . $new_file . '</info>');
+            }
         }
-        $this->line('View files created: <info>' . $view_path . '/*.*</info>');
     }
 
     public function insertMenuItem()
     {
-        // insert menu item
-        $menu_file = $this->files->get($this->lap['menu']);
-        $menu_stub = $this->files->get($this->lap['stubs'] . '/views/layouts/menu.stub');
-        $menu_content = PHP_EOL . $this->replace($menu_stub);
-
-        // insert after first </li> (dashboard) if doesn't already exist
-        if (strpos($menu_file, $menu_content) === false) {
-            $search = '</li>';
-            $index = strpos($menu_file, $search);
-            $this->files->put($this->lap['menu'], substr_replace($menu_file, $search . $menu_content, $index, strlen($search)));
+        // create menu item file
+        $menu_file = $this->lap['menu'] . '/' . $this->replaces['{model_variable}'] . '.blade.php';
+        if ($this->prompt($menu_file)) {
+            $menu_stub = $this->files->get($this->lap['stubs'] . '/views/layouts/menu.stub');
+            $this->files->put($menu_file, $this->replace($menu_stub));
+            $this->line('Menu item file created: <info>' . $menu_file . '</info>');
+            
+            $layout_menu = $this->files->get($this->lap['layout_menu']);
+            $menu_content = PHP_EOL . '@include(\'lap::layouts.menu.'.$this->replaces['{model_variable}'] . '\')';
+            if (strpos($layout_menu, $menu_content) === false) {
+                $search = '{{-- menu inject start --}}';
+                $index = strpos($layout_menu, $search);
+                $this->files->put($this->lap['layout_menu'], substr_replace($layout_menu, $search . $menu_content, $index, strlen($search)));
+                $this->line('Menu item included: <info>' . $this->lap['layout_menu'] . '</info>');
+            }
         }
 
-        $this->line('Menu item inserted: <info>' . $this->lap['menu'] . '</info>');
     }
 
     public function insertRoutes()
@@ -456,5 +469,23 @@ class CrudGenerate extends Command
     public function quoteVar($value)
     {
         return is_bool($value) || is_numeric($value) ? var_export($value, true) : "'$value'";
+    }
+
+    protected function prompt($file)
+    {
+        if ($this->option('force')) {
+            return true;
+        }
+        $this->info($file);
+        if (file_exists($file)) {
+            if (!$this->confirm('Overwrite? At your own RISK!')) {
+                return false;
+            }
+        } else {
+            if (!$this->confirm('Create?')) {
+                return false;
+            }
+        }
+        return true;
     }
 }
