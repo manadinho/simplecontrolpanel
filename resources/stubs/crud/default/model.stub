@@ -4,8 +4,8 @@ namespace {model_namespace};
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Kjjdion\LaravelAdminPanel\Traits\DynamicFillable;
-use Kjjdion\LaravelAdminPanel\Traits\UserTimezone;
+use Wikichua\Simplecontrolpanel\Traits\DynamicFillable;
+use Wikichua\Simplecontrolpanel\Traits\UserTimezone;
 
 class {model_class} extends Eloquent
 {

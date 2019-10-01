@@ -32,6 +32,7 @@ class CrudGenerate extends Command
 
         // set class values
         $this->config = include $config_file;
+        $this->lap = config('lap.crud_paths');
         $this->setSimpleReplaces();
         $this->setAttributeReplaces();
 
@@ -48,7 +49,7 @@ class CrudGenerate extends Command
 
         // ask to migrate
         if ($this->confirm('Migrate now?')) {
-            Artisan::call('migrate', ['--path' => $this->config['paths']['migrations']]);
+            Artisan::call('migrate', ['--path' => $this->lap['migrations']]);
             $this->info('Migration complete!');
         }
     }
@@ -57,9 +58,9 @@ class CrudGenerate extends Command
     {
         // set simple replacement searches for stubs
         $this->replaces = [
-            '{controller_namespace}' => $controller_namespace = ucfirst(str_replace('/', '\\', $this->config['paths']['controller'])),
+            '{controller_namespace}' => $controller_namespace = ucfirst(str_replace('/', '\\', $this->lap['controller'])),
             '{controller_route}' => ltrim(str_replace('App\\Http\\Controllers', '', $controller_namespace) . '\\', '\\'),
-            '{model_namespace}' => ucfirst(str_replace('/', '\\', $this->config['paths']['model'])),
+            '{model_namespace}' => ucfirst(str_replace('/', '\\', $this->lap['model'])),
             '{model_class}' => $model_class = $this->argument('model'),
             '{model_string}' => $model_string = trim(preg_replace('/(?!^)[A-Z]{2,}(?=[A-Z][a-z])|[A-Z][a-z]/', ' $0', $model_class)),
             '{model_strings}' => $model_strings = str_plural($model_string),
@@ -67,7 +68,7 @@ class CrudGenerate extends Command
             '{model_variables}' => strtolower(str_replace(' ', '_', $model_strings)),
             '{model_primary_attribute}' => 'id',
             '{model_icon}' => isset($this->config['icon']) ? $this->config['icon'] : 'fa-link',
-            '{view_prefix_url}' => $view_prefix_url = ltrim(str_replace('resources/views', '', $this->config['paths']['views']) . '/', '/'),
+            '{view_prefix_url}' => $view_prefix_url = ltrim(str_replace('resources/views', '', $this->lap['views']) . '/', '/'),
             '{view_prefix_name}' => str_replace('/', '.', $view_prefix_url),
         ];
     }
@@ -135,17 +136,22 @@ class CrudGenerate extends Command
                 $datatable[] = $this->indent(3) . $this->flattenArray($values['datatable']) . ',';
             }
 
+            // exporttable
+            if (!empty($values['exporttable'])) {
+                $exporttable[] = $this->indent(3) . '\'' . $values['exporttable'] . '\'' . ',';
+            }
+
             // read attributes
             $attribute_label = ucwords(str_replace('_', ' ', $attribute));
             $attribute_value = '$' . $this->replaces['{model_variable}'] . '->' . $attribute;
-            $read_stub = $this->files->get($this->config['paths']['stubs'] . '/views/layouts/read.stub');
+            $read_stub = $this->files->get($this->lap['stubs'] . '/views/layouts/read.stub');
             $read_stub = str_replace('{attribute_label}', $attribute_label, $read_stub);
             $read_stub = str_replace('{attribute_value}', '{{ ' . (isset($values['casts']) && $values['casts'] ? "implode(', ', $attribute_value)" : $attribute_value) . ' }}', $read_stub);
             $read_attributes[] = $read_stub . PHP_EOL;
 
             // form inputs
             if (!empty($values['input'])) {
-                $input_stub = $this->files->get($this->config['paths']['stubs'] . '/views/layouts/input.stub');
+                $input_stub = $this->files->get($this->lap['stubs'] . '/views/layouts/input.stub');
                 $input_stub = str_replace('{attribute}', $attribute, $input_stub);
                 $input_stub = str_replace('{attribute_label}', $attribute_label, $input_stub);
                 $inputs_create[] = str_replace('{attribute_input}', $this->inputContent($values['input'], 'create', $attribute, $form_enctype), $input_stub) . PHP_EOL;
@@ -161,6 +167,7 @@ class CrudGenerate extends Command
         $this->replaces['{validations_create}'] = isset($validations['create']) ? trim(implode(PHP_EOL, $validations['create'])) : '';
         $this->replaces['{validations_update}'] = isset($validations['update']) ? trim(implode(PHP_EOL, $validations['update'])) : '';
         $this->replaces['{datatable}'] = $datatable ? trim(implode(PHP_EOL, $datatable)) : '';
+        $this->replaces['{exporttable}'] = $exporttable ? trim(implode(PHP_EOL, $exporttable)) : '';
         $this->replaces['{read_attributes}'] = $read_attributes ? trim(implode(PHP_EOL, $read_attributes)) : '';
         $this->replaces['{form_enctype}'] = $form_enctype;
         $this->replaces['{inputs_create}'] = $inputs_create ? trim(implode(PHP_EOL, $inputs_create)) : '';
@@ -172,7 +179,7 @@ class CrudGenerate extends Command
         $replaces = [];
 
         if (in_array($input['type'], ['checkbox', 'radio'])) {
-            $stub = $this->files->get($this->config['paths']['stubs'] . '/views/inputs/checkbox_radio.stub');
+            $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/checkbox_radio.stub');
             $replaces['{input_type}'] = $input['type'];
             $replaces['{input_name}'] = $attribute . ($input['type'] == 'checkbox' && !empty($input['options']) ? '[]' : '');
             $replaces['{input_id}'] = $attribute . '_{{ $loop->index }}';
@@ -180,34 +187,32 @@ class CrudGenerate extends Command
         }
         else if ($input['type'] == 'file') {
             $form_enctype = ' enctype="multipart/form-data"';
-            $stub = $this->files->get($this->config['paths']['stubs'] . '/views/inputs/file.stub');
+            $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/file.stub');
             $replaces['{input_name}'] = $attribute;
             $replaces['{input_id}'] = $attribute;
             $replaces['{input_multiple}'] = !empty($input['multiple']) ? ' multiple' : '';
         }
         else if ($input['type'] == 'select') {
-            $stub = $this->files->get($this->config['paths']['stubs'] . '/views/inputs/select.stub');
+            $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/select.stub');
             $replaces['{input_name}'] = $attribute;
             $replaces['{input_id}'] = $attribute;
             $replaces = $this->inputSelectOptions($attribute, $input, $method, $replaces);
         }
         else if ($input['type'] == 'textarea') {
-            $stub = $this->files->get($this->config['paths']['stubs'] . '/views/inputs/textarea.stub');
+            $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/textarea.stub');
             $replaces['{input_name}'] = $attribute;
             $replaces['{input_id}'] = $attribute;
             $replaces['{input_value}'] = $method == 'update' ? '{{ $' . $this->replaces['{model_variable}'] . '->' . $attribute . ' }}' : '';
         }
         else {
-            $stub = $this->files->get($this->config['paths']['stubs'] . '/views/inputs/text.stub');
+            $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/text.stub');
             $replaces['{input_type}'] = $input['type'];
             $replaces['{input_name}'] = $attribute;
             $replaces['{input_id}'] = $attribute;
             $replaces['{input_value}'] = $method == 'update' ? ' value="{{ $' . $this->replaces['{model_variable}'] . '->' . $attribute . ' }}"' : '';
         }
 
-        foreach ($replaces as $search => $replace) {
-            $stub = str_replace($search, $replace, $stub);
-        }
+        $stub = str_replace(array_keys($this->replaces), $this->replaces, str_replace(array_keys($replaces), $replaces, $stub));
 
         return trim($stub);
     }
@@ -279,9 +284,16 @@ class CrudGenerate extends Command
             $label = array_values($input['options'][$key])[0];
 
             $replaces['{input_options}'] = $this->putInChains($key);
-            $replaces['{input_option}'] = '$model';
-            $replaces['{input_option_value}'] = '{{ $model->' . $value . ' }}';
-            $replaces['{input_option_label}'] = '{{ $model->' . $label . ' }}';
+            if ($input['option_return'] == 'array') {
+                $replaces['{input_option}'] = '$' . $value . ' => $' . $label;
+                $replaces['{input_option_value}'] = '{{ $' . $value . ' }}';
+                $replaces['{input_option_label}'] = '{{ $' . $label . ' }}';
+            } else {
+                $replaces['{input_option}'] = '$model';
+                $replaces['{input_option_value}'] = '{{ $model->' . $value . ' }}';
+                $replaces['{input_option_label}'] = '{{ $model->' . $label . ' }}';
+            }
+
             $replaces['{input_option_selected}'] = $method == 'update' ? '{{ $model->' . $value . ' == $' . $this->replaces['{model_variable}'] . '->' . $attribute . " ? ' selected' : '' }}" : '';
         }
         else if (array_keys($input['options']) !== range(0, count($input['options']) - 1)) {
@@ -318,10 +330,10 @@ class CrudGenerate extends Command
     {
         // create directories recursively if they don't already exist
         $directories = [
-            $this->config['paths']['controller'],
-            $this->config['paths']['model'],
-            $this->config['paths']['migrations'],
-            $this->config['paths']['views'] . '/' . $this->replaces['{model_variables}'] . '/datatable',
+            $this->lap['controller'],
+            $this->lap['model'],
+            $this->lap['migrations'],
+            $this->lap['views'] . '/' . $this->replaces['{model_variables}'] . '/datatable',
         ];
 
         foreach ($directories as $directory) {
@@ -334,8 +346,8 @@ class CrudGenerate extends Command
     public function createControllerFile()
     {
         // create controller file
-        $controller_file = $this->config['paths']['controller'] . '/' . $this->replaces['{model_class}'] . 'Controller.php';
-        $controller_stub = $this->files->get($this->config['paths']['stubs'] . '/controller.stub');
+        $controller_file = $this->lap['controller'] . '/' . $this->replaces['{model_class}'] . 'Controller.php';
+        $controller_stub = $this->files->get($this->lap['stubs'] . '/controller.stub');
         $this->files->put($controller_file, $this->replace($controller_stub));
         $this->line('Controller file created: <info>' . $controller_file . '</info>');
     }
@@ -343,8 +355,8 @@ class CrudGenerate extends Command
     public function createModelFile()
     {
         // create model file
-        $model_file = $this->config['paths']['model'] . '/' . $this->replaces['{model_class}'] . '.php';
-        $model_stub = $this->files->get($this->config['paths']['stubs'] . '/model.stub');
+        $model_file = $this->lap['model'] . '/' . $this->replaces['{model_class}'] . '.php';
+        $model_stub = $this->files->get($this->lap['stubs'] . '/model.stub');
         $this->files->put($model_file, $this->replace($model_stub));
         $this->line('Model file created: <info>' . $model_file . '</info>');
     }
@@ -352,8 +364,8 @@ class CrudGenerate extends Command
     public function createMigrationFile()
     {
         // create migration file
-        $migrations_file = $this->config['paths']['migrations'] . '/' . date('Y_m_d') . '_000000_create_' . $this->replaces['{model_variable}'] . '_table.php';
-        $migrations_stub = $this->files->get($this->config['paths']['stubs'] . '/migrations.stub');
+        $migrations_file = $this->lap['migrations'] . '/' . '0000_00_00_000000_create_' . $this->replaces['{model_variable}'] . '_table.php';
+        $migrations_stub = $this->files->get($this->lap['stubs'] . '/migrations.stub');
         $this->files->put($migrations_file, $this->replace($migrations_stub));
         $this->line('Migration file created: <info>' . $migrations_file . '</info>');
     }
@@ -361,8 +373,8 @@ class CrudGenerate extends Command
     public function createViewFiles()
     {
         // create view files
-        $view_path = $this->config['paths']['views'] . '/' . $this->replaces['{model_variables}'];
-        foreach ($this->files->allFiles($this->config['paths']['stubs'] . '/views/models') as $file) {
+        $view_path = $this->lap['views'] . '/' . $this->replaces['{model_variables}'];
+        foreach ($this->files->allFiles($this->lap['stubs'] . '/views/models') as $file) {
             $new_file = $view_path . '/' . ltrim($file->getRelativePath() . '/' . str_replace('.stub', '.blade.php', $file->getFilename()), '/');
             $this->files->put($new_file, $this->replace($file->getContents()));
         }
@@ -372,33 +384,33 @@ class CrudGenerate extends Command
     public function insertMenuItem()
     {
         // insert menu item
-        $menu_file = $this->files->get($this->config['paths']['menu']);
-        $menu_stub = $this->files->get($this->config['paths']['stubs'] . '/views/layouts/menu.stub');
+        $menu_file = $this->files->get($this->lap['menu']);
+        $menu_stub = $this->files->get($this->lap['stubs'] . '/views/layouts/menu.stub');
         $menu_content = PHP_EOL . $this->replace($menu_stub);
 
         // insert after first </li> (dashboard) if doesn't already exist
         if (strpos($menu_file, $menu_content) === false) {
             $search = '</li>';
             $index = strpos($menu_file, $search);
-            $this->files->put($this->config['paths']['menu'], substr_replace($menu_file, $search . $menu_content, $index, strlen($search)));
+            $this->files->put($this->lap['menu'], substr_replace($menu_file, $search . $menu_content, $index, strlen($search)));
         }
 
-        $this->line('Menu item inserted: <info>' . $this->config['paths']['menu'] . '</info>');
+        $this->line('Menu item inserted: <info>' . $this->lap['menu'] . '</info>');
     }
 
     public function insertRoutes()
     {
         // insert routes
-        $routes_file = $this->files->get($this->config['paths']['routes']);
-        $routes_stub = $this->files->get($this->config['paths']['stubs'] . '/routes.stub');
+        $routes_file = $this->files->get($this->lap['routes']);
+        $routes_stub = $this->files->get($this->lap['stubs'] . '/routes.stub');
         $routes_content = PHP_EOL . PHP_EOL . $this->replace($routes_stub);
 
         // insert at end of file if doesn't already exist
         if (strpos($routes_file, $routes_content) === false) {
-            $this->files->append($this->config['paths']['routes'], $routes_content);
+            $this->files->append($this->lap['routes'], $routes_content);
         }
 
-        $this->line('Routes inserted: <info>' . $this->config['paths']['routes'] . '</info>');
+        $this->line('Routes inserted: <info>' . $this->lap['routes'] . '</info>');
     }
 
     public function indent($multiplier = 1)

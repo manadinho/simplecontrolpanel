@@ -29,4 +29,14 @@ return [
         'user' => 'Wikichua\Simplecontrolpanel\Models\User',
     ],
 
+    'crud_paths' => [
+        'stubs' => 'vendor/wikichua/simplecontrolpanel/resources/stubs/crud/default',
+        'controller' => 'app/Http/Controllers/Admin',
+        'model' => 'app',
+        'migrations' => 'database/migrations',
+        'views' => 'resources/views/admin',
+        'menu' => 'resources/views/vendor/lap/layouts/menu.blade.php',
+        'routes' => 'routes/web.php',
+    ],
+
 ];

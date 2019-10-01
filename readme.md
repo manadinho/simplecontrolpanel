@@ -35,7 +35,7 @@ Require via composer:
 
 Publish install files:
 
-    php artisan vendor:publish --provider="Wikichua\Simplecontrolpanel\SimpleControlPanelServiceProvider" --tag="install"
+    php artisan vendor:publish --tag="lap.install"
 
 Add the `AdminUser`, `DynamicFillable`, and `UserTimezone` traits to your `User` model:
 
@@ -50,6 +50,10 @@ Add the `AdminUser`, `DynamicFillable`, and `UserTimezone` traits to your `User`
 Add this in your controller.php
     use \Wikichua\Simplecontrolpanel\Traits\Controller;
 
+    class Controller extends BaseController
+    {
+        use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+        use \Wikichua\Simplecontrolpanel\Traits\Controller;
 
 Run the migrations:
 

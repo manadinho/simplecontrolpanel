@@ -24,7 +24,7 @@ class {model_class}Controller extends Controller
         $filter = json_decode(request('filter'),1);
         $this->filter($filter, ${model_variables});
         $columns = [
-            'id', 'name', 'status'
+            {exporttable}
         ];
         ${model_variables} = ${model_variables}->select($columns)->get();
         return $this->exporting(${model_variables}->toArray(),'{model_variables}');
@@ -55,7 +55,6 @@ class {model_class}Controller extends Controller
         }
         $dtid = '{model_variables}_datatable';
         $html = $builder->columns([
-            ['title' => 'Seq', 'data' => 'seq'],
             {datatable}
             ['title' => '', 'data' => 'actions', 'searchable' => false, 'orderable' => false],
         ]);

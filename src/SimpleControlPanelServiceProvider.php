@@ -26,6 +26,7 @@ class SimpleControlPanelServiceProvider extends ServiceProvider
         $this->app['router']->aliasMiddleware('not_admin_role', 'Wikichua\Simplecontrolpanel\Middleware\NotAdminRole');
         $this->app['router']->aliasMiddleware('not_system_doc', 'Wikichua\Simplecontrolpanel\Middleware\NotSystemDoc');
 
+        $this->mergeConfigFrom(__DIR__.'/../config/simplecontrolpanel.php', 'lap');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'lap');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->loadRoutesFrom(__DIR__.'/routes.php');
@@ -46,8 +47,6 @@ class SimpleControlPanelServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/simplecontrolpanel.php', 'lap');
-
         // Register the service the package provides.
         $this->app->singleton('simplecontrolpanel', function ($app) {
             return new SimpleControlPanel;
@@ -72,13 +71,12 @@ class SimpleControlPanelServiceProvider extends ServiceProvider
     protected function bootForConsole()
     {
         // Publishing the configuration file.
-        $this->publishes([__DIR__.'/../config/simplecontrolpanel.php' => config_path('lap.php')], 'install');
-        $this->publishes([__DIR__ . '/../public' => public_path('lap')], 'install');
+        $this->publishes([__DIR__.'/../config/simplecontrolpanel.php' => config_path('lap.php')], 'lap.install');
+        $this->publishes([__DIR__ . '/../public' => public_path('lap')], 'lap.install');
+        $this->publishes([__DIR__ . '/../resources/views' => resource_path('views/vendor/lap')], 'lap.install');
 
-        $this->publishes([__DIR__ . '/../resources/views' => resource_path('views/vendor/lap')], 'install.advanced');
-        $this->publishes([__DIR__ . '/../database/migrations' => database_path('migrations')], 'install.advanced');
-
-        $this->publishes([__DIR__ . '/../resources/stubs/crud/default' => resource_path('stubs/crud/default')], 'install.advanced');
+        $this->publishes([__DIR__ . '/../database/migrations' => database_path('migrations')], 'lap.install.advanced');
+        $this->publishes([__DIR__ . '/../resources/stubs/crud/default' => resource_path('stubs/crud/default')], 'lap.install.advanced');
 
         // Registering package commands.
         $this->commands([

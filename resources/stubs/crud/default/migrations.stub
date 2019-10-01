@@ -12,22 +12,20 @@ class Create{model_class}Table extends Migration
         Schema::create('{model_variables}', function (Blueprint $table) {
             $table->increments('id');
             {migrations}
-            $table->string('status',1)->nullable();
             $table->timestamps();
             $table->softDeletes();
-            $table->integer('seq')->default(1)->nullable();
         });
 
         // add permissions
         app(config('lap.models.permission'))->createGroup('{model_strings}', ['Create {model_strings}', 'Read {model_strings}', 'Update {model_strings}', 'Delete {model_strings}']);
-        \App\Setting::create(['key' => snake_case(strtolower('{model_string}_status')),'value' => ["P" => "Pending", "A" => "Confirmed", "C" => "Cancelled"]]);
+        app(config('lap.models.setting'))->create(['key' => '{model_variable}_status','value' => ["P" => "Pending", "A" => "Confirmed", "C" => "Cancelled"]]);
     }
 
     public function down()
     {
         // drop table
         Schema::dropIfExists('{model_variables}');
-        \App\Setting::where('key',snake_case(strtolower('{model_string}_status')))->forceDelete();
+        app(config('lap.models.setting'))->where('key','{model_variable}_status')->forceDelete();
         // delete permissions
         app(config('lap.models.permission'))->where('group', '{model_strings}')->delete();
     }
