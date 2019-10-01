@@ -31,28 +31,25 @@ Assets used:
 
 Require via composer:
 
-    composer require kjjdion/laravel-admin-panel
+    composer require wikichua/simplecontrolpanel
 
 Publish install files:
 
-    php artisan vendor:publish --provider="Kjjdion\LaravelAdminPanel\LapServiceProvider" --tag="install"
-
-This will create the following files:
-
-    config/lap.php
-    public/lap/*.*
-    resources/views/vendor/lap/*.*
-    app/Http/Controllers/Admin/BackendController.php
+    php artisan vendor:publish --provider="Wikichua\Simplecontrolpanel\SimpleControlPanelServiceProvider" --tag="install"
 
 Add the `AdminUser`, `DynamicFillable`, and `UserTimezone` traits to your `User` model:
 
-    use Kjjdion\LaravelAdminPanel\Traits\AdminUser;
-    use Kjjdion\LaravelAdminPanel\Traits\DynamicFillable;
-    use Kjjdion\LaravelAdminPanel\Traits\UserTimezone;
+    use Wikichua\Simplecontrolpanel\Traits\AdminUser;
+    use Wikichua\Simplecontrolpanel\Traits\DynamicFillable;
+    use Wikichua\Simplecontrolpanel\Traits\UserTimezone;
     
     class User extends Authenticatable
     {
         use Notifiable, AdminUser, DynamicFillable, UserTimezone;
+
+Add this in your controller.php
+    use \Wikichua\Simplecontrolpanel\Traits\Controller;
+
 
 Run the migrations:
 
@@ -66,16 +63,3 @@ The default admin login is:
 
     Email Address: admin@example.com
     Password: admin123
-
-### Digging Deeper
-
-Please see the [documentation](https://lap.kjjdion.com/docs) for more information.
-
-### Contributing
-
-- [Buy me a coffee](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=NWJGV49MPZZSQ&source=url)
-- [Submit a pull request](https://github.com/kjjdion/laravel-admin-panel/pulls)
-
-### Support
-
-Please use [GitHub issues](https://github.com/kjjdion/laravel-admin-panel/issues) for support.
