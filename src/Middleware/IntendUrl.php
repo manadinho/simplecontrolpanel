@@ -1,6 +1,6 @@
 <?php
 
-namespace Kjjdion\LaravelAdminPanel\Middleware;
+namespace Wikichua\LaravelAdminPanel\Middleware;
 
 class IntendUrl
 {

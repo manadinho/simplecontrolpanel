@@ -3,8 +3,8 @@
 namespace {model_namespace};
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
-use Kjjdion\LaravelAdminPanel\Traits\DynamicFillable;
-use Kjjdion\LaravelAdminPanel\Traits\UserTimezone;
+use Wikichua\LaravelAdminPanel\Traits\DynamicFillable;
+use Wikichua\LaravelAdminPanel\Traits\UserTimezone;
 
 class {model_class} extends Eloquent
 {

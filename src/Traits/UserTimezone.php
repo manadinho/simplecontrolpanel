@@ -1,6 +1,6 @@
 <?php
 
-namespace Kjjdion\LaravelAdminPanel\Traits;
+namespace Wikichua\LaravelAdminPanel\Traits;
 
 use Carbon\Carbon;
 

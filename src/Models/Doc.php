@@ -1,11 +1,11 @@
 <?php
 
-namespace Kjjdion\LaravelAdminPanel\Models;
+namespace Wikichua\LaravelAdminPanel\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Kalnoy\Nestedset\NodeTrait;
-use Kjjdion\LaravelAdminPanel\Traits\DynamicFillable;
-use Kjjdion\LaravelAdminPanel\Traits\UserTimezone;
+use Wikichua\LaravelAdminPanel\Traits\DynamicFillable;
+use Wikichua\LaravelAdminPanel\Traits\UserTimezone;
 use Parsedown;
 
 class Doc extends Model

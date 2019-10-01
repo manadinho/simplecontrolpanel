@@ -21,27 +21,27 @@ return [
 
     // controllers used by package
     'controllers' => [
-        'activity_log' => 'Kjjdion\LaravelAdminPanel\Controllers\ActivityLogController',
+        'activity_log' => 'Wikichua\LaravelAdminPanel\Controllers\ActivityLogController',
         'auth' => [
-            'change_password' => 'Kjjdion\LaravelAdminPanel\Controllers\Auth\ChangePasswordController',
-            'forgot_password' => 'Kjjdion\LaravelAdminPanel\Controllers\Auth\ForgotPasswordController',
-            'login' => 'Kjjdion\LaravelAdminPanel\Controllers\Auth\LoginController',
-            'profile' => 'Kjjdion\LaravelAdminPanel\Controllers\Auth\ProfileController',
-            'reset_password' => 'Kjjdion\LaravelAdminPanel\Controllers\Auth\ResetPasswordController',
+            'change_password' => 'Wikichua\LaravelAdminPanel\Controllers\Auth\ChangePasswordController',
+            'forgot_password' => 'Wikichua\LaravelAdminPanel\Controllers\Auth\ForgotPasswordController',
+            'login' => 'Wikichua\LaravelAdminPanel\Controllers\Auth\LoginController',
+            'profile' => 'Wikichua\LaravelAdminPanel\Controllers\Auth\ProfileController',
+            'reset_password' => 'Wikichua\LaravelAdminPanel\Controllers\Auth\ResetPasswordController',
         ],
         'backend' => 'App\Http\Controllers\Admin\BackendController',
-        'doc' => 'Kjjdion\LaravelAdminPanel\Controllers\DocController',
-        'role' => 'Kjjdion\LaravelAdminPanel\Controllers\RoleController',
-        'user' => 'Kjjdion\LaravelAdminPanel\Controllers\UserController',
+        'doc' => 'Wikichua\LaravelAdminPanel\Controllers\DocController',
+        'role' => 'Wikichua\LaravelAdminPanel\Controllers\RoleController',
+        'user' => 'Wikichua\LaravelAdminPanel\Controllers\UserController',
     ],
 
     // models used by package
     'models' => [
-        'activity_log' => 'Kjjdion\LaravelAdminPanel\Models\ActivityLog',
-        'doc' => 'Kjjdion\LaravelAdminPanel\Models\Doc',
-        'permission' => 'Kjjdion\LaravelAdminPanel\Models\Permission',
-        'role' => 'Kjjdion\LaravelAdminPanel\Models\Role',
-        'setting' => 'Kjjdion\LaravelAdminPanel\Models\Setting',
+        'activity_log' => 'Wikichua\LaravelAdminPanel\Models\ActivityLog',
+        'doc' => 'Wikichua\LaravelAdminPanel\Models\Doc',
+        'permission' => 'Wikichua\LaravelAdminPanel\Models\Permission',
+        'role' => 'Wikichua\LaravelAdminPanel\Models\Role',
+        'setting' => 'Wikichua\LaravelAdminPanel\Models\Setting',
     ],
 
 ];

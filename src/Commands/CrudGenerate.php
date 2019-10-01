@@ -1,6 +1,6 @@
 <?php
 
-namespace Kjjdion\LaravelAdminPanel\Commands;
+namespace Wikichua\LaravelAdminPanel\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;

@@ -44,7 +44,7 @@ Require via composer:
 
 Publish install files:
 
-    php artisan vendor:publish --provider="Kjjdion\LaravelAdminPanel\LapServiceProvider" --tag="install"
+    php artisan vendor:publish --provider="Wikichua\LaravelAdminPanel\LapServiceProvider" --tag="install"
 
 This will create the following files:
 
@@ -55,9 +55,9 @@ This will create the following files:
 
 Add the `AdminUser`, `DynamicFillable`, and `UserTimezone` traits to your `User` model:
 
-    use Kjjdion\LaravelAdminPanel\Traits\AdminUser;
-    use Kjjdion\LaravelAdminPanel\Traits\DynamicFillable;
-    use Kjjdion\LaravelAdminPanel\Traits\UserTimezone;
+    use Wikichua\LaravelAdminPanel\Traits\AdminUser;
+    use Wikichua\LaravelAdminPanel\Traits\DynamicFillable;
+    use Wikichua\LaravelAdminPanel\Traits\UserTimezone;
     
     class User extends Authenticatable
     {

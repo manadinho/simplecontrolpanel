@@ -1,6 +1,6 @@
 <?php
 
-namespace Kjjdion\LaravelAdminPanel\Controllers;
+namespace Wikichua\LaravelAdminPanel\Controllers;
 
 use App\Http\Controllers\Controller;
 use Yajra\DataTables\Html\Builder;

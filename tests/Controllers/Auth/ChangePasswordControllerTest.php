@@ -1,8 +1,8 @@
 <?php
 
-namespace Kjjdion\LaravelAdminPanel\Tests\Controllers\Auth;
+namespace Wikichua\LaravelAdminPanel\Tests\Controllers\Auth;
 
-use Kjjdion\LaravelAdminPanel\Tests\TestCase;
+use Wikichua\LaravelAdminPanel\Tests\TestCase;
 
 class ChangePasswordControllerTest extends TestCase
 {

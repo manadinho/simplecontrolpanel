@@ -1,6 +1,6 @@
 <?php
 
-namespace Kjjdion\LaravelAdminPanel\Notifications;
+namespace Wikichua\LaravelAdminPanel\Notifications;
 
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Notifications\Notification;

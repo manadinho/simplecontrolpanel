@@ -1,8 +1,8 @@
 <?php
 
-namespace Kjjdion\LaravelAdminPanel\Tests\Middleware;
+namespace Wikichua\LaravelAdminPanel\Tests\Middleware;
 
-use Kjjdion\LaravelAdminPanel\Tests\TestCase;
+use Wikichua\LaravelAdminPanel\Tests\TestCase;
 
 class NotSystemDocTest extends TestCase
 {

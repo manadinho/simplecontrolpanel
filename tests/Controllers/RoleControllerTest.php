@@ -1,8 +1,8 @@
 <?php
 
-namespace Kjjdion\LaravelAdminPanel\Tests\Controllers;
+namespace Wikichua\LaravelAdminPanel\Tests\Controllers;
 
-use Kjjdion\LaravelAdminPanel\Tests\TestCase;
+use Wikichua\LaravelAdminPanel\Tests\TestCase;
 
 class RoleControllerTest extends TestCase
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Kjjdion\LaravelAdminPanel\Traits;
+namespace Wikichua\LaravelAdminPanel\Traits;
 
 use Illuminate\Auth\Notifications\ResetPassword;
-use Kjjdion\LaravelAdminPanel\Notifications\ResetAdminPassword;
+use Wikichua\LaravelAdminPanel\Notifications\ResetAdminPassword;
 
 trait AdminUser
 {

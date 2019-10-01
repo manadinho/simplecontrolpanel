@@ -50,12 +50,12 @@ class LapServiceProvider extends ServiceProvider
         }
 
         // alias middleware
-        $this->app['router']->prependMiddlewareToGroup('web', 'Kjjdion\LaravelAdminPanel\Middleware\RestrictDemo');
-        $this->app['router']->aliasMiddleware('auth_admin', 'Kjjdion\LaravelAdminPanel\Middleware\AuthAdmin');
-        $this->app['router']->aliasMiddleware('guest_admin', 'Kjjdion\LaravelAdminPanel\Middleware\GuestAdmin');
-        $this->app['router']->aliasMiddleware('intend_url', 'Kjjdion\LaravelAdminPanel\Middleware\IntendUrl');
-        $this->app['router']->aliasMiddleware('not_admin_role', 'Kjjdion\LaravelAdminPanel\Middleware\NotAdminRole');
-        $this->app['router']->aliasMiddleware('not_system_doc', 'Kjjdion\LaravelAdminPanel\Middleware\NotSystemDoc');
+        $this->app['router']->prependMiddlewareToGroup('web', 'Wikichua\LaravelAdminPanel\Middleware\RestrictDemo');
+        $this->app['router']->aliasMiddleware('auth_admin', 'Wikichua\LaravelAdminPanel\Middleware\AuthAdmin');
+        $this->app['router']->aliasMiddleware('guest_admin', 'Wikichua\LaravelAdminPanel\Middleware\GuestAdmin');
+        $this->app['router']->aliasMiddleware('intend_url', 'Wikichua\LaravelAdminPanel\Middleware\IntendUrl');
+        $this->app['router']->aliasMiddleware('not_admin_role', 'Wikichua\LaravelAdminPanel\Middleware\NotAdminRole');
+        $this->app['router']->aliasMiddleware('not_system_doc', 'Wikichua\LaravelAdminPanel\Middleware\NotSystemDoc');
 
         // load routes
         $this->loadRoutesFrom(__DIR__ . '/routes.php');

@@ -1,10 +1,10 @@
 <?php
 
-namespace Kjjdion\LaravelAdminPanel\Models;
+namespace Wikichua\LaravelAdminPanel\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Kjjdion\LaravelAdminPanel\Traits\DynamicFillable;
-use Kjjdion\LaravelAdminPanel\Traits\UserTimezone;
+use Wikichua\LaravelAdminPanel\Traits\DynamicFillable;
+use Wikichua\LaravelAdminPanel\Traits\UserTimezone;
 
 class Role extends Model
 {

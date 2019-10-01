@@ -1,9 +1,9 @@
 <?php
 
-namespace Kjjdion\LaravelAdminPanel\Tests\Traits;
+namespace Wikichua\LaravelAdminPanel\Tests\Traits;
 
 use Carbon\Carbon;
-use Kjjdion\LaravelAdminPanel\Tests\TestCase;
+use Wikichua\LaravelAdminPanel\Tests\TestCase;
 
 class UserTimezoneTest extends TestCase
 {
