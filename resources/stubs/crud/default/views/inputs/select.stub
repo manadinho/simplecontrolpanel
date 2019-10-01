@@ -1,0 +1,6 @@
+                        <select name="{input_name}" id="{input_id}" class="selectpicker form-control" data-style="border bg-white" data-live-search="true" {input_multiple}>
+                            <option value=""></option>
+                            @foreach({input_options} as {input_option})
+                                <option value="{input_option_value}"{input_option_selected}>{input_option_label}</option>
+                            @endforeach
+                        </select>

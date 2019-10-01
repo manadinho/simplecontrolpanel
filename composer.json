@@ -1,0 +1,49 @@
+{
+    "name": "wikichua/simplecontrolpanel",
+    "description": "A simple admin control panel for Laravel 6. Forked from kejodion/laravel-admin-panel",
+    "license": "license",
+    "authors": [
+        {
+            "name": "Wiki Chua",
+            "email": "wikichua@gmail.com",
+            "homepage": "https://github.com/wikichua/",
+            "role": "Forker"
+        }
+    ],
+    "homepage": "https://github.com/wikichua/simplecontrolpanel",
+    "keywords": ["Laravel", "SimpleControlPanel"],
+    "require": {
+        "erusev/parsedown": "^1.7",
+        "yajra/laravel-datatables-html": "^4.19",
+        "yajra/laravel-datatables-oracle": "^9.6",
+        "maatwebsite/excel": "^3.1",
+        "tightenco/ziggy": "^0.8.0",
+        "kalnoy/nestedset": "^5.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~7.0",
+        "mockery/mockery": "^1.1",
+        "orchestra/testbench": "~3.0",
+        "sempro/phpunit-pretty-print": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Wikichua\\SimpleControlPanel\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Wikichua\\SimpleControlPanel\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Wikichua\\SimpleControlPanel\\SimpleControlPanelServiceProvider"
+            ],
+            "aliases": {
+                "SimpleControlPanel": "Wikichua\\SimpleControlPanel\\Facades\\SimpleControlPanel"
+            }
+        }
+    }
+}

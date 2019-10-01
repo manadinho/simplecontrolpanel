@@ -1,0 +1,42 @@
+<?php
+
+return [
+
+    // paths & files used for generating
+    'paths' => [
+        'stubs' => 'vendor/wikichua/simplecontrolpanel/resources/stubs/crud/default',
+        'controller' => 'app/Http/Controllers/Admin',
+        'model' => 'app',
+        'migrations' => 'database/migrations',
+        'views' => 'resources/views/admin',
+        'menu' => 'resources/views/vendor/lap/layouts/menu.blade.php',
+        'routes' => 'routes/admin.php',
+    ],
+
+    // menu icon (fontawesome class)
+    'icon' => 'fa-link',
+
+    // model attributes
+    'attributes' => [
+
+        'name' => [
+            'primary' => false,
+            'migrations' => [
+                'string:name',
+            ],
+            'validations' => [
+                'create' => 'required',
+                'update' => 'required',
+            ],
+            'datatable' => [
+                'title' => 'Title',
+                'data' => 'name',
+            ],
+            'input' => [
+                'type' => 'text',
+            ],
+        ],
+
+    ],
+
+];

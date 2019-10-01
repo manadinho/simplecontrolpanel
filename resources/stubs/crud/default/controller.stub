@@ -1,0 +1,178 @@
+<?php
+
+namespace {controller_namespace};
+
+use {model_namespace}\{model_class};
+use App\Http\Controllers\Controller;
+use Yajra\DataTables\Html\Builder;
+
+class {model_class}Controller extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware(['auth_admin', 'can:Access Admin Panel']);
+        $this->middleware('intend_url')->only(['index', 'read']);
+        $this->middleware('can:Create {model_strings}')->only(['createForm', 'create']);
+        $this->middleware('can:Read {model_strings}')->only(['index', 'read']);
+        $this->middleware('can:Update {model_strings}')->only(['updateForm', 'update']);
+        $this->middleware(['can:Delete {model_strings}'])->only('delete');
+    }
+
+    public function export()
+    {
+        ${model_variables} = {model_class}::query(){relationships_query};
+        $filter = json_decode(request('filter'),1);
+        $this->filter($filter, ${model_variables});
+        $columns = [
+            'id', 'name', 'status'
+        ];
+        ${model_variables} = ${model_variables}->select($columns)->get();
+        return $this->exporting(${model_variables}->toArray(),'{model_variables}');
+    }
+
+    public function index(Builder $builder)
+    {
+        if (request()->ajax()) {
+            ${model_variables} = {model_class}::query(){relationships_query};
+            $maxseq = {model_class}::max('seq');
+            $minseq = {model_class}::min('seq');
+            $datatable = datatables(${model_variables})
+                ->editColumn('seq', function (${model_variable}) use($maxseq, $minseq){
+                    $model = ${model_variable};
+                    $up_url = route('{view_prefix_name}{model_variables}.move', [$model->id,'up']);
+                    $down_url = route('{view_prefix_name}{model_variables}.move', [$model->id,'down']);
+                    return view('lap::layouts.seq', compact('model','maxseq','minseq','up_url','down_url'));
+                })
+                ->editColumn('actions', function (${model_variable}) {
+                    return view('{view_prefix_name}{model_variables}.datatable.actions', compact('{model_variable}'));
+                })
+                ->rawColumns(['actions','seq'])
+                ->filter(function ($query) use(${model_variables}) {
+                    $this->filter(request('filter'), ${model_variables});
+                });
+
+            return $datatable->toJson();
+        }
+        $dtid = '{model_variables}_datatable';
+        $html = $builder->columns([
+            ['title' => 'Seq', 'data' => 'seq'],
+            {datatable}
+            ['title' => '', 'data' => 'actions', 'searchable' => false, 'orderable' => false],
+        ]);
+        $html->setTableAttribute('id', $dtid);
+        $html->ajax([
+            'data' => 'function (d) {
+                d.filter = {};
+                $(\'.filterInput\').each(function(index) {
+                    d.filter[$(this).attr(\'name\')] = $(this).val();
+                });
+            }',
+        ]);
+        $html->parameters([
+            'bFilter' => false,
+            'dom' => '<"toolbar">lfrtip'
+        ]);
+        $export_url = route('{view_prefix_name}{model_variables}.export');
+        return view('{view_prefix_name}{model_variables}.index', compact('html','dtid','export_url'));
+    }
+
+    public function createForm()
+    {
+        return view('{view_prefix_name}{model_variables}.create');
+    }
+
+    public function create()
+    {
+        $this->validate(request(), [
+            {validations_create}
+        ]);
+        request()->merge(['created_by' => auth()->id(), 'updated_by' => auth()->id(), 'seq' => {model_class}::max('seq') + 1]);
+        ${model_variable} = {model_class}::create(request()->all());
+
+        activity('Created {model_string}: ' . ${model_variable}->{model_primary_attribute}, request()->all(), ${model_variable});
+        flash(['success', '{model_string} created!']);
+
+        if (request()->input('_submit') == 'redirect') {
+            return response()->json(['redirect' => session()->pull('url.intended', route('admin.{model_variables}'))]);
+        }
+        else {
+            return response()->json(['reload_page' => true]);
+        }
+    }
+
+    public function read({model_class} ${model_variable})
+    {
+        return view('{view_prefix_name}{model_variables}.read', compact('{model_variable}'));
+    }
+
+    public function updateForm({model_class} ${model_variable})
+    {
+        return view('{view_prefix_name}{model_variables}.update', compact('{model_variable}'));
+    }
+
+    public function update({model_class} ${model_variable})
+    {
+        $this->validate(request(), [
+            {validations_update}
+        ]);
+        request()->merge(['updated_by' => auth()->id()]);
+        ${model_variable}->update(request()->all());
+
+        activity('Updated {model_string}: ' . ${model_variable}->{model_primary_attribute}, request()->all(), ${model_variable});
+        flash(['success', '{model_string} updated!']);
+
+        if (request()->input('_submit') == 'redirect') {
+            return response()->json(['redirect' => session()->pull('url.intended', route('admin.{model_variables}'))]);
+        }
+        else {
+            return response()->json(['reload_page' => true]);
+        }
+    }
+
+    public function delete({model_class} ${model_variable})
+    {
+        ${model_variable}->delete();
+
+        activity('Deleted {model_string}: ' . ${model_variable}->{model_primary_attribute}, ${model_variable}->toArray());
+        $flash = ['success', '{model_string} deleted!'];
+
+        if (request()->input('_submit') == 'reload_datatables') {
+            return response()->json([
+                'flash' => $flash,
+                'reload_datatables' => true,
+            ]);
+        }
+        else {
+            flash($flash);
+
+            return redirect()->route('admin.{model_variables}');
+        }
+    }
+    public function move({model_class} ${model_variable}, $direction)
+    {
+        if (strtolower($direction) == 'up') {
+            $seq = {model_class}::where('seq', '<', ${model_variable}->seq)->max('seq');
+        } else {
+            $seq = {model_class}::where('seq', '>', ${model_variable}->seq)->min('seq');
+        }
+        $toSwap = {model_class}::where('seq',$seq)->first();
+        $toSwap->seq = ${model_variable}->seq;
+        $toSwap->save();
+
+        ${model_variable}->seq = $seq;
+        ${model_variable}->save();
+        activity('Move {model_string} '. $direction .': ' . ${model_variable}->id, ${model_variable}->toArray());
+        $flash = ['success', '{model_string} moved '.$direction.'!'];
+
+        if (request()->input('_submit') == 'reload_datatables') {
+            return response()->json([
+                'flash' => $flash,
+                'reload_datatables' => true,
+            ]);
+        }
+        else {
+            flash($flash);
+            return redirect()->route('admin.{model_variables}');
+        }
+    }
+}
