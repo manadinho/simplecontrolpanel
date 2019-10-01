@@ -4,7 +4,7 @@
 @section('parent-content')
     <nav class="navbar navbar-expand navbar-dark bg-dark shadow">
         <a class="sidebar-toggle mr-3" href="#"><i class="far fa-fw fa-bars"></i></a>
-        <a class="navbar-brand" href="{{ route('admin') }}"><img src="{{ asset('T4LAP_white.png') }}" height="30"></a>
+        <a class="navbar-brand" href="{{ route('admin') }}"><img src="{{ asset('lap/logo.png') }}" height="30"></a>
 
         <div class="navbar-collapse collapse">
             <ul class="navbar-nav ml-auto">

@@ -17,7 +17,7 @@ function prettyPrintJson($value='')
 }
 function settings($name,$default = '')
 {
-	if (json_decode(config('settings.'.$name),1)) {
+	if (!is_array(config('settings.'.$name)) && json_decode(config('settings.'.$name),1)) {
 		return json_decode(config('settings.'.$name),1)? json_decode(config('settings.'.$name),1):$default;
 	}
 	return config('settings.'.$name, $default);

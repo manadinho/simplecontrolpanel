@@ -14,9 +14,11 @@
 </li>
 {{-- Administrative Group --}}
 <li>
-    <a href="#" data-toggle="collapse" data-target="#group1" aria-expanded="{{ preg_match($admin_group, request()->route()->getName())? 'true':'false' }}"><i class="fal fa-fw fa-cogs mr-3"></i>Administrative</a>
+    <a href="#" data-toggle="collapse" data-target="#admin_group" aria-expanded="{{ preg_match($admin_group, request()->route()->getName())? 'true':'false' }}">
+        <i class="fal fa-fw fa-cogs mr-3"></i>Administrative
+    </a>
 </li>
-<ul id="group1" class="collapse list-unstyled {{ preg_match($admin_group, request()->route()->getName())? 'show':'' }}">
+<ul id="admin_group" class="collapse list-unstyled {{ preg_match($admin_group, request()->route()->getName())? 'show':'' }}">
     @can('Read Permissions')
     <li class="{{ preg_match('/admin.permissions.*/', request()->route()->getName())? 'active':'' }}">
         <a href="{{ route('admin.permissions') }}"><i class="fal fa-fw fa-key mr-3"></i>Permissions</a>

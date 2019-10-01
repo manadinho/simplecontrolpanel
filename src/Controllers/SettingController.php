@@ -23,10 +23,13 @@ class SettingController extends Controller
             $settings = app(config('lap.models.setting'))->query();
             $datatable = datatables($settings)
                 ->editColumn('value', function ($setting) {
-                    return config('settings.'.$setting->key);
+                    if (is_array(settings($setting->key))) {
+                        return prettyPrintJson(settings($setting->key));
+                    }
+                    return settings($setting->key);
                 })
                 ->editColumn('code', function ($setting) {
-                    return 'config(\'settings.'.$setting->key.'\');';
+                    return 'settings(\''.$setting->key.'\');';
                 })
                 ->editColumn('actions', function ($setting) {
                     return view('lap::settings.datatable.actions', compact('setting'));
