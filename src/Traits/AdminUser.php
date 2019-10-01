@@ -1,9 +1,9 @@
 <?php
 
-namespace Wikichua\SimpleControlPanel\Traits;
+namespace Wikichua\Simplecontrolpanel\Traits;
 
 use Illuminate\Auth\Notifications\ResetPassword;
-use Wikichua\SimpleControlPanel\Notifications\ResetAdminPassword;
+use Wikichua\Simplecontrolpanel\Notifications\ResetAdminPassword;
 
 trait AdminUser
 {

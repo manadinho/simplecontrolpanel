@@ -1,6 +1,6 @@
 <?php
 
-namespace Wikichua\SimpleControlPanel;
+namespace Wikichua\Simplecontrolpanel;
 
 class SimpleControlPanel
 {

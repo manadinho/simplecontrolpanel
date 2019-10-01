@@ -1,6 +1,6 @@
 <?php
 
-namespace Wikichua\SimpleControlPanel\Notifications;
+namespace Wikichua\Simplecontrolpanel\Notifications;
 
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Notifications\Notification;

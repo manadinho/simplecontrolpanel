@@ -1,6 +1,6 @@
 <?php
 
-namespace Wikichua\SimpleControlPanel\Traits;
+namespace Wikichua\Simplecontrolpanel\Traits;
 
 trait Controller
 {

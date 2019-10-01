@@ -1,6 +1,6 @@
 <?php
 
-namespace Wikichua\SimpleControlPanel\Middleware;
+namespace Wikichua\Simplecontrolpanel\Middleware;
 
 use Illuminate\Auth\Access\AuthorizationException;
 

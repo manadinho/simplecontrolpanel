@@ -1,31 +1,32 @@
 <?php
 
 return [
+    'route_prefix' => 'admin',
     'controllers' => [
         'auth' => [
-            'change_password' => 'Wikichua\SimpleControlPanel\Controllers\Auth\ChangePasswordController',
-            'forgot_password' => 'Wikichua\SimpleControlPanel\Controllers\Auth\ForgotPasswordController',
-            'login' => 'Wikichua\SimpleControlPanel\Controllers\Auth\LoginController',
-            'profile' => 'Wikichua\SimpleControlPanel\Controllers\Auth\ProfileController',
-            'reset_password' => 'Wikichua\SimpleControlPanel\Controllers\Auth\ResetPasswordController',
+            'change_password' => 'Wikichua\Simplecontrolpanel\Controllers\Auth\ChangePasswordController',
+            'forgot_password' => 'Wikichua\Simplecontrolpanel\Controllers\Auth\ForgotPasswordController',
+            'login' => 'Wikichua\Simplecontrolpanel\Controllers\Auth\LoginController',
+            'profile' => 'Wikichua\Simplecontrolpanel\Controllers\Auth\ProfileController',
+            'reset_password' => 'Wikichua\Simplecontrolpanel\Controllers\Auth\ResetPasswordController',
         ],
-        'activity_log' => 'Wikichua\SimpleControlPanel\Controllers\ActivityLogController',
-        'backend' => 'App\Http\Controllers\Admin\BackendController',
-        'doc' => 'Wikichua\SimpleControlPanel\Controllers\DocController',
-        'role' => 'Wikichua\SimpleControlPanel\Controllers\RoleController',
-        'permission' => 'Wikichua\SimpleControlPanel\Controllers\PermissionController',
-        'setting' => 'Wikichua\SimpleControlPanel\Controllers\SettingController',
-        'user' => 'Wikichua\SimpleControlPanel\Controllers\UserController',
+        'activity_log' => 'Wikichua\Simplecontrolpanel\Controllers\ActivityLogController',
+        'backend' => 'Wikichua\Simplecontrolpanel\Controllers\BackendController',
+        'doc' => 'Wikichua\Simplecontrolpanel\Controllers\DocController',
+        'role' => 'Wikichua\Simplecontrolpanel\Controllers\RoleController',
+        'permission' => 'Wikichua\Simplecontrolpanel\Controllers\PermissionController',
+        'setting' => 'Wikichua\Simplecontrolpanel\Controllers\SettingController',
+        'user' => 'Wikichua\Simplecontrolpanel\Controllers\UserController',
     ],
 
     // models used by package
     'models' => [
-        'activity_log' => 'Wikichua\SimpleControlPanel\Models\ActivityLog',
-        'doc' => 'Wikichua\SimpleControlPanel\Models\Doc',
-        'permission' => 'Wikichua\SimpleControlPanel\Models\Permission',
-        'role' => 'Wikichua\SimpleControlPanel\Models\Role',
-        'setting' => 'Wikichua\SimpleControlPanel\Models\Setting',
-        'user' => 'Wikichua\SimpleControlPanel\Models\User',
+        'activity_log' => 'Wikichua\Simplecontrolpanel\Models\ActivityLog',
+        'doc' => 'Wikichua\Simplecontrolpanel\Models\Doc',
+        'permission' => 'Wikichua\Simplecontrolpanel\Models\Permission',
+        'role' => 'Wikichua\Simplecontrolpanel\Models\Role',
+        'setting' => 'Wikichua\Simplecontrolpanel\Models\Setting',
+        'user' => 'Wikichua\Simplecontrolpanel\Models\User',
     ],
 
 ];

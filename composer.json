@@ -28,21 +28,24 @@
     },
     "autoload": {
         "psr-4": {
-            "Wikichua\\SimpleControlPanel\\": "src/"
-        }
+            "Wikichua\\Simplecontrolpanel\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
-            "Wikichua\\SimpleControlPanel\\Tests\\": "tests"
+            "Wikichua\\Simplecontrolpanel\\Tests\\": "tests"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Wikichua\\SimpleControlPanel\\SimpleControlPanelServiceProvider"
+                "Wikichua\\Simplecontrolpanel\\SimpleControlPanelServiceProvider"
             ],
             "aliases": {
-                "SimpleControlPanel": "Wikichua\\SimpleControlPanel\\Facades\\SimpleControlPanel"
+                "SimpleControlPanel": "Wikichua\\Simplecontrolpanel\\Facades\\SimpleControlPanel"
             }
         }
     }

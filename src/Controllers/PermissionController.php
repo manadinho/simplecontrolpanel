@@ -1,6 +1,6 @@
 <?php
 
-namespace Wikichua\SimpleControlPanel\Controllers;
+namespace Wikichua\Simplecontrolpanel\Controllers;
 
 use App\Http\Controllers\Controller;
 use Yajra\DataTables\Html\Builder;
@@ -65,18 +65,21 @@ class PermissionController extends Controller
         }
     }
 
-    public function read(Permission $permission)
+    public function read($id)
     {
+        $permission = app(config('lap.models.permission'))->find($id);
         return view('lap::permissions.read', compact('permission'));
     }
 
-    public function updateForm(Permission $permission)
+    public function updateForm($id)
     {
+        $permission = app(config('lap.models.permission'))->find($id);
         return view('lap::permissions.update', compact('permission'));
     }
 
-    public function update(Permission $permission)
+    public function update($id)
     {
+        $permission = app(config('lap.models.permission'))->find($id);
         $this->validate(request(), [
             'group' => 'required',
             'name' => 'required',
@@ -95,8 +98,9 @@ class PermissionController extends Controller
         }
     }
 
-    public function delete(Permission $permission)
+    public function delete($id)
     {
+        $permission = app(config('lap.models.permission'))->find($id);
         $permission->delete();
 
         activity('Deleted Permission: ' . $permission->id, $permission->toArray());

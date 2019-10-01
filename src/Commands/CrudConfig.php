@@ -1,6 +1,6 @@
 <?php
 
-namespace Wikichua\SimpleControlPanel\Commands;
+namespace Wikichua\Simplecontrolpanel\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;

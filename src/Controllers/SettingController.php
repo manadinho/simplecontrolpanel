@@ -1,6 +1,6 @@
 <?php
 
-namespace Wikichua\SimpleControlPanel\Controllers;
+namespace Wikichua\Simplecontrolpanel\Controllers;
 
 use App\Http\Controllers\Controller;
 use Yajra\DataTables\Html\Builder;
@@ -78,18 +78,21 @@ class SettingController extends Controller
         }
     }
 
-    public function read(Setting $setting)
+    public function read($id)
     {
+        $setting = app(config('lap.models.setting'))->find($id);
         return view('lap::settings.read', compact('setting'));
     }
 
-    public function updateForm(Setting $setting)
+    public function updateForm($id)
     {
+        $setting = app(config('lap.models.setting'))->find($id);
         return view('lap::settings.update', compact('setting'));
     }
 
-    public function update(Setting $setting)
+    public function update($id)
     {
+        $setting = app(config('lap.models.setting'))->find($id);
         $this->validate(request(), [
             'key' => 'required',
         ]);
@@ -115,8 +118,9 @@ class SettingController extends Controller
         }
     }
 
-    public function delete(Setting $setting)
+    public function delete($id)
     {
+        $setting = app(config('lap.models.setting'))->find($id);
         $setting->delete();
 
         activity('Deleted Setting: ' . $setting->id, $setting->toArray());

@@ -3,7 +3,13 @@
 //     return redirect()->route('admin.login');
 // })->name('login');
 
-Route::group(['middleware' => 'admin'], function () {
+Route::group(['middleware' => 'web','prefix' => config('lap.route_prefix','admin')], function () {
+    // backend
+    Route::get('/', config('lap.controllers.backend') . '@index')->name('admin');
+    Route::get('dashboard', config('lap.controllers.backend') . '@dashboard')->name('admin.dashboard');
+    Route::get('settings', config('lap.controllers.backend') . '@settingsForm')->name('admin.settings');
+    Route::patch('settings', config('lap.controllers.backend') . '@settings');
+    Route::post('summernote/image/upload', config('lap.controllers.backend') . '@summernoteImageUpload')->name('admin.summernote.imageUpload');
 
     // auth
     Route::get('login', config('lap.controllers.auth.login') . '@loginForm')->name('admin.login');
@@ -17,13 +23,6 @@ Route::group(['middleware' => 'admin'], function () {
     Route::post('password/email', config('lap.controllers.auth.forgot_password') . '@sendResetLinkEmail')->name('admin.password.email');
     Route::get('password/reset/{token?}', config('lap.controllers.auth.reset_password') . '@resetForm')->name('admin.password.reset');
     Route::post('password/reset', config('lap.controllers.auth.reset_password') . '@reset')->name('admin.password.update');
-
-    // backend
-    Route::get('admin', config('lap.controllers.backend') . '@index')->name('admin');
-    Route::get('dashboard', config('lap.controllers.backend') . '@dashboard')->name('admin.dashboard');
-    Route::get('settings', config('lap.controllers.backend') . '@settingsForm')->name('admin.settings');
-    Route::patch('settings', config('lap.controllers.backend') . '@settings');
-    Route::post('summernote/image/upload', config('lap.controllers.backend') . '@summernoteImageUpload')->name('admin.summernote.imageUpload');
 
     // role
     Route::get('roles', config('lap.controllers.role') . '@index')->name('admin.roles');
@@ -50,7 +49,6 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('activity_logs/read/{id}', config('lap.controllers.activity_log') . '@read')->name('admin.activity_logs.read');
     
     // docs
-    Route::get('docs/{id?}/{slug?}', config('lap.controllers.doc') . '@frontend')->name('docs');
     Route::get('docs', config('lap.controllers.doc') . '@index')->name('admin.docs');
     Route::get('docs/create', config('lap.controllers.doc') . '@createForm')->name('admin.docs.create');
     Route::post('docs/create', config('lap.controllers.doc') . '@create');
@@ -79,4 +77,4 @@ Route::group(['middleware' => 'admin'], function () {
     Route::delete('permissions/delete/{permission}', config('lap.controllers.permission') . '@delete')->name('admin.permissions.delete');
 });
 
-
+Route::get('docs/{id?}/{slug?}', config('lap.controllers.doc') . '@frontend')->name('docs');

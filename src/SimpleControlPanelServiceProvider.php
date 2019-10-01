@@ -1,7 +1,12 @@
 <?php
 
-namespace Wikichua\SimpleControlPanel;
+namespace Wikichua\Simplecontrolpanel;
 
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 
 class SimpleControlPanelServiceProvider extends ServiceProvider
@@ -13,8 +18,15 @@ class SimpleControlPanelServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'wikichua');
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'wikichua');
+        // alias middleware
+        $this->app['router']->prependMiddlewareToGroup('web', 'Wikichua\Simplecontrolpanel\Middleware\RestrictDemo');
+        $this->app['router']->aliasMiddleware('auth_admin', 'Wikichua\Simplecontrolpanel\Middleware\AuthAdmin');
+        $this->app['router']->aliasMiddleware('guest_admin', 'Wikichua\Simplecontrolpanel\Middleware\GuestAdmin');
+        $this->app['router']->aliasMiddleware('intend_url', 'Wikichua\Simplecontrolpanel\Middleware\IntendUrl');
+        $this->app['router']->aliasMiddleware('not_admin_role', 'Wikichua\Simplecontrolpanel\Middleware\NotAdminRole');
+        $this->app['router']->aliasMiddleware('not_system_doc', 'Wikichua\Simplecontrolpanel\Middleware\NotSystemDoc');
+
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'lap');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->loadRoutesFrom(__DIR__.'/routes.php');
         $this->gatePermissions();
@@ -34,7 +46,7 @@ class SimpleControlPanelServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/lap.php', 'lap');
+        $this->mergeConfigFrom(__DIR__.'/../config/simplecontrolpanel.php', 'lap');
 
         // Register the service the package provides.
         $this->app->singleton('simplecontrolpanel', function ($app) {
@@ -61,30 +73,12 @@ class SimpleControlPanelServiceProvider extends ServiceProvider
     {
         // Publishing the configuration file.
         $this->publishes([__DIR__.'/../config/simplecontrolpanel.php' => config_path('lap.php')], 'install');
-        $this->publishes([__DIR__ . '/../public' => public_path('lap')], 'install'); // public assets
-        $this->publishes([__DIR__ . '/../resources/views' => resource_path('views/vendor/lap')], 'install');
-        $this->publishes([__DIR__ . '/../resources/stubs/controllers/BackendController.stub' => app_path('Http/Controllers/Admin/BackendController.php')], 'install'); // backend controller
+        $this->publishes([__DIR__ . '/../public' => public_path('lap')], 'install');
 
-        $this->publishes([__DIR__ . '/../public' => public_path('lap')], 'config');
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'lap');
+        $this->publishes([__DIR__ . '/../resources/views' => resource_path('views/vendor/lap')], 'install.advanced');
+        $this->publishes([__DIR__ . '/../database/migrations' => database_path('migrations')], 'install.advanced');
 
-        $this->publishes([__DIR__ . '/../resources/stubs/crud/default' => resource_path('stubs/crud/default')], 'crud_stubs');
-        $this->publishes([__DIR__ . '/../database/migrations' => database_path('migrations')], 'migrations');
-
-        // Publishing the views.
-        /*$this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/wikichua'),
-        ], 'simplecontrolpanel.views');*/
-
-        // Publishing assets.
-        /*$this->publishes([
-            __DIR__.'/../resources/assets' => public_path('vendor/wikichua'),
-        ], 'simplecontrolpanel.views');*/
-
-        // Publishing the translation files.
-        /*$this->publishes([
-            __DIR__.'/../resources/lang' => resource_path('lang/vendor/wikichua'),
-        ], 'simplecontrolpanel.views');*/
+        $this->publishes([__DIR__ . '/../resources/stubs/crud/default' => resource_path('stubs/crud/default')], 'install.advanced');
 
         // Registering package commands.
         $this->commands([
@@ -92,13 +86,6 @@ class SimpleControlPanelServiceProvider extends ServiceProvider
                 Commands\CrudGenerate::class,
         ]);
         
-        // alias middleware
-        $this->app['router']->prependMiddlewareToGroup('web', 'Wikichua\SimpleControlPanel\Middleware\RestrictDemo');
-        $this->app['router']->aliasMiddleware('auth_admin', 'Wikichua\SimpleControlPanel\Middleware\AuthAdmin');
-        $this->app['router']->aliasMiddleware('guest_admin', 'Wikichua\SimpleControlPanel\Middleware\GuestAdmin');
-        $this->app['router']->aliasMiddleware('intend_url', 'Wikichua\SimpleControlPanel\Middleware\IntendUrl');
-        $this->app['router']->aliasMiddleware('not_admin_role', 'Wikichua\SimpleControlPanel\Middleware\NotAdminRole');
-        $this->app['router']->aliasMiddleware('not_system_doc', 'Wikichua\SimpleControlPanel\Middleware\NotSystemDoc');
     }
 
     public function gatePermissions()

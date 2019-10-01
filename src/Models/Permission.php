@@ -1,10 +1,10 @@
 <?php
 
-namespace Wikichua\SimpleControlPanel\Models;
+namespace Wikichua\Simplecontrolpanel\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Wikichua\SimpleControlPanel\Traits\DynamicFillable;
-use Wikichua\SimpleControlPanel\Traits\UserTimezone;
+use Wikichua\Simplecontrolpanel\Traits\DynamicFillable;
+use Wikichua\Simplecontrolpanel\Traits\UserTimezone;
 
 class Permission extends Model
 {

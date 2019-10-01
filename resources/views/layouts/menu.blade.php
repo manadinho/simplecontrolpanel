@@ -32,11 +32,6 @@
         <a href="{{ route('admin.users') }}"><i class="fal fa-fw fa-user mr-3"></i>Users</a>
     </li>
     @endcan
-    @can('Read Members')
-    <li class="{{ preg_match('/admin.members.*/', request()->route()->getName())? 'active':'' }}">
-        <a href="{{ route('admin.members') }}"><i class="fal fa-fw fa-users-class mr-3"></i>Members</a>
-    </li>
-    @endcan
     @can('Read Settings')
     <li class="{{ preg_match('/admin.settings.*/', request()->route()->getName())? 'active':'' }}">    
         <a href="{{ route('admin.settings') }}"><i class="fal fa-fw fa-cog mr-3"></i>System Settings</a>

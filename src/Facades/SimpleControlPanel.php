@@ -1,6 +1,6 @@
 <?php
 
-namespace Wikichua\SimpleControlPanel\Facades;
+namespace Wikichua\Simplecontrolpanel\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
