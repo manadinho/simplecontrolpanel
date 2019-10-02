@@ -231,6 +231,15 @@ Mutator
         ',
     ]
 
+Summernote
+
+    'input' => [
+        'type' => 'textarea',
+        'class' => 'summernote'
+    ],
+
+If you need editor. Just add summernote to your class.
+
 Date Picker
 
     'input' => [
