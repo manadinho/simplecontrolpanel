@@ -37,6 +37,7 @@ return [
         'views' => 'resources/views/admin',
         'menu' => 'resources/views/vendor/lap/layouts/menu',
         'layout_menu' => 'resources/views/vendor/lap/layouts/menu.blade.php',
+        'route' => 'routes/admin',
         'routes' => 'routes/web.php',
     ],
 

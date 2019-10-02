@@ -1,3 +1,4 @@
+<?php
 // {model_variables}
 Route::get(config('lap.route_prefix').'/{model_variables}', '{controller_route}{model_class}Controller@index')->name('{view_prefix_name}{model_variables}');
 Route::get(config('lap.route_prefix').'/{model_variables}/create', '{controller_route}{model_class}Controller@createForm')->name('{view_prefix_name}{model_variables}.create');

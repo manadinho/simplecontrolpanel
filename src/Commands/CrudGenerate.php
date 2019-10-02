@@ -334,6 +334,7 @@ class CrudGenerate extends Command
             $this->lap['model'],
             $this->lap['migrations'],
             $this->lap['menu'],
+            $this->lap['route'],
             $this->lap['views'] . '/' . $this->replaces['{model_variables}'] . '/datatable',
         ];
 
@@ -413,17 +414,21 @@ class CrudGenerate extends Command
 
     public function insertRoutes()
     {
-        // insert routes
-        $routes_file = $this->files->get($this->lap['routes']);
-        $routes_stub = $this->files->get($this->lap['stubs'] . '/routes.stub');
-        $routes_content = PHP_EOL . PHP_EOL . $this->replace($routes_stub);
-
-        // insert at end of file if doesn't already exist
-        if (strpos($routes_file, $routes_content) === false) {
-            $this->files->append($this->lap['routes'], $routes_content);
+        // create menu item file
+        $route_file = $this->lap['route'] . '/' . $this->replaces['{model_variable}'] . '.php';
+        if ($this->prompt($route_file)) {
+            $routes_stub = $this->files->get($this->lap['stubs'] . '/routes.stub');
+            $this->files->put($route_file, $this->replace($routes_stub));
+            $this->line('Menu item file created: <info>' . $route_file . '</info>');
+            
+            $routes = $this->files->get($this->lap['routes']);
+            $route_content = PHP_EOL . "include_once(resource_path('../{$route_file}'));";
+            if (strpos($routes, $route_content) === false) {
+                $this->files->append($this->lap['routes'], $route_content);
+                $this->line('Route included: <info>' . $this->lap['routes'] . '</info>');
+            }
         }
 
-        $this->line('Routes inserted: <info>' . $this->lap['routes'] . '</info>');
     }
 
     public function indent($multiplier = 1)
@@ -478,11 +483,11 @@ class CrudGenerate extends Command
         }
         $this->info($file);
         if (file_exists($file)) {
-            if (!$this->confirm('Overwrite? At your own RISK!')) {
+            if (!$this->confirm('Overwrite? At your own RISK!',false)) {
                 return false;
             }
         } else {
-            if (!$this->confirm('Create?')) {
+            if (!$this->confirm('Create?',true)) {
                 return false;
             }
         }

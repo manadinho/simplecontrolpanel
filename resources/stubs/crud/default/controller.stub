@@ -161,16 +161,13 @@ class {model_class}Controller extends Controller
         ${model_variable}->seq = $seq;
         ${model_variable}->save();
         activity('Move {model_string} '. $direction .': ' . ${model_variable}->id, ${model_variable}->toArray());
-        $flash = ['success', '{model_string} moved '.$direction.'!'];
 
         if (request()->input('_submit') == 'reload_datatables') {
             return response()->json([
-                'flash' => $flash,
                 'reload_datatables' => true,
             ]);
         }
         else {
-            flash($flash);
             return redirect()->route('admin.{model_variables}');
         }
     }

@@ -93,8 +93,11 @@ img {
 .sidebar-dark a:hover, .sidebar-dark .active a {
     color: rgba(255, 255, 255, 1);
 }
-.sidebar-dark a:hover, .sidebar-dark .active a, .sidebar-dark .list-admin ul, .sidebar-dark .list-admin [aria-expanded="true"]  {
+.sidebar-dark a:hover, .sidebar-dark .active a, .sidebar-dark .list-admin ul:not(.collapse), .sidebar-dark .list-admin [aria-expanded="true"]  {
     background: rgba(0, 0, 0, .15);
+}
+.sidebar-dark .collapse a:hover, .sidebar-dark .collapse .active a, .sidebar-dark .list-admin .collapse ul, .sidebar-dark .list-admin .collapse [aria-expanded="true"]  {
+    background: rgba(0, 0, 0, .25) !important;
 }
 .sidebar-dark .list-admin ul li a {
     background: transparent !important;
@@ -109,8 +112,11 @@ img {
 .sidebar-light a:hover, .sidebar-light .active a {
     color: rgba(0, 0, 0, 1);
 }
-.sidebar-light a:hover, .sidebar-light .active a, .sidebar-light .list-admin ul, .sidebar-light .list-admin [aria-expanded="true"]  {
+.sidebar-light a:hover, .sidebar-light .active a, .sidebar-light .list-admin ul:not(.collapse), .sidebar-light .list-admin [aria-expanded="true"]  {
     background: rgba(0, 0, 0, .05);
+}
+.sidebar-light .collapse a:hover, .sidebar-light .collapse .active a, .sidebar-light .list-admin .collapse ul, .sidebar-light .list-admin .collapse [aria-expanded="true"]  {
+    background: rgba(0, 0, 0, .15) !important;
 }
 .sidebar-light .list-admin ul li a {
     background: transparent !important;
@@ -217,4 +223,23 @@ img {
 }
 .markdown pre, .markdown blockquote {
     background-color: #E9ECEF;
+}
+.overlay {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 ) 
+                url('//i.stack.imgur.com/FhHRx.gif') 
+                50% 50% 
+                no-repeat;
+}
+body.loading .overlay {
+    overflow: hidden;   
+}
+body.loading .overlay {
+    display: block;
 }

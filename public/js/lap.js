@@ -63,8 +63,17 @@ $.extend(true, $.fn.dataTable.defaults, {
         });
     }
 });
-
 $(document).ready(function () {
+    $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+        event.preventDefault();
+        $(this).ekkoLightbox();
+    });
+    
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
 
     // flash alert if present on body
     let body = $('body');
@@ -94,65 +103,105 @@ $(document).ready(function () {
 
     $(document).on('submit', '[data-ajax-form]', function (event) {
         event.preventDefault();
-
         let form = $(this);
         let form_data = new FormData(form[0]);
         let button_clicked = form.find('[data-button-clicked]');
-
-        if (form.attr('data-ajax-form') !== 'submitted') {
-            // stop additional form submits
-            form.attr('data-ajax-form', 'submitted');
-
-            // append value of submit button clicked
-            if (button_clicked.attr('name')) {
-                form_data.append(button_clicked.attr('name'), button_clicked.val());
-            }
-
-            // remove existing alert & invalid field styles
-            $('.alert-flash').remove();
-            $('.is-invalid').removeClass('is-invalid');
-            $('.invalid-feedback').remove();
-
-            $.ajax({
-                url: form.attr('action'),
-                type: form.attr('method'),
-                contentType: false,
-                processData: false,
-                data: form_data,
-                success: function (response) {
-                    // redirect to page
-                    if (response.hasOwnProperty('redirect')) {
-                        $(location).attr('href', response.redirect);
-                    }
-                    // reload current page
-                    if (response.hasOwnProperty('reload_page')) {
-                        location.reload();
-                    }
-                    // reload datatables on page
-                    if (response.hasOwnProperty('reload_datatables')) {
-                        $($.fn.dataTable.tables()).DataTable().ajax.reload(null, false);
-                    }
-                    // flash message using class
-                    if (response.hasOwnProperty('flash')) {
-                        flash(response.flash[0], response.flash[1]);
-                    }
-                },
-                error: function (response) {
-                    // flash error message
-                    flash('danger', response.responseJSON.message);
-
-                    // show error for each input
-                    if (response.responseJSON.hasOwnProperty('errors')) {
-                        $.each(response.responseJSON.errors, function (key, value) {
-                            let input = $('#' + $.escapeSelector(key));
-                            let container = input.closest('.form-group, [class^="col"]');
-
-                            input.addClass('is-invalid');
-                            container.append('<div class="invalid-feedback d-block">' + value[0] + '</div>');
-                        });
-                    }
+        let _method = form.find('input[name=_method]').val();
+        if (_method === 'DELETE') {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "This is a 1 way ticket action.",
+                type: "warning",
+                focusConfirm: false,
+                showConfirmButton: true,
+                showCancelButton: true
+            }).then((result) => {
+                if (result.value) {
+                    post_form(form, form_data, button_clicked);
                 }
             });
+        } else {
+            let confirm_msg = button_clicked.data('confirm_msg');
+            let confirmwithinput_msg = button_clicked.data('confirmwithinput_msg');
+            let confirmwithinput_html = button_clicked.data('confirmwithinput_html');
+            let confirm_title = button_clicked.data('confirm_title');
+            if (confirm_title == undefined) {
+                confirm_title = 'Are you sure?';
+            }
+            if (confirm_msg != undefined) {
+                Swal.fire({
+                    title: confirm_title,
+                    text: confirm_msg,
+                    type: "question",
+                    focusConfirm: false,
+                    showConfirmButton: true,
+                    showCancelButton: true
+                }).then((result) => {
+                    if (result.value) {
+                        post_form(form, form_data, button_clicked);
+                    }
+                });
+            } else if (confirmwithinput_msg != undefined) {
+                let confirm_input_type = button_clicked.data('confirm_input_type');
+                if (confirm_input_type == undefined) {
+                    confirm_input_type = 'password';
+                }
+                Swal.fire({
+                    title: confirm_title,
+                    input: confirm_input_type,
+                    text: confirmwithinput_msg,
+                    type: "warning",
+                    focusConfirm: false,
+                    showConfirmButton: true,
+                    showCancelButton: true,
+                    inputValidator: (value) => {
+                        if (!value) {
+                            return 'Please fill up the value.'
+                        }
+                    }
+                }).then((result) => {
+                    if (result.value) {
+                        form_data.append('swal_input',result.value);
+                        post_form(form, form_data, button_clicked);
+                    }
+                });
+            } else if (confirmwithinput_html != undefined) {
+                confirmwithinput_html = '<div id="swalFormWrapper">'+confirmwithinput_html+'</div>';
+                Swal.fire({
+                    title: confirm_title,
+                    html: confirmwithinput_html,
+                    type: "warning",
+                    focusConfirm: false,
+                    showConfirmButton: true,
+                    showCancelButton: true
+                }).then((result) => {
+                    if (result.value) {
+                        let ok = false;
+                        $.each($('#swalFormWrapper').find('input,textarea,select').serializeArray(),function(index, val) {
+                            if (val.value != '') {
+                                form_data.append(val.name,val.value);
+                                ok = true;
+                            } else {
+                                ok = false;
+                                return ;
+                            }
+                        });
+                        if (ok) {
+                            post_form(form, form_data, button_clicked);
+                        } else {
+                            Swal.fire({
+                                type: "error",
+                                title: "whoops! Mistake found!",
+                                text: "Please fill up the field."
+                            }).then((result) => {
+                                form.trigger('submit');
+                            });
+                        }
+                    }
+                });
+            } else {
+                post_form(form, form_data, button_clicked);
+            }
         }
     });
 
@@ -168,11 +217,11 @@ $(document).ready(function () {
     });
 
     // confirm action
-    $(document).on('click', '[data-confirm]', function (event) {
-        if (!confirm($(this).data('confirm').length ? $(this).data('confirm') : 'Are you sure?')) {
-            event.preventDefault();
-        }
-    });
+    // $(document).on('click', '[data-confirm]', function (event) {
+    //     if (!confirm($(this).data('confirm').length ? $(this).data('confirm') : 'Are you sure?')) {
+    //         event.preventDefault();
+    //     }
+    // });
 
     // hide/show target based on changed value
     $(document).on('change', '[data-show-hide]', function () {
@@ -224,13 +273,85 @@ $(document).ready(function () {
         });
     }
 });
+$(document).on({
+    ajaxStart: function() { $("body").addClass("loading"); },
+    ajaxStop: function() { $("body").removeClass("loading"); }
+});
+function post_form(form, form_data, button_clicked) {
+    if (form.attr('data-ajax-form') !== 'submitted') {
+        // stop additional form submits
+        form.attr('data-ajax-form', 'submitted');
 
-function flash(alert_class, alert_message) {
-    let html = '<div class="alert alert-flash bg-' + alert_class + ' text-light position-fixed mb-0">' + alert_message + '</div>';
+        // append value of submit button clicked
+        if (button_clicked.attr('name')) {
+            form_data.append(button_clicked.attr('name'), button_clicked.val());
+        }
 
-    $(html).hide().appendTo('body').fadeIn('fast', function () {
-        $(this).delay(3000).fadeOut('fast', function () {
-            $(this).remove();
+        // remove existing alert & invalid field styles
+        $('.alert-flash').remove();
+        $('.is-invalid').removeClass('is-invalid');
+        $('.invalid-feedback').remove();
+
+        $.ajax({
+            url: form.attr('action'),
+            type: form.attr('method'),
+            contentType: false,
+            processData: false,
+            data: form_data,
+            success: function (response) {
+                // redirect to page
+                if (response.hasOwnProperty('redirect')) {
+                    $(location).attr('href', response.redirect);
+                }
+                // reload current page
+                if (response.hasOwnProperty('reload_page')) {
+                    location.reload();
+                }
+                // reload datatables on page
+                if (response.hasOwnProperty('reload_datatables')) {
+                    $($.fn.dataTable.tables()).DataTable().ajax.reload(null, false);
+                }
+                // flash message using class
+                if (response.hasOwnProperty('flash')) {
+                    flash(response.flash[0], response.flash[1]);
+                }
+            },
+            beforeSend: function() {
+                $("body").addClass("loading");
+            },
+            complete: function() {
+                $("body").removeClass("loading");
+            },
+            error: function (response) {
+                // flash error message
+                flash('error', response.responseJSON.message);
+
+                // show error for each input
+                if (response.responseJSON.hasOwnProperty('errors')) {
+                    $.each(response.responseJSON.errors, function (key, value) {
+                        let input = $('#' + $.escapeSelector(key));
+                        let container = input.closest('.form-group, [class^="col"]');
+
+                        input.addClass('is-invalid');
+                        container.append('<div class="invalid-feedback d-block">' + value[0] + '</div>');
+                    });
+                }
+            }
         });
+    }
+}
+function flash(alert_class, alert_message) {
+    if (alert_class == 'danger') { alert_class = 'error'; }
+    Swal.fire({
+      title: alert_class.toUpperCase() + '!',
+      text: alert_message,
+      type: alert_class
     });
+    // let html = '<div class="alert alert-flash bg-' + alert_class + ' text-light position-fixed mb-0">' + alert_message + '</div>';
+
+    // $(html).hide().appendTo('body').fadeIn('fast', function () {
+    //     $(this).delay(3000).fadeOut('fast', function () {
+    //         $(this).remove();
+    //     });
+    // });
 }
