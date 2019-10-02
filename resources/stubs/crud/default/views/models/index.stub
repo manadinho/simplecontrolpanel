@@ -67,10 +67,13 @@
            'This Month': [moment().startOf('month'), moment().endOf('month')],
            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
         },
-        autoUpdateInput: false
+        autoUpdateInput: false,
+        locale: {
+          format: 'YYYY-MM-DD'
+        }
     });
     $('#created_at_range').on('apply.daterangepicker', function(ev, picker) {
-        $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+        $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
     });
     $('#created_at_range').on('cancel.daterangepicker', function(ev, picker) {
         $(this).val('');

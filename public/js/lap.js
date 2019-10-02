@@ -274,10 +274,13 @@ $(document).ready(function () {
     }
 
     $('.datepicker').daterangepicker({
-        singleDatePicker: true
+        singleDatePicker: true,
+        locale: {
+          format: 'YYYY-MM-DD'
+        }
     });
     $('.datepicker').on('apply.daterangepicker', function(ev, picker) {
-        $(this).val(picker.startDate.format('MM/DD/YYYY'));
+        $(this).val(picker.startDate.format('YYYY-MM-DD'));
     });
     $('.datepicker').on('cancel.daterangepicker', function(ev, picker) {
         $(this).val('');
@@ -288,10 +291,13 @@ $(document).ready(function () {
         ranges: {
            'Today': [moment(), moment()],
            '1 Week': [moment(), moment().add(7, 'days')]
+        },
+        locale: {
+          format: 'YYYY-MM-DD'
         }
     });
     $('.rangedatepicker').on('apply.daterangepicker', function(ev, picker) {
-        $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+        $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
     });
     $('.rangedatepicker').on('cancel.daterangepicker', function(ev, picker) {
         $(this).val('');

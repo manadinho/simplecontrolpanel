@@ -172,7 +172,9 @@ class CrudGenerate extends Command
             $attribute_value = '$' . $this->replaces['{model_variable}'] . '->' . $attribute;
             $read_stub = $this->files->get($this->lap['stubs'] . '/views/layouts/read.stub');
             $read_stub = str_replace('{attribute_label}', $attribute_label, $read_stub);
-            $read_stub = str_replace('{attribute_value}', '{{ ' . (isset($values['casts']) && $values['casts'] ? "implode(', ', $attribute_value)" : $attribute_value) . ' }}', $read_stub);
+            
+            $read_stub = str_replace('{attribute_value}', '{{ ' . (isset($values['casts']) && $values['casts'] == 'array'? "implode(', ', $attribute_value)" : $attribute_value) . ' }}', $read_stub);
+            
             $read_attributes[] = $read_stub . PHP_EOL;
 
             // form inputs
@@ -240,11 +242,6 @@ class CrudGenerate extends Command
             $replaces['{input_id}'] = $attribute;
             $replaces['{input_class}'] = isset($input['class']) && $input['class'] != ''? ' '.$input['class']:'';
             $model_preinput = '$' . $this->replaces['{model_variable}'] . '->' . $attribute;
-
-            if (isset($input['class']) && $input['class'] == 'datepicker') {
-                $model_preinput = $model_preinput.'->format(\'m/d/Y\')';
-            }
-
             $replaces['{input_value}'] = $method == 'update' ? ' value="{{ ' . $model_preinput . ' }}"' : '';
         }
 
