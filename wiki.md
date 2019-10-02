@@ -262,7 +262,27 @@ To append the field name
 
 Sample:
 
-    'testdate' => [
+    'content' => [
+            'primary' => false,
+            'migrations' => [
+                'string:content|nullable',
+            ],
+            'validations' => [
+                'create' => 'required',
+                'update' => 'required',
+            ],
+            'datatable' => [
+                'title' => 'Content',
+                'data' => 'content',
+            ],
+            'exporttable' => 'content',
+            'input' => [
+                'type' => 'textarea',
+                'class' => 'summernote',
+            ],
+        ],
+
+        'testdate' => [
             'primary' => false,
             'migrations' => [
                 'datetime:testdate|nullable',
@@ -307,9 +327,9 @@ Sample:
             ],
             'casts' => 'datetime:Y-m-d',
             'mutators' => [
-                // 'get' => 'return \Carbon\Carbon::parse($value);',
+                'get' => 'return $this->attributes[\'testdaterange_start\'] ." - ".$this->attributes[\'testdaterange_end\'];',
                 'set' => '
-                    list($start,$end) = explode(\'-\',$value);
+                    list($start,$end) = explode(\' - \',$value);
                     $this->attributes[\'testdaterange_start\'] = \Carbon\Carbon::parse(trim($start));
                     $this->attributes[\'testdaterange_end\'] = \Carbon\Carbon::parse(trim($end));
                 ',
@@ -336,9 +356,9 @@ Sample:
             // ],
             'casts' => 'datetime:Y-m-d',
             'mutators' => [
-                // 'get' => 'return \Carbon\Carbon::parse($value);',
+                'get' => 'return $this->attributes[\'testdaterange_start\'] ." - ".$this->attributes[\'testdaterange_end\'];',
                 'set' => '
-                    list($start,$end) = explode(\'-\',$value);
+                    list($start,$end) = explode(\' - \',$value);
                     $this->attributes[\'testdaterange_start\'] = \Carbon\Carbon::parse(trim($start));
                     $this->attributes[\'testdaterange_end\'] = \Carbon\Carbon::parse(trim($end));
                 ',
