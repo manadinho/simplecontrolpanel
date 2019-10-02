@@ -62,11 +62,15 @@ Run the migrations:
 
 Alternative installation:
 
-# composer create-project laravel/laravel --prefer-dist appName
+Install laravel:
 
-# cd appName; mkdir packages; cd packages; mkdir wikichua; cd wikichua; git clone https://github.com/wikichua/simplecontrolpanel.git
+    composer create-project laravel/laravel --prefer-dist appName
 
-Add this in your composer.json under scripts section
+Create directories in terminal:
+
+    cd appName; mkdir packages; cd packages; mkdir wikichua; cd wikichua; git clone https://github.com/wikichua/simplecontrolpanel.git
+
+Add this in your composer.json under scripts section:
 
     "repositories": {
         "wikichua-simplecontrolpanel": {
