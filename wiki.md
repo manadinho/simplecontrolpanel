@@ -59,7 +59,7 @@ The default admin login is:
 
     Email Address: admin@example.com
     Password: admin123
-    
+
 ### CRUD Configuration manual
 
 #### Icon
@@ -205,3 +205,159 @@ The same conventions for options apply to checkbox, radio, and select. However, 
         'value' => true,
         'label' => 'This vehicle is financed',
     ],
+
+Multiple attribute available in input type select, file & checkbox.
+    
+    'input' => [
+        'type' => 'select', // select/checkbox/file
+        'multiple' => true
+    ],
+
+Mutator
+
+    'mutators' => [
+        'get' => 'return \Carbon\Carbon::parse($value);',
+        'set' => '$this->attributes[\'testdate\'] = \Carbon\Carbon::parse($value);',
+    ]
+
+1 line of return is preferred. If you need multiple lines
+
+    'mutators' => [
+        'get' => 'return \Carbon\Carbon::parse($value);',
+        'set' => '
+            list($start,$end) = explode(\'-\',$value);
+            $this->attributes[\'testdaterange_start\'] = \Carbon\Carbon::parse(trim($start));
+            $this->attributes[\'testdaterange_end\'] = \Carbon\Carbon::parse(trim($end));
+        ',
+    ]
+
+Date Picker
+
+    'input' => [
+        'type' => 'text',
+        'class' => 'datepicker'
+    ],
+    'casts' => 'datetime:Y-m-d',
+    'mutators' => [
+        // 'get' => 'return \Carbon\Carbon::parse($value);',
+        'set' => '$this->attributes[\'testdate\'] = \Carbon\Carbon::parse($value);',
+    ]
+
+Special for date picker, casting is important and mutator just don't include the get
+
+Appends
+
+    'appends' => true,
+
+To append the field name
+
+Sample:
+
+    'testdate' => [
+            'primary' => false,
+            'migrations' => [
+                'datetime:testdate|nullable',
+            ],
+            'validations' => [
+                'create' => '',
+                'update' => '',
+            ],
+            'datatable' => [
+                'title' => 'date',
+                'data' => 'testdate',
+            ],
+            'exporttable' => 'testdate',
+            'input' => [
+                'type' => 'text',
+                'class' => 'datepicker'
+            ],
+            'casts' => 'datetime:Y-m-d',
+            'mutators' => [
+                // 'get' => 'return \Carbon\Carbon::parse($value);',
+                'set' => '$this->attributes[\'testdate\'] = \Carbon\Carbon::parse($value);',
+            ]
+        ],
+
+        'testdaterange_start' => [
+            'primary' => false,
+            'migrations' => [
+                'datetime:testdaterange_start|nullable',
+            ],
+            'validations' => [
+                'create' => '',
+                'update' => '',
+            ],
+            // 'datatable' => [
+            //     'title' => 'date',
+            //     'data' => 'testdaterange_start',
+            // ],
+            // 'exporttable' => 'testdaterange_start',
+            'input' => [
+                'type' => 'text',
+                'class' => 'rangedatepicker'
+            ],
+            'casts' => 'datetime:Y-m-d',
+            'mutators' => [
+                // 'get' => 'return \Carbon\Carbon::parse($value);',
+                'set' => '
+                    list($start,$end) = explode(\'-\',$value);
+                    $this->attributes[\'testdaterange_start\'] = \Carbon\Carbon::parse(trim($start));
+                    $this->attributes[\'testdaterange_end\'] = \Carbon\Carbon::parse(trim($end));
+                ',
+            ]
+        ],
+
+        'testdaterange_end' => [
+            'primary' => false,
+            'migrations' => [
+                'datetime:testdaterange_end|nullable',
+            ],
+            // 'validations' => [
+            //     'create' => '',
+            //     'update' => '',
+            // ],
+            // 'datatable' => [
+            //     'title' => 'date',
+            //     'data' => 'testdaterange_end',
+            // ],
+            // 'exporttable' => 'testdaterange_end',
+            // 'input' => [
+            //     'type' => 'text',
+            //     'class' => 'rangedatepicker'
+            // ],
+            'casts' => 'datetime:Y-m-d',
+            'mutators' => [
+                // 'get' => 'return \Carbon\Carbon::parse($value);',
+                'set' => '
+                    list($start,$end) = explode(\'-\',$value);
+                    $this->attributes[\'testdaterange_start\'] = \Carbon\Carbon::parse(trim($start));
+                    $this->attributes[\'testdaterange_end\'] = \Carbon\Carbon::parse(trim($end));
+                ',
+            ]
+        ],
+
+        'testdaterange' => [
+            'primary' => false,
+            // 'migrations' => [
+            //     'datetime:testdaterange_start|nullable',
+            //     'datetime:testdaterange_end|nullable',
+            // ],
+            // 'validations' => [
+            //     'create' => '',
+            //     'update' => '',
+            // ],
+            'datatable' => [
+                'title' => 'date',
+                'data' => 'testdaterange',
+            ],
+            // 'exporttable' => 'testdaterange',
+            // 'input' => [
+            //     'type' => 'text',
+            //     'class' => 'rangedatepicker'
+            // ],
+            'appends' => true,
+            'mutators' => [
+                'get' => 'return $this->attributes[\'testdaterange_start\'] ." - ".$this->attributes[\'testdaterange_end\'];',
+                
+            ]
+        ],

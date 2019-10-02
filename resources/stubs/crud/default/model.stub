@@ -12,9 +12,13 @@ class {model_class} extends Eloquent
     use SoftDeletes, DynamicFillable, UserTimezone;
     protected $dates = ['deleted_at'];
 
+    {model_appends}
+
     {model_casts}
 
     {relationships}
 
     {user_timezones}
+
+    {mutators}
 }

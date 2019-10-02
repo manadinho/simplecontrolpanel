@@ -78,9 +78,11 @@ class CrudGenerate extends Command
         // set replacement searches using attribute values
         $attributes = isset($this->config['attributes']) ? $this->config['attributes'] : [];
         $model_casts = [];
+        $model_appends = [];
         $relationships = [];
         $relationships_query = [];
         $user_timezones = [];
+        $mutators = [];
         $migrations = [];
         $validations = [];
         $datatable = [];
@@ -100,6 +102,10 @@ class CrudGenerate extends Command
                 $model_casts[] = "'$attribute' => '" . $values['casts'] . "'";
             }
 
+            if (isset($values['appends']) && $values['appends']) {
+                $model_appends[] = "'$attribute'";
+            }
+
             // relationships
             if (!empty($values['relationship'])) {
                 $relationships[] = $this->indent() . 'public function ' . array_keys($values['relationship'])[0] . '()';
@@ -115,6 +121,26 @@ class CrudGenerate extends Command
                 $user_timezones[] = $this->indent() . '{';
                 $user_timezones[] = $this->indent() . '    return $this->inUserTimezone($value);';
                 $user_timezones[] = $this->indent() . '}' . PHP_EOL;
+            }
+
+            // mutators
+            if (!empty($values['mutators']['get'])) {
+                $mutators[] = $this->indent() . 'public function get' . studly_case($attribute) . 'Attribute($value)';
+                $mutators[] = $this->indent() . '{';
+                $lines = explode("\n",trim($values['mutators']['get']));
+                foreach ($lines as $line) {
+                    $mutators[] = $this->indent() . '    '.trim($line);
+                }
+                $mutators[] = $this->indent() . '}' . PHP_EOL;
+            }
+            if (!empty($values['mutators']['set'])) {
+                $mutators[] = $this->indent() . 'public function set' . studly_case($attribute) . 'Attribute($value)';
+                $mutators[] = $this->indent() . '{';
+                $lines = explode("\n",trim($values['mutators']['set']));
+                foreach ($lines as $line) {
+                    $mutators[] = $this->indent() . '    '.trim($line);
+                }
+                $mutators[] = $this->indent() . '}' . PHP_EOL;
             }
 
             // migrations
@@ -160,9 +186,11 @@ class CrudGenerate extends Command
         }
 
         $this->replaces['{model_casts}'] = $model_casts ? 'protected $casts = [' . implode(', ', $model_casts) . '];' : '';
+        $this->replaces['{model_appends}'] = $model_appends ? 'protected $appends = [' . implode(', ', $model_appends) . '];' : '';
         $this->replaces['{relationships}'] = $relationships ? trim(implode(PHP_EOL, $relationships)) : '';
         $this->replaces['{relationships_query}'] = $relationships_query ? "->with('" . implode("', '", $relationships_query) . "')" : '';
         $this->replaces['{user_timezones}'] = $user_timezones ? trim(implode(PHP_EOL, $user_timezones)) : '';
+        $this->replaces['{mutators}'] = $mutators ? trim(implode(PHP_EOL, $mutators)) : '';
         $this->replaces['{migrations}'] = $validations ? trim(implode(PHP_EOL, $migrations)) : '';
         $this->replaces['{validations_create}'] = isset($validations['create']) ? trim(implode(PHP_EOL, $validations['create'])) : '';
         $this->replaces['{validations_update}'] = isset($validations['update']) ? trim(implode(PHP_EOL, $validations['update'])) : '';
@@ -203,13 +231,21 @@ class CrudGenerate extends Command
             $replaces['{input_name}'] = $attribute;
             $replaces['{input_id}'] = $attribute;
             $replaces['{input_value}'] = $method == 'update' ? '{{ $' . $this->replaces['{model_variable}'] . '->' . $attribute . ' }}' : '';
+            $replaces['{input_class}'] = isset($input['class']) && $input['class'] != ''? ' '.$input['class']:'';
         }
         else {
             $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/text.stub');
             $replaces['{input_type}'] = $input['type'];
             $replaces['{input_name}'] = $attribute;
             $replaces['{input_id}'] = $attribute;
-            $replaces['{input_value}'] = $method == 'update' ? ' value="{{ $' . $this->replaces['{model_variable}'] . '->' . $attribute . ' }}"' : '';
+            $replaces['{input_class}'] = isset($input['class']) && $input['class'] != ''? ' '.$input['class']:'';
+            $model_preinput = '$' . $this->replaces['{model_variable}'] . '->' . $attribute;
+
+            if (isset($input['class']) && $input['class'] == 'datepicker') {
+                $model_preinput = $model_preinput.'->format(\'m/d/Y\')';
+            }
+
+            $replaces['{input_value}'] = $method == 'update' ? ' value="{{ ' . $model_preinput . ' }}"' : '';
         }
 
         $stub = str_replace(array_keys($this->replaces), $this->replaces, str_replace(array_keys($replaces), $replaces, $stub));
@@ -288,13 +324,14 @@ class CrudGenerate extends Command
                 $replaces['{input_option}'] = '$' . $value . ' => $' . $label;
                 $replaces['{input_option_value}'] = '{{ $' . $value . ' }}';
                 $replaces['{input_option_label}'] = '{{ $' . $label . ' }}';
+                $replaces['{input_option_selected}'] = $method == 'update' ? '{{ $' . $value . ' == $' . $this->replaces['{model_variable}'] . '->' . $attribute . " ? ' selected' : '' }}" : '';
             } else {
                 $replaces['{input_option}'] = '$model';
                 $replaces['{input_option_value}'] = '{{ $model->' . $value . ' }}';
                 $replaces['{input_option_label}'] = '{{ $model->' . $label . ' }}';
+                $replaces['{input_option_selected}'] = $method == 'update' ? '{{ $model->' . $value . ' == $' . $this->replaces['{model_variable}'] . '->' . $attribute . " ? ' selected' : '' }}" : '';
             }
 
-            $replaces['{input_option_selected}'] = $method == 'update' ? '{{ $model->' . $value . ' == $' . $this->replaces['{model_variable}'] . '->' . $attribute . " ? ' selected' : '' }}" : '';
         }
         else if (array_keys($input['options']) !== range(0, count($input['options']) - 1)) {
             // options are associative array (key is defined)
@@ -312,6 +349,8 @@ class CrudGenerate extends Command
             $replaces['{input_option_label}'] = '{{ $option }}';
             $replaces['{input_option_selected}'] = $method == 'update' ? '{{ $option == $' . $this->replaces['{model_variable}'] . '->' . $attribute . " ? ' selected' : '' }}" : '';
         }
+        $replaces['{input_multiple}'] = !empty($input['multiple']) ? ' multiple' : '';
+        $replaces['{input_class}'] = isset($input['class']) && $input['class'] != ''? ' '.$input['class']:'';
 
         return $replaces;
     }

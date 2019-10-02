@@ -1,1 +1,1 @@
-                        <textarea name="{input_name}" id="{input_id}" class="form-control" rows="5">{input_value}</textarea>
+                        <textarea name="{input_name}" id="{input_id}" class="form-control{input_class}" rows="5">{input_value}</textarea>

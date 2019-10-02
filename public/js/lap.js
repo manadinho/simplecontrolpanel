@@ -272,6 +272,58 @@ $(document).ready(function () {
             });
         });
     }
+
+    $('.datepicker').daterangepicker({
+        singleDatePicker: true
+    });
+    $('.datepicker').on('apply.daterangepicker', function(ev, picker) {
+        $(this).val(picker.startDate.format('MM/DD/YYYY'));
+    });
+    $('.datepicker').on('cancel.daterangepicker', function(ev, picker) {
+        $(this).val('');
+    });
+
+    $('.rangedatepicker').daterangepicker({
+        autoUpdateInput: false,
+        ranges: {
+           'Today': [moment(), moment()],
+           '1 Week': [moment(), moment().add(7, 'days')]
+        }
+    });
+    $('.rangedatepicker').on('apply.daterangepicker', function(ev, picker) {
+        $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+    });
+    $('.rangedatepicker').on('cancel.daterangepicker', function(ev, picker) {
+        $(this).val('');
+    });
+    
+    $summernote = $('.summernote').summernote({
+        height: 300,
+        minHeight: null,
+        maxHeight: null,
+        callbacks: {
+            onImageUpload: function(files) {
+                for(let i=0; i < files.length; i++) {
+                    let file = files[i];
+                    let out = new FormData();
+                    out.append('file', file, file.name);
+                    $.ajax({
+                        method: 'POST',
+                        url: route('admin.summernote.imageUpload'),
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        data: out,
+                        success: function (url) {
+                            $summernote.summernote("insertImage", url, function ($image) {
+                                $image.css('width', '100%');
+                            });
+                        }
+                    });
+                }
+            }
+        }
+    });
 });
 $(document).on({
     ajaxStart: function() { $("body").addClass("loading"); },
@@ -347,11 +399,4 @@ function flash(alert_class, alert_message) {
       text: alert_message,
       type: alert_class
     });
-    // let html = '<div class="alert alert-flash bg-' + alert_class + ' text-light position-fixed mb-0">' + alert_message + '</div>';
-
-    // $(html).hide().appendTo('body').fadeIn('fast', function () {
-    //     $(this).delay(3000).fadeOut('fast', function () {
-    //         $(this).remove();
-    //     });
-    // });
 }
