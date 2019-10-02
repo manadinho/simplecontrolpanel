@@ -60,13 +60,13 @@ Run the migrations:
     php artisan migrate
 
 
-Alternative
+Alternative installation:
 
-composer create-project laravel/laravel --prefer-dist appName
+# composer create-project laravel/laravel --prefer-dist appName
 
-cd appName; mkdir packages; cd packages; mkdir wikichua; cd wikichua; git clone https://github.com/wikichua/simplecontrolpanel.git
+# cd appName; mkdir packages; cd packages; mkdir wikichua; cd wikichua; git clone https://github.com/wikichua/simplecontrolpanel.git
 
-add this in composer.json under scripts
+Add this in your composer.json under scripts section
 
     "repositories": {
         "wikichua-simplecontrolpanel": {
