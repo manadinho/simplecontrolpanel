@@ -65,6 +65,7 @@ Alternative
 - composer create-project laravel/laravel --prefer-dist appName
 - cd appName; mkdir packages; cd packages; mkdir wikichua; cd wikichua; git clone https://github.com/wikichua/simplecontrolpanel.git
 - add this in composer.json under scripts
+
     "repositories": {
         "wikichua-simplecontrolpanel": {
             "type": "path",
