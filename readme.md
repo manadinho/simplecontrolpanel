@@ -60,7 +60,7 @@ Run the migrations:
     php artisan migrate
 
 
-Alternative installation:
+### Alternative installation:
 
 Install laravel:
 
