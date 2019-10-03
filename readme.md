@@ -31,7 +31,7 @@ Assets used:
 
 Require via composer:
 
-    composer require wikichua/simplecontrolpanel
+    composer require wikichua/simplecontrolpanel ^2.1
 
 Publish install files:
 
