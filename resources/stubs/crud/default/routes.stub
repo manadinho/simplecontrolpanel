@@ -8,4 +8,4 @@ Route::get(config('lap.route_prefix').'/{model_variables}/update/{{model_variabl
 Route::patch(config('lap.route_prefix').'/{model_variables}/update/{{model_variable}}', '{controller_route}{model_class}Controller@update');
 Route::delete(config('lap.route_prefix').'/{model_variables}/delete/{{model_variable}}', '{controller_route}{model_class}Controller@delete')->name('{view_prefix_name}{model_variables}.delete');
 Route::any(config('lap.route_prefix').'/{model_variables}/export', '{controller_route}{model_class}Controller@export')->name('{view_prefix_name}{model_variables}.export');
-Route::any(config('lap.route_prefix').'/{model_variables}/{{model_variable}}/move/{direction}', '{controller_route}{model_class}Controller@move')->name('{view_prefix_name}{model_variables}.move');
+Route::any(config('lap.route_prefix').'/{model_variables}/reorder', '{controller_route}{model_class}Controller@reorder')->name('{view_prefix_name}{model_variables}.reorder');

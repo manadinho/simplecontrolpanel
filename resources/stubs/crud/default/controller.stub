@@ -34,15 +34,9 @@ class {model_class}Controller extends Controller
     {
         if (request()->ajax()) {
             ${model_variables} = {model_class}::query(){relationships_query};
-            $maxseq = {model_class}::max('seq');
-            $minseq = {model_class}::min('seq');
             $datatable = datatables(${model_variables})
-                ->editColumn('seq', function (${model_variable}) use($maxseq, $minseq){
-                    $model = ${model_variable};
-                    $up_url = route('{view_prefix_name}{model_variables}.move', [$model->id,'up']);
-                    $down_url = route('{view_prefix_name}{model_variables}.move', [$model->id,'down']);
-                    return view('lap::layouts.seq', compact('model','maxseq','minseq','up_url','down_url'));
-                })
+                ->setRowAttr(['data-id' => '{{ $id }}', 'data-seq' => '{{ $seq }}'])
+                ->setRowClass('sortable_row')
                 ->editColumn('actions', function (${model_variable}) {
                     return view('{view_prefix_name}{model_variables}.datatable.actions', compact('{model_variable}'));
                 })
@@ -72,7 +66,8 @@ class {model_class}Controller extends Controller
             'dom' => '<"toolbar">lfrtip'
         ]);
         $export_url = route('{view_prefix_name}{model_variables}.export');
-        return view('{view_prefix_name}{model_variables}.index', compact('html','dtid','export_url'));
+        $reorder_url = route('{view_prefix_name}{model_variables}.reorder');
+        return view('{view_prefix_name}{model_variables}.index', compact('html','dtid','export_url','reorder_url'));
     }
 
     public function createForm()
@@ -147,28 +142,18 @@ class {model_class}Controller extends Controller
             return redirect()->route('admin.{model_variables}');
         }
     }
-    public function move({model_class} ${model_variable}, $direction)
+    public function reorder()
     {
-        if (strtolower($direction) == 'up') {
-            $seq = {model_class}::where('seq', '<', ${model_variable}->seq)->max('seq');
-        } else {
-            $seq = {model_class}::where('seq', '>', ${model_variable}->seq)->min('seq');
-        }
-        $toSwap = {model_class}::where('seq',$seq)->first();
-        $toSwap->seq = ${model_variable}->seq;
-        $toSwap->save();
+        $ids = collect(request()->get('ids'))->pluck('id');
+        $seqs = collect(request()->get('seqs'))->pluck('seq');
 
-        ${model_variable}->seq = $seq;
-        ${model_variable}->save();
-        activity('Move {model_string} '. $direction .': ' . ${model_variable}->id, ${model_variable}->toArray());
-
-        if (request()->input('_submit') == 'reload_datatables') {
-            return response()->json([
-                'reload_datatables' => true,
-            ]);
+        foreach ($ids as $i => $id) {
+            $tag = {model_class}::find($id);
+            $tag->timestamps = false; // To disable update_at field
+            $tag->update(['seq' => $seqs[$i]]);
         }
-        else {
-            return redirect()->route('admin.{model_variables}');
-        }
+        return response()->json([
+            'reload_datatables' => true,
+        ]);        
     }
 }

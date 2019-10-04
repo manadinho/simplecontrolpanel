@@ -27,5 +27,44 @@
         $('#filterModalCenter').modal('hide');
     });
     @endif
+
+    @if (isset($reorder_url) && $reorder_url != '')
+    $( "#{{ $dtid }}" ).sortable({
+        items: "tr",
+        cursor: 'move',
+        opacity: 0.6,
+        start: function (event, ui) {
+            seqs = [];
+            $('tr.sortable_row').each(function(index,element) {
+                seqs.push(
+                {
+                    seq: $(this).data('seq'),
+                });
+            });
+        },
+        update: function (event, ui) {
+            var ids = [];
+            $('tr.sortable_row').each(function(index,element) {
+                ids.push({
+                    id: $(this).data('id'),
+                });
+            });
+            $.ajax({
+                    type: "POST", 
+                    dataType: "json", 
+                    url: "{{ $reorder_url }}",
+                    data: {
+                    ids: ids,
+                    seqs: seqs,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function() {
+                    $($.fn.dataTable.tables()).DataTable().ajax.reload(null, false);
+                }
+            });
+            $($.fn.dataTable.tables()).DataTable().ajax.reload(null, false);
+        }
+    });
+    @endif
 })(window, jQuery);
 </script>
