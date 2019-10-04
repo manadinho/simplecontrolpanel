@@ -45,5 +45,10 @@
         <a href="{{ route('admin.docs') }}"><i class="fal fa-fw fa-book mr-3"></i>Docs</a>
     </li>
     @endcan
+    @can('Read Seotools')
+        <li class="{{ preg_match('/admin.seotools.*/', request()->route()->getName())? 'active':'' }}">
+            <a href="{{ route('admin.seotools') }}"><i class="fab fa-fw fa-searchengin mr-3"></i>Seotools</a>
+        </li>
+    @endcan
 </ul>
 {{-- End Administrative Group --}}

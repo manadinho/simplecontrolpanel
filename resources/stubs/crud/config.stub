@@ -5,6 +5,8 @@ return [
     // menu icon (fontawesome class)
     'icon' => 'fa-link',
 
+    'need_seo' => true,
+
     // model attributes
     'attributes' => [
 

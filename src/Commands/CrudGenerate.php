@@ -64,7 +64,7 @@ class CrudGenerate extends Command
             '{model_class}' => $model_class = $this->argument('model'),
             '{model_string}' => $model_string = trim(preg_replace('/(?!^)[A-Z]{2,}(?=[A-Z][a-z])|[A-Z][a-z]/', ' $0', $model_class)),
             '{model_strings}' => $model_strings = str_plural($model_string),
-            '{model_variable}' => strtolower(str_replace(' ', '_', $model_string)),
+            '{model_variable}' => $model_variable = strtolower(str_replace(' ', '_', $model_string)),
             '{model_variables}' => strtolower(str_replace(' ', '_', $model_strings)),
             '{model_primary_attribute}' => 'id',
             '{model_icon}' => isset($this->config['icon']) ? $this->config['icon'] : 'fa-link',
@@ -173,7 +173,7 @@ class CrudGenerate extends Command
             $read_stub = $this->files->get($this->lap['stubs'] . '/views/layouts/read.stub');
             $read_stub = str_replace('{attribute_label}', $attribute_label, $read_stub);
             
-            $read_stub = str_replace('{attribute_value}', '{{ ' . (isset($values['casts']) && $values['casts'] == 'array'? "implode(', ', $attribute_value)" : $attribute_value) . ' }}', $read_stub);
+            $read_stub = str_replace('{attribute_value}', '{{ ' . (isset($values['casts']) && $values['casts'] == 'array'? "is_array($attribute_value)? implode(', ', $attribute_value):''" : $attribute_value) . ' }}', $read_stub);
             
             $read_attributes[] = $read_stub . PHP_EOL;
 
@@ -237,6 +237,9 @@ class CrudGenerate extends Command
         }
         else {
             $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/text.stub');
+            if (isset($input['tags']) && $input['tags']) {
+                $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/tags.stub');
+            }
             $replaces['{input_type}'] = $input['type'];
             $replaces['{input_name}'] = $attribute;
             $replaces['{input_id}'] = $attribute;
@@ -406,7 +409,7 @@ class CrudGenerate extends Command
     public function createMigrationFile()
     {
         // create migration file
-        $migrations_file = $this->lap['migrations'] . '/' . '0000_00_00_000000_create_' . $this->replaces['{model_variable}'] . '_table.php';
+        $migrations_file = $this->lap['migrations'] . '/' . date('Y_00_00_000000') .'_create_' . $this->replaces['{model_variable}'] . '_table.php';
         if ($this->prompt($migrations_file)) {
             $migrations_stub = $this->files->get($this->lap['stubs'] . '/migrations.stub');
             $this->files->put($migrations_file, $this->replace($migrations_stub));
@@ -455,7 +458,7 @@ class CrudGenerate extends Command
         if ($this->prompt($route_file)) {
             $routes_stub = $this->files->get($this->lap['stubs'] . '/routes.stub');
             $this->files->put($route_file, $this->replace($routes_stub));
-            $this->line('Menu item file created: <info>' . $route_file . '</info>');
+            $this->line('Route file created: <info>' . $route_file . '</info>');
             
             $routes = $this->files->get($this->lap['routes']);
             $route_content = PHP_EOL . "include_once(resource_path('../{$route_file}'));";

@@ -5,6 +5,7 @@ namespace {controller_namespace};
 use {model_namespace}\{model_class};
 use App\Http\Controllers\Controller;
 use Yajra\DataTables\Html\Builder;
+use Artesaos\SEOTools\Facades\SEOTools;
 
 class {model_class}Controller extends Controller
 {
@@ -38,7 +39,10 @@ class {model_class}Controller extends Controller
                 ->setRowAttr(['data-id' => '{{ $id }}', 'data-seq' => '{{ $seq }}'])
                 ->setRowClass('sortable_row')
                 ->editColumn('actions', function (${model_variable}) {
-                    return view('{view_prefix_name}{model_variables}.datatable.actions', compact('{model_variable}'));
+                    $seotool = app(config('lap.models.seotool'))
+                        ->query()->where('model','{model_namespace}\{model_class}')
+                        ->where('model_id',${model_variable}->id)->first();
+                    return view('{view_prefix_name}{model_variables}.datatable.actions', compact('{model_variable}','seotool'));
                 })
                 ->rawColumns(['actions','seq'])
                 ->filter(function ($query) use(${model_variables}) {
@@ -96,6 +100,7 @@ class {model_class}Controller extends Controller
 
     public function read({model_class} ${model_variable})
     {
+        $this->initSeo('{model_namespace}\{model_class}', ${model_variable}->id);
         return view('{view_prefix_name}{model_variables}.read', compact('{model_variable}'));
     }
 
@@ -142,6 +147,7 @@ class {model_class}Controller extends Controller
             return redirect()->route('admin.{model_variables}');
         }
     }
+
     public function reorder()
     {
         $ids = collect(request()->get('ids'))->pluck('id');

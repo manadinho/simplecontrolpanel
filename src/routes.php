@@ -75,6 +75,15 @@ Route::group(['middleware' => 'web','prefix' => config('lap.route_prefix','admin
     Route::get('permissions/update/{permission}', config('lap.controllers.permission') . '@updateForm')->name('admin.permissions.update');
     Route::patch('permissions/update/{permission}', config('lap.controllers.permission') . '@update');
     Route::delete('permissions/delete/{permission}', config('lap.controllers.permission') . '@delete')->name('admin.permissions.delete');
+
+    // seotools
+    Route::get('seotools', config('lap.controllers.seotool') . '@index')->name('admin.seotools');
+    Route::get('seotools/create/{model_id}/{model_name}', config('lap.controllers.seotool') . '@createForm')->name('admin.seotools.create');
+    Route::post('seotools/create/{model_id}/{model_name}', config('lap.controllers.seotool') . '@create');
+    Route::get('seotools/read/{seotool}', config('lap.controllers.seotool') . '@read')->name('admin.seotools.read');
+    Route::get('seotools/update/{seotool}', config('lap.controllers.seotool') . '@updateForm')->name('admin.seotools.update');
+    Route::patch('seotools/update/{seotool}', config('lap.controllers.seotool') . '@update');
+    Route::delete('seotools/delete/{seotool}', config('lap.controllers.seotool') . '@delete')->name('admin.seotools.delete');
 });
 
 Route::get('docs/{id?}/{slug?}', config('lap.controllers.doc') . '@frontend')->name('docs');

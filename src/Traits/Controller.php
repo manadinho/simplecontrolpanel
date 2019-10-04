@@ -2,6 +2,12 @@
 
 namespace Wikichua\Simplecontrolpanel\Traits;
 
+use Artesaos\SEOTools\Facades\SEOTools;
+use Artesaos\SEOTools\Facades\SEOMeta;
+use Artesaos\SEOTools\Facades\OpenGraph;
+use Artesaos\SEOTools\Facades\TwitterCard;
+use Artesaos\SEOTools\Facades\JsonLd;
+
 trait Controller
 {
     protected function filter($filter, $object)
@@ -38,5 +44,58 @@ trait Controller
                 $sheet->fromArray($array);
             });
         })->download('xls');
+    }
+    protected function initSeo($model_name,$model_id)
+    {
+        $seotool = app(config('lap.models.seotool'))
+                    ->query()->where('model',$model_name)
+                    ->where('model_id',$model_id)->first();
+        $model = app($model_name)->find($model_id);
+        SEOMeta::setTitle($seotool->title);
+        SEOMeta::setDescription($seotool->description);
+        SEOMeta::addMeta($seotool->jsonld_type.':published_time', (\Carbon\Carbon::parse($model->created_at))->toW3CString(), 'property');
+        SEOMeta::addMeta($seotool->jsonld_type.':modified_time', (\Carbon\Carbon::parse($model->created_at))->toW3CString(), 'property');
+        SEOMeta::addKeyword($seotool->keywords);
+        SEOMeta::setCanonical($seotool->canonical);
+        if (isset($model->tags) && is_array($model->tags)) {
+            foreach ($model->tags as $tag) {
+                SEOMeta::addMeta($seotool->jsonld_type.':tags', $tag, 'tag');
+            }
+        }
+        if (isset($seotool->metas) && is_array($seotool->metas)) {
+            foreach ($seotool->metas as $meta) {
+                SEOMeta::addMeta($seotool->jsonld_type.':metas', $meta, 'meta');
+            }
+        }
+
+        JsonLd::setTitle($seotool->jsonld_title);
+        JsonLd::setDescription($seotool->jsonld_description);
+        JsonLd::setType($seotool->jsonld_type);
+        foreach ($seotool->jsonld_images as $image) {
+            JsonLd::addImage(asset($image));
+        }
+
+        OpenGraph::setDescription($seotool->og_description);
+        OpenGraph::setTitle($seotool->og_title);
+        OpenGraph::setUrl('http://current.url.com');
+
+        OpenGraph::setTitle($seotool->og_title)
+        ->setDescription($seotool->og_description)
+        ->setType($seotool->jsonld_type)
+        ->setArticle($seotool->og_model);
+        if (count($seotool->og_properties)) {
+            foreach ($seotool->og_properties as $prop) {
+                OpenGraph::addProperty('Property',$prop);
+            }
+        }
+        if (count($seotool->og_images)) {
+            foreach ($seotool->og_images as $image) {
+                OpenGraph::addImage(asset($image));
+            }
+        }
+
+        TwitterCard::setTitle($seotool->twitter_title);
+        TwitterCard::setSite($seotool->twitter_site);
+
     }
 }

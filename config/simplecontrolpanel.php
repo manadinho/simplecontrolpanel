@@ -17,6 +17,7 @@ return [
         'permission' => 'Wikichua\Simplecontrolpanel\Controllers\PermissionController',
         'setting' => 'Wikichua\Simplecontrolpanel\Controllers\SettingController',
         'user' => 'Wikichua\Simplecontrolpanel\Controllers\UserController',
+        'seotool' => 'Wikichua\Simplecontrolpanel\Controllers\SeotoolController',
     ],
 
     // models used by package
@@ -27,6 +28,7 @@ return [
         'role' => 'Wikichua\Simplecontrolpanel\Models\Role',
         'setting' => 'Wikichua\Simplecontrolpanel\Models\Setting',
         'user' => 'Wikichua\Simplecontrolpanel\Models\User',
+        'seotool' => 'Wikichua\Simplecontrolpanel\Models\Seotool',
     ],
 
     'crud_paths' => [
