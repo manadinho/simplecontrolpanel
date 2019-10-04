@@ -1,14 +1,5 @@
 <div class="text-right text-nowrap">
-    <a href="{{ route('{view_prefix_name}{model_variables}.read', ${model_variable}->id) }}" class="btn btn-link text-secondary p-1" title="Read"><i class="fal fa-lg fa-eye"></i></a>
-    @if ($seotool)
-        @can('Update Seotools')
-    <a href="{{ route('admin.seotools.update', $seotool->id) }}" class="btn btn-link text-secondary p-1" title="Update"><i class="fab fa-lg fa-searchengin"></i></a>
-        @endcan
-    @else
-        @can('Create Seotools')
-    <a href="{{ route('admin.seotools.create', [${model_variable}->id,urlencode('{model_namespace}\{model_class}')]) }}" class="btn btn-link text-secondary p-1" title="Create"><i class="fab fa-lg fa-searchengin"></i></a>
-        @endcan
-    @endif
+    {seo_action}
     @can('Update {model_strings}')
         <a href="{{ route('{view_prefix_name}{model_variables}.update', ${model_variable}->id) }}" class="btn btn-link text-secondary p-1" title="Update"><i class="fal fa-lg fa-edit"></i></a>
     @endcan

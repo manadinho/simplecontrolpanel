@@ -56,20 +56,23 @@ class CrudGenerate extends Command
 
     public function setSimpleReplaces()
     {
+
         // set simple replacement searches for stubs
         $this->replaces = [
             '{controller_namespace}' => $controller_namespace = ucfirst(str_replace('/', '\\', $this->lap['controller'])),
             '{controller_route}' => ltrim(str_replace('App\\Http\\Controllers', '', $controller_namespace) . '\\', '\\'),
-            '{model_namespace}' => ucfirst(str_replace('/', '\\', $this->lap['model'])),
+            '{model_namespace}' => $model_namespace = ucfirst(str_replace('/', '\\', $this->lap['model'])),
             '{model_class}' => $model_class = $this->argument('model'),
             '{model_string}' => $model_string = trim(preg_replace('/(?!^)[A-Z]{2,}(?=[A-Z][a-z])|[A-Z][a-z]/', ' $0', $model_class)),
             '{model_strings}' => $model_strings = str_plural($model_string),
             '{model_variable}' => $model_variable = strtolower(str_replace(' ', '_', $model_string)),
-            '{model_variables}' => strtolower(str_replace(' ', '_', $model_strings)),
+            '{model_variables}' => $model_variables = strtolower(str_replace(' ', '_', $model_strings)),
             '{model_primary_attribute}' => 'id',
             '{model_icon}' => isset($this->config['icon']) ? $this->config['icon'] : 'fa-link',
             '{view_prefix_url}' => $view_prefix_url = ltrim(str_replace('resources/views', '', $this->lap['views']) . '/', '/'),
-            '{view_prefix_name}' => str_replace('/', '.', $view_prefix_url),
+            '{view_prefix_name}' => $view_prefix_name = str_replace('/', '.', $view_prefix_url),
+            '{seo_action}' => isset($this->config['need_seo']) && $this->config['need_seo'] ? "@include('{$view_prefix_name}{$model_variables}.datatable.seo_action')" : '',
+            '{seo_init}' => isset($this->config['need_seo']) && $this->config['need_seo'] ? '$this->initSeo(\''.$model_namespace.'\\'.$model_class.'\', $'.$model_variable.'->id);' : '',
         ];
     }
 
@@ -246,6 +249,9 @@ class CrudGenerate extends Command
             $replaces['{input_class}'] = isset($input['class']) && $input['class'] != ''? ' '.$input['class']:'';
             $model_preinput = '$' . $this->replaces['{model_variable}'] . '->' . $attribute;
             $replaces['{input_value}'] = $method == 'update' ? ' value="{{ ' . $model_preinput . ' }}"' : '';
+            if (isset($input['tags']) && $input['tags']) {
+                $replaces['{input_value}'] = $method == 'update' ? ' value="{{ implode(\',\',' . $model_preinput . ') }}"' : '';
+            }
         }
 
         $stub = str_replace(array_keys($this->replaces), $this->replaces, str_replace(array_keys($replaces), $replaces, $stub));

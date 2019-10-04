@@ -47,7 +47,7 @@
                 <div class="form-group row mb-0">
                     <label for="metas" class="col-md-2 col-form-label">Metas</label>
                     <div class="col-md-8">
-                        <input type="text" name="metas[]" id="metas" class="form-control" value="{{ $seotool->metas }}" autocomplete="false" multiple data-role="tagsinput">
+                        <input type="text" name="metas[]" id="metas" class="form-control" value="{{ implode(',', $seotool->metas) }}" autocomplete="false" multiple data-role="tagsinput">
                     </div>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                 <div class="form-group row mb-0">
                     <label for="keywords" class="col-md-2 col-form-label">Keywords</label>
                     <div class="col-md-8">
-                        <input type="text" name="keywords[]" id="keywords" class="form-control" value="{{ $seotool->keywords }}" autocomplete="false" multiple data-role="tagsinput">
+                        <input type="text" name="keywords[]" id="keywords" class="form-control" value="{{ implode(',', $seotool->keywords) }}" autocomplete="false" multiple data-role="tagsinput">
                     </div>
                 </div>
             </div>
@@ -92,7 +92,7 @@
                 <div class="form-group row mb-0">
                     <label for="og_properties" class="col-md-2 col-form-label">Og Properties</label>
                     <div class="col-md-8">
-                        <input type="text" name="og_properties[]" id="og_properties" class="form-control" value="{{ $seotool->og_properties }}" autocomplete="false" multiple data-role="tagsinput">
+                        <input type="text" name="og_properties[]" id="og_properties" class="form-control" value="{{ implode(',', $seotool->og_properties) }}" autocomplete="false" multiple data-role="tagsinput">
                     </div>
                 </div>
             </div>
