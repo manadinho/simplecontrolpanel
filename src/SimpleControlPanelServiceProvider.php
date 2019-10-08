@@ -19,7 +19,7 @@ class SimpleControlPanelServiceProvider extends ServiceProvider
     public function boot()
     {
         // alias middleware
-        $this->app['router']->prependMiddlewareToGroup('web', 'Wikichua\Simplecontrolpanel\Middleware\RestrictDemo');
+        // $this->app['router']->prependMiddlewareToGroup('web', 'Wikichua\Simplecontrolpanel\Middleware\RestrictDemo');
         $this->app['router']->aliasMiddleware('auth_admin', 'Wikichua\Simplecontrolpanel\Middleware\AuthAdmin');
         $this->app['router']->aliasMiddleware('guest_admin', 'Wikichua\Simplecontrolpanel\Middleware\GuestAdmin');
         $this->app['router']->aliasMiddleware('intend_url', 'Wikichua\Simplecontrolpanel\Middleware\IntendUrl');
@@ -76,8 +76,8 @@ class SimpleControlPanelServiceProvider extends ServiceProvider
         $this->publishes([__DIR__ . '/../public' => public_path('lap')], 'lap.install');
         $this->publishes([__DIR__ . '/../resources/views' => resource_path('views/vendor/lap')], 'lap.install');
 
-        $this->publishes([__DIR__ . '/../database/migrations' => database_path('migrations')], 'lap.install.advanced');
-        $this->publishes([__DIR__ . '/../resources/stubs/crud/default' => resource_path('stubs/crud/default')], 'lap.install.advanced');
+        $this->publishes([__DIR__ . '/../database/migrations' => database_path('migrations')], 'lap.install.migrations');
+        $this->publishes([__DIR__ . '/../resources/stubs/crud/default' => resource_path('stubs/crud/default')], 'lap.install.stubs');
 
         // Registering package commands.
         $this->commands([
