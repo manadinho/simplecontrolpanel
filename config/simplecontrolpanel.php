@@ -18,6 +18,7 @@ return [
         'setting' => 'Wikichua\Simplecontrolpanel\Controllers\SettingController',
         'user' => 'Wikichua\Simplecontrolpanel\Controllers\UserController',
         'seotool' => 'Wikichua\Simplecontrolpanel\Controllers\SeotoolController',
+        'api' => 'Wikichua\Simplecontrolpanel\Controllers\ApiController',
     ],
 
     // models used by package

@@ -390,3 +390,36 @@ Sample:
                 
             ]
         ],
+
+## Optional steps; This is for my own usage.
+
+### exception
+
+In case using API, just add this into Exceptions/Handler.php,
+
+    public function render($request, Exception $exception)
+    {
+        if ($request->route() && $request->route()->getPrefix() == 'api') {
+            if ($exception) {
+                return response($exception, 400);
+            }
+            return response()->json(['status' => 'failed', 'error' => 'Intruder detected!']);
+        }
+        return parent::render($request, $exception);
+    }
+
+### always https
+
+Add this into boot method in Providers/AppServiceProvider.php
+
+    if (env('APP_ENV') == 'production') {
+        \URL::forceScheme('https');
+    }
+
+### extend ApiController.php
+
+This is optional. Bootstrapped for my own usage.
+
+    YourAPIControllerName extends \Wikichua\Simplecontrolpanel\Controllers\ApiController {
+
+    }
