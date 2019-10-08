@@ -14,14 +14,14 @@
     "keywords": ["Laravel", "SimpleControlPanel"],
     "require": {
         "erusev/parsedown": "^1.7",
-        "yajra/laravel-datatables-html": "^4.19",
         "yajra/laravel-datatables-oracle": "^9.6",
         "maatwebsite/excel": "^3.1",
         "tightenco/ziggy": "^0.8.0",
         "kalnoy/nestedset": "^5.0",
         "justbetter/laravel-pagination-with-havings": "^1.2",
         "laravel/helpers": "^1.1",
-        "artesaos/seotools": "^0.16.0"
+        "artesaos/seotools": "^0.16.0",
+        "yajra/laravel-datatables": "^1.5"
     },
     "require-dev": {
         "phpunit/phpunit": "~7.0",
