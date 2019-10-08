@@ -18,11 +18,23 @@
     @if (isset($export_url) && $export_url != '')
     $(document).on('click', '#exportBtn', function(event) {
         event.preventDefault();
-        let data = {};
-        $('.filterInput').each(function(index) {
-            data[$(this).attr('name')] = $(this).val();
+        var recordsDisplay = window.LaravelDataTables["{{ $dtid }}"].page.info().recordsDisplay;
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You may exporting a " + recordsDisplay + " records. Please try to minimize your query to prevent connection time out.",
+            type: "warning",
+            focusConfirm: false,
+            showConfirmButton: true,
+            showCancelButton: true
+        }).then((result) => {
+            if (result.value) {
+                let data = {};
+                $('.filterInput').each(function(index) {
+                    data[$(this).attr('name')] = $(this).val();
+                });
+                window.open('{{ $export_url }}' + '?filter='+ JSON.stringify(data),'_export');
+            }
         });
-        window.open('{{ $export_url }}' + '?filter='+ JSON.stringify(data),'_export');
         window.LaravelDataTables['{{ $dtid }}'].draw();
         $('#filterModalCenter').modal('hide');
     });

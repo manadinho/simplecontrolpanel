@@ -37,15 +37,10 @@ trait Controller
         }
         return $object;
     }
-    protected function exporting(Array $array,$filename = '')
+    protected function exporting($data,$filename = '')
     {
         $filename = $filename == ''? time():$filename;
-        return (new FastExcel(collect($array)))->download($filename.'.xlsx');
-        // return \Excel::create($filename, function($excel) use($array, $filename) {
-        //     $excel->sheet($filename, function($sheet)  use($array) {
-        //         $sheet->fromArray($array);
-        //     });
-        // })->download('xls');
+        return (new FastExcel($data))->download($filename.'.xls');
     }
     protected function initSeo($model_name,$model_id)
     {
