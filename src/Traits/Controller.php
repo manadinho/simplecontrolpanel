@@ -7,6 +7,7 @@ use Artesaos\SEOTools\Facades\SEOMeta;
 use Artesaos\SEOTools\Facades\OpenGraph;
 use Artesaos\SEOTools\Facades\TwitterCard;
 use Artesaos\SEOTools\Facades\JsonLd;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 trait Controller
 {
@@ -39,11 +40,12 @@ trait Controller
     protected function exporting(Array $array,$filename = '')
     {
         $filename = $filename == ''? time():$filename;
-        return \Excel::create($filename, function($excel) use($array, $filename) {
-            $excel->sheet($filename, function($sheet)  use($array) {
-                $sheet->fromArray($array);
-            });
-        })->download('xls');
+        return (new FastExcel(collect($array)))->download($filename.'.xlsx');
+        // return \Excel::create($filename, function($excel) use($array, $filename) {
+        //     $excel->sheet($filename, function($sheet)  use($array) {
+        //         $sheet->fromArray($array);
+        //     });
+        // })->download('xls');
     }
     protected function initSeo($model_name,$model_id)
     {
