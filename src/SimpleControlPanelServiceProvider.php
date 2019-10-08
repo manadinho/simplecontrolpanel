@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Filesystem\Filesystem;
 
 class SimpleControlPanelServiceProvider extends ServiceProvider
 {
@@ -71,10 +72,21 @@ class SimpleControlPanelServiceProvider extends ServiceProvider
     protected function bootForConsole()
     {
         // Publishing the configuration file.
-        $this->publishes([__DIR__.'/../config/simplecontrolpanel.php' => config_path('lap.php')], 'lap.install');
-        $this->publishes([__DIR__.'/../config/seotools.php' => config_path('seotools.php')], 'lap.install');
-        $this->publishes([__DIR__ . '/../public' => public_path('lap')], 'lap.install');
-        $this->publishes([__DIR__ . '/../resources/views' => resource_path('views/vendor/lap')], 'lap.install');
+        $this->publishes([__DIR__.'/../config/simplecontrolpanel.php' => config_path('lap.php')], 'lap.install.config');
+        $this->publishes([__DIR__.'/../config/seotools.php' => config_path('seotools.php')], 'lap.install.config');
+        $this->publishes([__DIR__ . '/../public' => public_path('lap')], 'lap.install.public');
+        $this->publishes([__DIR__ . '/../resources/views' => resource_path('views/vendor/lap')], 'lap.install.view');
+        
+        $files = new Filesystem;
+        if (!$files->exists(config('lap.crud_paths.route'))) {
+            $files->makeDirectory(config('lap.crud_paths.route'), 0755, true);
+        }
+        $this->publishes([__DIR__ . '/routes.php' => resource_path('../'.config('lap.crud_paths.route').'/routes.php')], 'lap.install.route');
+        $routes = $files->get(config('lap.crud_paths.routes'));
+        $route_content = PHP_EOL . "include_once(resource_path('../".config('lap.crud_paths.route')."/routes.php'));";
+        if (strpos($routes, $route_content) === false) {
+            $files->append(config('lap.crud_paths.routes'), $route_content);
+        }
 
         $this->publishes([__DIR__ . '/../database/migrations' => database_path('migrations')], 'lap.install.migrations');
         $this->publishes([__DIR__ . '/../resources/stubs/crud/default' => resource_path('stubs/crud/default')], 'lap.install.stubs');
