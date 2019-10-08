@@ -35,7 +35,7 @@ Require via composer:
 
 Publish install files:
 
-    php artisan vendor:publish --tag="lap.install"
+    php artisan vendor:publish --tag="lap.install.config,lap.install.public,lap.install.view,lap.install.route"
 
 Add the `AdminUser`, `DynamicFillable`, and `UserTimezone` traits to your `User` model:
 
