@@ -439,3 +439,9 @@ This is optional. Bootstrapped for my own usage.
             'api.register'
         ];
     }
+
+and your api.php route
+
+    Route::middleware('auth:api')->group(function() {
+        Route::any('/', 'ApiController@index')->name('api.verify');
+    }
