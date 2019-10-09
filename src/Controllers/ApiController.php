@@ -15,10 +15,10 @@ class ApiController extends Controller
 	];
 	public function __construct()
 	{
-		$this->middleware(['api_logger']);
+		$this->middleware('api_logger');
 		if (!in_array(request()->route()->getName(), $this->noNeedAuthorization)) {
 			$api_token = explode(' ', request()->header('authorization'))[1];
-			$this->user = app(config('auth.providers.users.model'))->query()->with('merchant_bookmarks','merchant_ratings','merchant_shares')->where('api_token',$api_token)->first();
+			$this->user = app(config('auth.providers.users.model'))->query()->where('api_token',$api_token)->first();
 		}
 	}
 	public function register(Request $request)
