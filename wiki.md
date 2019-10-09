@@ -6,7 +6,15 @@ Require via composer:
 
 Publish install files:
 
-    php artisan vendor:publish --tag="lap.install"
+    php artisan vendor:publish --tag=lap.install.config
+    php artisan vendor:publish --tag=lap.install.public
+    php artisan vendor:publish --tag=lap.install.view
+    php artisan vendor:publish --tag=lap.install.route
+
+Publish advanced files:
+
+    php artisan vendor:publish --tag=lap.install.migrations
+    php artisan vendor:publish --tag=lap.install.stubs
 
 Add the `AdminUser`, `DynamicFillable`, and `UserTimezone` traits to your `User` model:
 

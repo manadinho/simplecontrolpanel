@@ -82,10 +82,12 @@ class SimpleControlPanelServiceProvider extends ServiceProvider
             $files->makeDirectory(config('lap.crud_paths.route'), 0755, true);
         }
         $this->publishes([__DIR__ . '/routes.php' => resource_path('../'.config('lap.crud_paths.route').'/routes.php')], 'lap.install.route');
-        $routes = $files->get(config('lap.crud_paths.routes'));
-        $route_content = PHP_EOL . "include_once(resource_path('../".config('lap.crud_paths.route')."/routes.php'));";
-        if (strpos($routes, $route_content) === false) {
-            $files->append(config('lap.crud_paths.routes'), $route_content);
+        if (file_exists(resource_path('../'.config('lap.crud_paths.route').'/routes.php'))) {
+            $routes = $files->get(config('lap.crud_paths.routes'));
+            $route_content = PHP_EOL . "include_once(resource_path('../".config('lap.crud_paths.route')."/routes.php'));";
+            if (strpos($routes, $route_content) === false) {
+                $files->append(config('lap.crud_paths.routes'), $route_content);
+            }
         }
 
         $this->publishes([__DIR__ . '/../database/migrations' => database_path('migrations')], 'lap.install.migrations');

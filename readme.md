@@ -31,11 +31,19 @@ Assets used:
 
 Require via composer:
 
-    composer require wikichua/simplecontrolpanel ^2.1
+    composer require wikichua/simplecontrolpanel ^3.0.0
 
 Publish install files:
 
-    php artisan vendor:publish --tag="lap.install.config,lap.install.public,lap.install.view,lap.install.route"
+    php artisan vendor:publish --tag=lap.install.config
+    php artisan vendor:publish --tag=lap.install.public
+    php artisan vendor:publish --tag=lap.install.view
+    php artisan vendor:publish --tag=lap.install.route
+
+Publish advanced files:
+
+    php artisan vendor:publish --tag=lap.install.migrations
+    php artisan vendor:publish --tag=lap.install.stubs
 
 Add the `AdminUser`, `DynamicFillable`, and `UserTimezone` traits to your `User` model:
 
