@@ -20,7 +20,6 @@ class SimpleControlPanelServiceProvider extends ServiceProvider
     public function boot()
     {
         // alias middleware
-        // $this->app['router']->prependMiddlewareToGroup('web', 'Wikichua\Simplecontrolpanel\Middleware\RestrictDemo');
         $this->app['router']->aliasMiddleware('auth_admin', 'Wikichua\Simplecontrolpanel\Middleware\AuthAdmin');
         $this->app['router']->aliasMiddleware('guest_admin', 'Wikichua\Simplecontrolpanel\Middleware\GuestAdmin');
         $this->app['router']->aliasMiddleware('intend_url', 'Wikichua\Simplecontrolpanel\Middleware\IntendUrl');
