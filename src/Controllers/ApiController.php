@@ -10,11 +10,8 @@ class ApiController extends Controller
 {
 	public function __construct()
 	{
-		\Storage::append('api/requests'.date('Y-m').'.log', json_encode([date('Y-m-d H:i:s') => request()->all()]));
-		if (!in_array(request()->route()->getName(), ['api.auth'])) {
-			$api_token = explode(' ', request()->header('authorization'))[1];
-			$this->user = app(config('auth.providers.users.model'))->query()->where('api_token',$api_token)->first();
-		}
+		$this->middleware(['api_logger']);
+		$this->middleware(['api_constructor'])->except(['auth']);
 	}
     public function auth(Request $request)
 	{
