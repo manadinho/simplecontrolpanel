@@ -433,5 +433,9 @@ Add this into boot method in Providers/AppServiceProvider.php
 This is optional. Bootstrapped for my own usage.
 
     YourAPIControllerName extends \Wikichua\Simplecontrolpanel\Controllers\ApiController {
-
+        // api route name
+        public $noNeedAuthorization = [
+            'api.auth',
+            'api.register'
+        ];
     }
