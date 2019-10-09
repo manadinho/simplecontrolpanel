@@ -44,4 +44,13 @@ return [
         'routes' => 'routes/web.php',
     ],
 
+    'modules' => [
+        'Admin Panel',
+        'Roles',
+        'Users',
+        'Activity Logs',
+        'Docs',
+        'Settings',
+    ],
+
 ];

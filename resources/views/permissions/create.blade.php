@@ -21,7 +21,7 @@
                     <div class="col-md-8">
                         <select name="group" id="group" class="selectpicker form-control" data-style="border bg-white" data-live-search="true">
                         <option value="0">Please Select</option>
-                            @foreach (config('module.groups') as $group)
+                            @foreach (config('lap.modules') as $group)
                             <option value="{{ $group }}">{{ $group }}</option>
                             @endforeach
                         </select>
