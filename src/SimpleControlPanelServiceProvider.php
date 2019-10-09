@@ -75,7 +75,12 @@ class SimpleControlPanelServiceProvider extends ServiceProvider
         $this->publishes([__DIR__.'/../config/simplecontrolpanel.php' => config_path('lap.php')], 'lap.install.config');
         $this->publishes([__DIR__.'/../config/seotools.php' => config_path('seotools.php')], 'lap.install.config');
         $this->publishes([__DIR__ . '/../public' => public_path('lap')], 'lap.install.public');
-        $this->publishes([__DIR__ . '/../resources/views' => resource_path('views/vendor/lap')], 'lap.install.view');
+        $this->publishes([__DIR__ . '/../resources/views' => resource_path('views/vendor/lap')], 'lap.install.view.all');
+
+        $this->publishes([__DIR__ . '/../resources/views/layouts' => resource_path('views/vendor/lap/layouts')], 'lap.install.view.general');
+        $this->publishes([__DIR__ . '/../resources/views/auth' => resource_path('views/vendor/lap/auth')], 'lap.install.view.general');
+        $this->publishes([__DIR__ . '/../resources/views/backend' => resource_path('views/vendor/lap/backend')], 'lap.install.view.general');
+        $this->publishes([__DIR__ . '/../resources/views/users' => resource_path('views/vendor/lap/users')], 'lap.install.view.general');
         
         $files = new Filesystem;
         if (!$files->exists(config('lap.crud_paths.route'))) {
