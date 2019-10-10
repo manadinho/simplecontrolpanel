@@ -428,10 +428,12 @@ class CrudGenerate extends Command
         // create view files
         $view_path = $this->lap['views'] . '/' . $this->replaces['{model_variables}'];
         foreach ($this->files->allFiles($this->lap['stubs'] . '/views/models') as $file) {
-            $new_file = $view_path . '/' . ltrim($file->getRelativePath() . '/' . str_replace('.stub', '.blade.php', $file->getFilename()), '/');
-            if ($this->prompt($new_file)) {
-                $this->files->put($new_file, $this->replace($file->getContents()));
-                $this->line('View files created: <info>' . $new_file . '</info>');
+            if ($file->getFilename() != 'widget.stub') {
+                $new_file = $view_path . '/' . ltrim($file->getRelativePath() . '/' . str_replace('.stub', '.blade.php', $file->getFilename()), '/');
+                if ($this->prompt($new_file)) {
+                    $this->files->put($new_file, $this->replace($file->getContents()));
+                    $this->line('View files created: <info>' . $new_file . '</info>');
+                }
             }
         }
     }

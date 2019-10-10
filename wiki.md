@@ -74,6 +74,27 @@ The default admin login is:
 
 ### CRUD Configuration manual
 
+### Console
+
+Create Config file 
+    
+    $ php artisan crud:config <Model>
+
+This create a config file in your directory. Make sure you adjust accordingly by referring to Attributes section below.
+
+Generate files 
+
+    $ php artisan crud:generate <Model>
+
+Generate all files, but you will need to do migration yourself
+
+Generate Widget file
+
+    $ php artisan crud:widget <Model> 
+
+Yes, I added small feature on this. Basically generate widget files. You may just call @widget('<Model>')
+The widget view located in your crud directory. You may adjust it yourself accordingly, to charts, table or maybe menu?
+
 #### Icon
 
 This is simply the FontAwesome 5 icon class to use for the menu item e.g. fa-cogs.

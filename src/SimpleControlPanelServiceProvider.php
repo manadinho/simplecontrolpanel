@@ -52,6 +52,7 @@ class SimpleControlPanelServiceProvider extends ServiceProvider
         $this->app->singleton('simplecontrolpanel', function ($app) {
             return new SimpleControlPanel;
         });
+        $this->app->register(\Wikichua\Simplecontrolpanel\WidgetServiceProvider::class);
     }
 
     /**

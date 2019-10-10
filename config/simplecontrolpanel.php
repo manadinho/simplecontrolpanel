@@ -2,6 +2,8 @@
 
 return [
     'route_prefix' => 'admin',
+    'widgets_namespace' => '\App\Widgets',
+    'widgets_path' => 'app/Widgets',
     'controllers' => [
         'auth' => [
             'change_password' => '\Wikichua\Simplecontrolpanel\Controllers\Auth\ChangePasswordController',

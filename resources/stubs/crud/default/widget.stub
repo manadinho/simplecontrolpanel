@@ -1,0 +1,17 @@
+<?php
+
+namespace {widgets_namespace};
+
+use {model_namespace}\{model_class};
+
+class {model_class}Widget
+{
+    function __construct()
+    {
+        
+    }
+    public function handle()
+    {
+        return view('{view_prefix_name}{model_variables}.widget')->render();
+    }
+}

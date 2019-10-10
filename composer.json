@@ -46,10 +46,12 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Wikichua\\Simplecontrolpanel\\SimpleControlPanelServiceProvider"
+                "Wikichua\\Simplecontrolpanel\\SimpleControlPanelServiceProvider",
+                "Wikichua\\Simplecontrolpanel\\WidgetServiceProvider"
             ],
             "aliases": {
-                "SimpleControlPanel": "Wikichua\\Simplecontrolpanel\\Facades\\SimpleControlPanel"
+                "SimpleControlPanel": "Wikichua\\Simplecontrolpanel\\Facades\\SimpleControlPanel",
+                "Widget": "Wikichua\\Simplecontrolpanel\\Facades\\Widget"
             }
         }
     }
