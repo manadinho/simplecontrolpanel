@@ -19,7 +19,6 @@ Packages used:
 - [Laravel Datatables](https://github.com/yajra/laravel-datatables)
 - [Laravel Nestedset](https://github.com/lazychaser/laravel-nestedset)
 - [Parsedown](http://parsedown.org/)
-- [Laravel Charts](https://github.com/LaravelDaily/laravel-charts)
 - [SEOTools](https://github.com/artesaos/seotools)
 - [Fast Excel](https://github.com/rap2hpoutre/fast-excel)
 
