@@ -38,7 +38,10 @@ class WidgetServiceProvider extends ServiceProvider
         $this->app->singleton('widget', function ($app) {
             return new Widget;
         });
-        AliasLoader::getInstance(['Widget' => '\Wikichua\Simplecontrolpanel\Widget']);
+        AliasLoader::getInstance([
+            'Widget' => '\Wikichua\Simplecontrolpanel\Widget',
+            'Lava' => '\Khill\Lavacharts\Laravel\LavachartsFacade'
+        ]);
     }
 
     /**

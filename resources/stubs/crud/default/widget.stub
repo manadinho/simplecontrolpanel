@@ -3,15 +3,25 @@
 namespace {widgets_namespace};
 
 use {model_namespace}\{model_class};
+use LaravelDaily\LaravelCharts\Classes\LaravelChart;
 
-class {model_class}Widget
+class {model_class}Widget extends LaravelChart
 {
-    function __construct()
+    public function __construct()
     {
-        
+    	$chart_options = [
+		    'chart_title' => '{model_strings} by months',
+		    'report_type' => 'group_by_date',
+		    'model' => '{model_namespace}\{model_class}',
+		    'group_by_field' => 'created_at',
+		    'group_by_period' => 'month',
+		    'chart_type' => 'bar',
+		];
+    	parent::__construct($chart_options);
     }
     public function handle()
     {
-        return view('{view_prefix_name}{model_variables}.widget')->render();
+		$chart = $this;
+        return view('{view_prefix_name}{model_variables}.widget',compact('chart'));
     }
 }

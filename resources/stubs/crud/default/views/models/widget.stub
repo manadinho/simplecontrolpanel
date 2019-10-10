@@ -1,10 +1,10 @@
-<strong>This is your widget render view.</strong>
+{!! $chart->renderHtml() !!}
 
-
+@push('styles')
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css">
+@endpush
 @push('scripts')
-<script type="text/javascript">
-$(document).ready(function() {
-	
-});
-</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" charset="utf-8"></script>
+{!! $chart->renderJs() !!}
 @endpush

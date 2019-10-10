@@ -53,6 +53,7 @@ class SimpleControlPanelServiceProvider extends ServiceProvider
             return new SimpleControlPanel;
         });
         $this->app->register(\Wikichua\Simplecontrolpanel\WidgetServiceProvider::class);
+        // $this->app->register(\Khill\Lavacharts\Laravel\LavachartsFacade::class);
     }
 
     /**

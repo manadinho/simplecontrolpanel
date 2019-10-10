@@ -92,8 +92,10 @@ Generate Widget file
 
     $ php artisan crud:widget <Model> 
 
-Yes, I added small feature on this. Basically generate widget files. You may just call @widget('<Model>')
+Yes, I added small feature on this. Basically generate widget files. You may just call @widget(<Model>)
 The widget view located in your crud directory. You may adjust it yourself accordingly, to charts, table or maybe menu?
+
+Integrated with https://github.com/LaravelDaily/laravel-charts in widget
 
 #### Icon
 
