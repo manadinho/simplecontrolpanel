@@ -17,8 +17,11 @@ class ApiController extends Controller
 	{
 		$this->middleware('api_logger');
 		if (!in_array(request()->route()->getName(), $this->noNeedAuthorization)) {
-			$api_token = explode(' ', request()->header('authorization'))[1];
-			$this->user = app(config('auth.providers.users.model'))->query()->where('api_token',$api_token)->first();
+			// $this->middleware('auth:api');
+			$api_token = @explode(' ', request()->header('authorization'))[1];
+			if ($api_token) {
+				$this->user = app(config('auth.providers.users.model'))->query()->where('api_token',$api_token)->first();
+			}
 		}
 	}
 	public function register(Request $request)

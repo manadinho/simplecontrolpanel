@@ -438,13 +438,12 @@ In case using API, just add this into Exceptions/Handler.php,
     {
         if ($request->route() && $request->route()->getPrefix() == 'api') {
             if ($exception) {
-                return response($exception, 400);
+                if ($exception->getCode()) {
+                    return $this->handleApiException($request, $exception);
+                }             
+                return response()->json(['status' => 'failed', 'error' => 'Exception Error', 'message' => $exception->getMessage()]);
             }
             return response()->json(['status' => 'failed', 'error' => 'Intruder detected!']);
-        }
-
-        if ($request->wantsJson()) {
-            return $this->handleApiException($request, $exception);
         }
         return parent::render($request, $exception);
     }

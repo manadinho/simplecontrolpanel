@@ -4,7 +4,7 @@ namespace Wikichua\Simplecontrolpanel\Traits;
 
 trait ApiException
 {
-    private function handleApiException($request, Exception $exception)
+    protected function handleApiException($request, Exception $exception)
     {
         $exception = $this->prepareException($exception);
         if ($exception instanceof \Illuminate\Http\Exception\HttpResponseException) {
@@ -18,7 +18,7 @@ trait ApiException
         }
         return $this->customApiResponse($exception);
     }
-    private function customApiResponse($exception)
+    protected function customApiResponse($exception)
     {
         if (method_exists($exception, 'getStatusCode')) {
             $statusCode = $exception->getStatusCode();
