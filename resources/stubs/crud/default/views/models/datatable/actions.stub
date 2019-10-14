@@ -1,5 +1,6 @@
 <div class="text-right text-nowrap">
     {seo_action}
+    <a href="{{ route('{view_prefix_name}{model_variables}.read', ${model_variable}->id) }}" class="btn btn-link text-secondary p-1" title="Read"><i class="fal fa-lg fa-eye"></i></a>
     @can('Update {model_strings}')
         <a href="{{ route('{view_prefix_name}{model_variables}.update', ${model_variable}->id) }}" class="btn btn-link text-secondary p-1" title="Update"><i class="fal fa-lg fa-edit"></i></a>
     @endcan
