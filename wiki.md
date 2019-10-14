@@ -432,6 +432,8 @@ Sample:
 
 In case using API, just add this into Exceptions/Handler.php,
 
+    use \Wikichua\Simplecontrolpanel\Traits\ApiException;
+    
     public function render($request, Exception $exception)
     {
         if ($request->route() && $request->route()->getPrefix() == 'api') {
@@ -439,6 +441,10 @@ In case using API, just add this into Exceptions/Handler.php,
                 return response($exception, 400);
             }
             return response()->json(['status' => 'failed', 'error' => 'Intruder detected!']);
+        }
+
+        if ($request->wantsJson()) {
+            return $this->handleApiException($request, $exception);
         }
         return parent::render($request, $exception);
     }
