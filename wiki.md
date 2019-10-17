@@ -256,7 +256,8 @@ Multiple attribute available in input type select, file & checkbox.
     
     'input' => [
         'type' => 'select', // select/checkbox/file
-        'multiple' => true
+        'multiple' => true,
+        'live_search' => false, //option to select. Default true 
     ],
 
 Mutator
