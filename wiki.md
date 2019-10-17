@@ -211,6 +211,17 @@ options using code methods: return as in object
         ],
     ],
 
+**Get array from configuration file** (config ("conf_file_name.key_name"))
+
+```php
+'option_return' => 'array',
+'options' => [
+    'config:<conf_file_name.key_name>' => [
+        'key' => 'val',
+    ],
+],
+```
+
 options using code methods: return as in array
     
     'option_return' => 'array',
@@ -426,6 +437,21 @@ Sample:
             ]
         ],
 
+### Use
+**Generate config file**
+```php
+    artisan crud:config NameNewModel
+```
+
+**Generate crud files**
+```php
+artisan crud:generate NameNewModel
+```
+
+**Or with the flag --force when re-generating**
+```php
+artisan crud:generate NameNewModel --force
+```
 ## Optional steps; This is for my own usage.
 
 ### exception
