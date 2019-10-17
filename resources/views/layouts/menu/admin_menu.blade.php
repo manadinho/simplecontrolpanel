@@ -53,7 +53,7 @@
     @endcan
     @can('Read Log')
         <li class="{{ preg_match('/admin.log.*/', request()->route()->getName())? 'active':'' }}">
-            <a href="{{ route('admin.log') }}"><i class="fab fa-fw fa-bug mr-3"></i>Log</a>
+            <a href="{{ route('admin.log') }}"><i class="fal fa-fw fa-bug mr-3"></i>Log</a>
         </li>
     @endcan
 </ul>
