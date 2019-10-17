@@ -25,4 +25,14 @@ class BackendController extends Controller
         $path = str_replace('public', 'storage', $path);
         return str_replace(['http://','https://'], '//', asset($path));
     }
+    public function view_logs()
+    {
+        $logViewer = new LogViewerController;
+        return $logViewer->index();
+    }
+}
+
+class LogViewerController extends \Rap2hpoutre\LaravelLogViewer\LogViewerController
+{
+    protected $view_log = 'lap::backend.log';
 }
