@@ -10,8 +10,7 @@ Route::group(['middleware' => 'web','prefix' => config('lap.route_prefix','admin
     Route::get('settings', config('lap.controllers.backend') . '@settingsForm')->name('admin.settings');
     Route::patch('settings', config('lap.controllers.backend') . '@settings');
     Route::post('summernote/image/upload', config('lap.controllers.backend') . '@summernoteImageUpload')->name('admin.summernote.imageUpload');
-    // Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->name('admin.logs');
-    Route::get('logs', config('lap.controllers.backend').'@view_logs')->name('admin.logs');
+    Route::get('logs', config('lap.controllers.backend').'@view_logs')->name('admin.log');
 
     // auth
     Route::get('login', config('lap.controllers.auth.login') . '@loginForm')->name('admin.login');
