@@ -175,9 +175,9 @@ class CrudGenerate extends Command
             $attribute_value = '$' . $this->replaces['{model_variable}'] . '->' . $attribute;
             $read_stub = $this->files->get($this->lap['stubs'] . '/views/layouts/read.stub');
             $read_stub = str_replace('{attribute_label}', $attribute_label, $read_stub);
-            
+
             $read_stub = str_replace('{attribute_value}', '{{ ' . (isset($values['casts']) && $values['casts'] == 'array'? "is_array($attribute_value)? implode(', ', $attribute_value):''" : $attribute_value) . ' }}', $read_stub);
-            
+
             $read_attributes[] = $read_stub . PHP_EOL;
 
             // form inputs
@@ -377,6 +377,7 @@ EOF;
         }
         $replaces['{input_multiple}'] = !empty($input['multiple']) ? ' multiple' : '';
         $replaces['{input_class}'] = isset($input['class']) && $input['class'] != ''? ' '.$input['class']:'';
+        $replaces['{live_search}'] = isset($input['live_search']) && $input['live_search'] ? 'true' : 'false';
 
         return $replaces;
     }
@@ -466,7 +467,7 @@ EOF;
             $menu_stub = $this->files->get($this->lap['stubs'] . '/views/layouts/menu.stub');
             $this->files->put($menu_file, $this->replace($menu_stub));
             $this->line('Menu item file created: <info>' . $menu_file . '</info>');
-            
+
             $layout_menu = $this->files->get($this->lap['layout_menu']);
             $menu_content = PHP_EOL . '@include(\'lap::layouts.menu.'.$this->replaces['{model_variable}'] . '\')';
             if (strpos($layout_menu, $menu_content) === false) {
@@ -487,7 +488,7 @@ EOF;
             $routes_stub = $this->files->get($this->lap['stubs'] . '/routes.stub');
             $this->files->put($route_file, $this->replace($routes_stub));
             $this->line('Route file created: <info>' . $route_file . '</info>');
-            
+
             $routes = $this->files->get($this->lap['routes']);
             $route_content = PHP_EOL . "include_once(resource_path('../{$route_file}'));";
             if (strpos($routes, $route_content) === false) {
