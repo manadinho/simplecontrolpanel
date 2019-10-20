@@ -224,6 +224,7 @@ class CrudGenerate extends Command
             $replaces['{input_name}'] = $attribute;
             $replaces['{input_id}'] = $attribute;
             $replaces['{input_multiple}'] = !empty($input['multiple']) ? ' multiple' : '';
+            $replaces['{input_class}'] = isset($input['class']) && $input['class'] != ''? ' '.$input['class']:'';
         }
         else if ($input['type'] == 'select') {
             $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/select.stub');
