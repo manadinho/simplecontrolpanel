@@ -205,8 +205,8 @@ class CrudGenerate extends Command
         $this->replaces['{form_enctype}'] = $form_enctype;
         $this->replaces['{inputs_create}'] = $inputs_create ? trim(implode(PHP_EOL, $inputs_create)) : '';
         $this->replaces['{inputs_update}'] = $inputs_create ? trim(implode(PHP_EOL, $inputs_update)) : '';
-        $this->replaces['{controller_request_creates}'] = trim(implode(PHP_EOL, array_unique($this->controller_request_creates)));
-        $this->replaces['{controller_request_updates}'] = trim(implode(PHP_EOL, array_unique($this->controller_request_updates)));
+        $this->replaces['{controller_request_creates}'] = isset($this->controller_request_creates) && is_array($this->controller_request_creates)? trim(implode(PHP_EOL, array_unique($this->controller_request_creates))):'';
+        $this->replaces['{controller_request_updates}'] = isset($this->controller_request_updates) && is_array($this->controller_request_updates)? trim(implode(PHP_EOL, array_unique($this->controller_request_updates))):'';
     }
 
     public function inputContent($input, $method, $attribute, &$form_enctype)
