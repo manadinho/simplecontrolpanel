@@ -7,6 +7,7 @@
         'admin.settings.*',
         'admin.activity_logs.*',
         'admin.docs.*',
+        'admin.log.*',
     ]).'/';
 @endphp
 <li>
@@ -48,6 +49,11 @@
     @can('Read Seotools')
         <li class="{{ preg_match('/admin.seotools.*/', request()->route()->getName())? 'active':'' }}">
             <a href="{{ route('admin.seotools') }}"><i class="fab fa-fw fa-searchengin mr-3"></i>Seotools</a>
+        </li>
+    @endcan
+    @can('Read Log')
+        <li class="{{ preg_match('/admin.log.*/', request()->route()->getName())? 'active':'' }}">
+            <a href="{{ route('admin.log') }}"><i class="fal fa-fw fa-bug mr-3"></i>Log</a>
         </li>
     @endcan
 </ul>

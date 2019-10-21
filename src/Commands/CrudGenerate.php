@@ -205,6 +205,8 @@ class CrudGenerate extends Command
         $this->replaces['{form_enctype}'] = $form_enctype;
         $this->replaces['{inputs_create}'] = $inputs_create ? trim(implode(PHP_EOL, $inputs_create)) : '';
         $this->replaces['{inputs_update}'] = $inputs_create ? trim(implode(PHP_EOL, $inputs_update)) : '';
+        $this->replaces['{controller_request_creates}'] = trim(implode(PHP_EOL, array_unique($this->controller_request_creates)));
+        $this->replaces['{controller_request_updates}'] = trim(implode(PHP_EOL, array_unique($this->controller_request_updates)));
     }
 
     public function inputContent($input, $method, $attribute, &$form_enctype)
@@ -225,6 +227,24 @@ class CrudGenerate extends Command
             $replaces['{input_id}'] = $attribute;
             $replaces['{input_multiple}'] = !empty($input['multiple']) ? ' multiple' : '';
             $replaces['{input_class}'] = isset($input['class']) && $input['class'] != ''? ' '.$input['class']:'';
+            $attribute_file = $attribute.'_file';
+            $model_variables = $this->replaces['{model_variables}'];
+            $this->controller_request_creates[] = 
+<<<EOF
+        if (request()->hasFile('$attribute_file')) {
+            request()->merge([
+                '$attribute' => str_replace('public', 'storage', request()->file('$attribute_file')->store('public/$model_variables')),
+            ]);
+        }
+EOF;            
+            $this->controller_request_updates[] = 
+<<<EOF
+        if (request()->hasFile('$attribute_file')) {
+            request()->merge([
+                '$attribute' => str_replace('public', 'storage', request()->file('$attribute_file')->store('public/$model_variables')),
+            ]);
+        }
+EOF;
         }
         else if ($input['type'] == 'select') {
             $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/select.stub');

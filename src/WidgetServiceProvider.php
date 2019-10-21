@@ -39,8 +39,7 @@ class WidgetServiceProvider extends ServiceProvider
             return new Widget;
         });
         AliasLoader::getInstance([
-            'Widget' => '\Wikichua\Simplecontrolpanel\Widget',
-            'Lava' => '\Khill\Lavacharts\Laravel\LavachartsFacade'
+            'Widget' => '\Wikichua\Simplecontrolpanel\Widget'
         ]);
     }
 

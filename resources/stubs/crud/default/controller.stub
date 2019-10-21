@@ -85,6 +85,7 @@ class {model_class}Controller extends Controller
             {validations_create}
         ]);
         request()->merge(['created_by' => auth()->id(), 'updated_by' => auth()->id(), 'seq' => {model_class}::max('seq') + 1]);
+        {controller_request_creates}
         ${model_variable} = {model_class}::create(request()->all());
 
         activity('Created {model_string}: ' . ${model_variable}->{model_primary_attribute}, request()->all(), ${model_variable});
@@ -115,6 +116,7 @@ class {model_class}Controller extends Controller
             {validations_update}
         ]);
         request()->merge(['updated_by' => auth()->id()]);
+        {controller_request_updates}
         ${model_variable}->update(request()->all());
 
         activity('Updated {model_string}: ' . ${model_variable}->{model_primary_attribute}, request()->all(), ${model_variable});

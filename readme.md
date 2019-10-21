@@ -20,6 +20,7 @@ Packages used:
 - [Laravel Nestedset](https://github.com/lazychaser/laravel-nestedset)
 - [Parsedown](http://parsedown.org/)
 - [SEOTools](https://github.com/artesaos/seotools)
+- [Log Viewer](https://github.com/rap2hpoutre/laravel-log-viewer)
 - [Fast Excel](https://github.com/rap2hpoutre/fast-excel)
 
 Assets used:

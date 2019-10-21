@@ -1,4 +1,3 @@
-	<a href="{{ route('{view_prefix_name}{model_variables}.read', ${model_variable}->id) }}" class="btn btn-link text-secondary p-1" title="Read"><i class="fal fa-lg fa-eye"></i></a>
     @if ($seotool)
         @can('Update Seotools')
     <a href="{{ route('admin.seotools.update', $seotool->id) }}" class="btn btn-link text-secondary p-1" title="Update"><i class="fab fa-lg fa-searchengin"></i></a>
