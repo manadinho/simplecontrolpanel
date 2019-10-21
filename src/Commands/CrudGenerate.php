@@ -226,6 +226,7 @@ class CrudGenerate extends Command
             $replaces['{input_name}'] = $attribute;
             $replaces['{input_id}'] = $attribute;
             $replaces['{input_multiple}'] = !empty($input['multiple']) ? ' multiple' : '';
+            $replaces['{input_class}'] = isset($input['class']) && $input['class'] != ''? ' '.$input['class']:'';
             $attribute_file = $attribute.'_file';
             $model_variables = $this->replaces['{model_variables}'];
             $this->controller_request_creates[] = 
