@@ -229,15 +229,17 @@ class CrudGenerate extends Command
             $replaces['{input_class}'] = isset($input['class']) && $input['class'] != ''? ' '.$input['class']:'';
             $attribute_file = $attribute.'_file';
             $model_variables = $this->replaces['{model_variables}'];
-            $this->controller_request_creates[] = 
+
+            $this->controller_request_creates = [];
+            $this->controller_request_creates[] =
 <<<EOF
         if (request()->hasFile('$attribute_file')) {
             request()->merge([
                 '$attribute' => str_replace('public', 'storage', request()->file('$attribute_file')->store('public/$model_variables')),
             ]);
         }
-EOF;            
-            $this->controller_request_updates[] = 
+EOF;
+            $this->controller_request_updates[] =
 <<<EOF
         if (request()->hasFile('$attribute_file')) {
             request()->merge([
