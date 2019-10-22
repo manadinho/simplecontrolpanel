@@ -54,7 +54,7 @@ return [
             ],
             'datatable' => [
                 'title' => 'Status',
-                'data' => 'status',
+                'data' => 'status_name',
             ],
             'exporttable' => 'status',
             'input' => [
@@ -66,6 +66,10 @@ return [
                     ],
                 ],
             ],
+            'appends' => 'status_name',
+            'mutators' => [
+                'get' => 'return settings(\'{model_variable}_status\')[$this->attributes[\'status\']];',
+            ]
         ],
 
         'created_by' => [

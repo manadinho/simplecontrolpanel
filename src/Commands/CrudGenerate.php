@@ -105,8 +105,14 @@ class CrudGenerate extends Command
                 $model_casts[] = "'$attribute' => '" . $values['casts'] . "'";
             }
 
+            $mutator_name = $attribute;
             if (isset($values['appends']) && $values['appends']) {
-                $model_appends[] = "'$attribute'";
+                if ($values['appends'] === true) {
+                    $model_appends[] = "'$attribute'";
+                } else {
+                    $model_appends[] = "'".trim($values['appends'])."'";
+                    $mutator_name = trim($values['appends']);
+                }
             }
 
             // relationships
@@ -128,7 +134,7 @@ class CrudGenerate extends Command
 
             // mutators
             if (!empty($values['mutators']['get'])) {
-                $mutators[] = $this->indent() . 'public function get' . studly_case($attribute) . 'Attribute($value)';
+                $mutators[] = $this->indent() . 'public function get' . studly_case($mutator_name) . 'Attribute($value)';
                 $mutators[] = $this->indent() . '{';
                 $lines = explode("\n",trim($values['mutators']['get']));
                 foreach ($lines as $line) {
@@ -137,7 +143,7 @@ class CrudGenerate extends Command
                 $mutators[] = $this->indent() . '}' . PHP_EOL;
             }
             if (!empty($values['mutators']['set'])) {
-                $mutators[] = $this->indent() . 'public function set' . studly_case($attribute) . 'Attribute($value)';
+                $mutators[] = $this->indent() . 'public function set' . studly_case($mutator_name) . 'Attribute($value)';
                 $mutators[] = $this->indent() . '{';
                 $lines = explode("\n",trim($values['mutators']['set']));
                 foreach ($lines as $line) {
@@ -195,7 +201,7 @@ class CrudGenerate extends Command
         $this->replaces['{relationships}'] = $relationships ? trim(implode(PHP_EOL, $relationships)) : '';
         $this->replaces['{relationships_query}'] = $relationships_query ? "->with('" . implode("', '", $relationships_query) . "')" : '';
         $this->replaces['{user_timezones}'] = $user_timezones ? trim(implode(PHP_EOL, $user_timezones)) : '';
-        $this->replaces['{mutators}'] = $mutators ? trim(implode(PHP_EOL, $mutators)) : '';
+        $this->replaces['{mutators}'] = str_replace(array_keys($this->replaces), $this->replaces, ($mutators ? trim(implode(PHP_EOL, $mutators)) : ''));
         $this->replaces['{migrations}'] = $validations ? trim(implode(PHP_EOL, $migrations)) : '';
         $this->replaces['{validations_create}'] = isset($validations['create']) ? trim(implode(PHP_EOL, $validations['create'])) : '';
         $this->replaces['{validations_update}'] = isset($validations['update']) ? trim(implode(PHP_EOL, $validations['update'])) : '';
