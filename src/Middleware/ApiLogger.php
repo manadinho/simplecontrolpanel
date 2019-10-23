@@ -13,6 +13,6 @@ class ApiLogger
 
     public function terminate($request, $response)
     {
-        \Storage::append('api/log-'.date('Y-m').'.log', json_encode([date('Y-m-d H:i:s') => ['request' => $request->all()]]));
+        \Storage::append('../logs/api/log-'.date('Y-m').'.log', json_encode([date('Y-m-d H:i:s') => ['request' => $request->all()]]));
     }
 }
