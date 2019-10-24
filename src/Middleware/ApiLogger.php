@@ -14,6 +14,11 @@ class ApiLogger
     public function terminate($request, $response)
     {
     	config(['filesystems.disks.local.root' => storage_path('logs/api')]);
-        \Storage::append('log-'.date('Y-m').'.log', json_encode([date('Y-m-d H:i:s') => ['request' => $request->all()]]));
+        \Storage::append('log-'.date('Y-m').'.log', date('Y-m-d H:i:s')."\t:\t". json_encode([
+        		'endpoint' => $request->url(), 
+        		'header' => $request->header(), 
+        		'ip' => $request->ip(), 
+	        	'request' => $request->all(),
+	        ]));
     }
 }

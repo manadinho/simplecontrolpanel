@@ -72,7 +72,9 @@
                             <span class="fa fa-search"></span>
                             </button>
                             @endif
+                            <code>
                             {{{$log['text']}}}
+                            </code>
                             @if (isset($log['in_file']))
                             <br/>{{{$log['in_file']}}}
                             @endif
