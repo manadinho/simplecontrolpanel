@@ -1,6 +1,6 @@
 @extends('lap::layouts.auth')
 
-@section('title', 'Create {model_string}')
+@section('title', __l('create', 'Create') .' '. {l_model_string})
 @section('child-content')
     <div class="row mb-3">
         <div class="col-md-auto mt-2 mt-md-0">
@@ -17,8 +17,8 @@
         <div class="list-group shadow">
             {inputs_create}
             <div class="list-group-item bg-light text-left text-md-right pb-1">
-                {{-- <button type="submit" name="_submit" class="btn btn-primary mb-2" value="reload_page">Save</button> --}}
-                <button type="submit" name="_submit" class="btn btn-primary mb-2" value="redirect">Save &amp; Go Back</button>
+                {{-- <button type="submit" name="_submit" class="btn btn-primary mb-2" value="reload_page">{{__l('save', 'Save')}}</button> --}}
+                <button type="submit" name="_submit" class="btn btn-primary mb-2" value="redirect">{{__l('save_and_go_back', 'Save &amp; Go Back')}}</button>
             </div>
         </div>
     </form>

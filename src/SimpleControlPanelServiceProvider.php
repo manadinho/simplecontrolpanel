@@ -82,6 +82,7 @@ class SimpleControlPanelServiceProvider extends ServiceProvider
         $this->publishes([__DIR__ . '/../resources/views/auth' => resource_path('views/vendor/lap/auth')], 'lap.install.view.general');
         $this->publishes([__DIR__ . '/../resources/views/backend' => resource_path('views/vendor/lap/backend')], 'lap.install.view.general');
         $this->publishes([__DIR__ . '/../resources/views/users' => resource_path('views/vendor/lap/users')], 'lap.install.view.general');
+        $this->publishes([__DIR__ . '/../resources/lang' => resource_path('lang')], 'lap.install.lang.general');
 
         $files = new Filesystem;
         if (!$files->exists(config('lap.crud_paths.route'))) {

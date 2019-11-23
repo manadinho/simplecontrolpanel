@@ -47,6 +47,7 @@ Publish advanced files:
 
     php artisan vendor:publish --tag=lap.install.migrations
     php artisan vendor:publish --tag=lap.install.stubs
+    php artisan vendor:publish --tag=lap.install.lang.general
 
 Publish all views files:
 
