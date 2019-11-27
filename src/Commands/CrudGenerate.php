@@ -65,6 +65,8 @@ class CrudGenerate extends Command
             '{model_class}' => $model_class = $this->argument('model'),
             '{model_string}' => $model_string = trim(preg_replace('/(?!^)[A-Z]{2,}(?=[A-Z][a-z])|[A-Z][a-z]/', ' $0', $model_class)),
             '{model_strings}' => $model_strings = str_plural($model_string),
+            '{l_model_string}' => "__l('" . strtolower($model_string) . "', '". $model_string ."')",
+            '{l_model_strings}' => "__l('" . strtolower($model_strings) . "', '". $model_strings ."')",
             '{model_variable}' => $model_variable = strtolower(str_replace(' ', '_', $model_string)),
             '{model_variables}' => $model_variables = strtolower(str_replace(' ', '_', $model_strings)),
             '{model_primary_attribute}' => 'id',
@@ -180,7 +182,7 @@ class CrudGenerate extends Command
             $attribute_label = ucwords(str_replace('_', ' ', $attribute));
             $attribute_value = '$' . $this->replaces['{model_variable}'] . '->' . $attribute;
             $read_stub = $this->files->get($this->lap['stubs'] . '/views/layouts/read.stub');
-            $read_stub = str_replace('{attribute_label}', $attribute_label, $read_stub);
+            $read_stub = str_replace('{attribute_label}', "__l('{$attribute}','{$attribute_label}')", $read_stub);
 
             $read_stub = str_replace('{attribute_value}', '{{ ' . (isset($values['casts']) && $values['casts'] == 'array'? "is_array($attribute_value)? implode(', ', $attribute_value):''" : $attribute_value) . ' }}', $read_stub);
 
@@ -190,7 +192,8 @@ class CrudGenerate extends Command
             if (!empty($values['input'])) {
                 $input_stub = $this->files->get($this->lap['stubs'] . '/views/layouts/input.stub');
                 $input_stub = str_replace('{attribute}', $attribute, $input_stub);
-                $input_stub = str_replace('{attribute_label}', $attribute_label, $input_stub);
+                $input_stub = str_replace('{attribute_label}', "__l('{$attribute}','{$attribute_label}')", $input_stub);
+
                 $inputs_create[] = str_replace('{attribute_input}', $this->inputContent($values['input'], 'create', $attribute, $form_enctype), $input_stub) . PHP_EOL;
                 $inputs_update[] = str_replace('{attribute_input}', $this->inputContent($values['input'], 'update', $attribute, $form_enctype), $input_stub) . PHP_EOL;
             }

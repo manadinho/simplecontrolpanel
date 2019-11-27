@@ -3,25 +3,28 @@
 function qs_url($path = null, $qs = array(), $secure = null)
 {
     $url = app('url')->to($path, $secure);
-    if (count($qs)){
-        foreach($qs as $key => $value){
-            $qs[$key] = sprintf('%s=%s',$key, urlencode($value));
+    if (count($qs)) {
+        foreach ($qs as $key => $value) {
+            $qs[$key] = sprintf('%s=%s', $key, urlencode($value));
         }
         $url = sprintf('%s?%s', $url, implode('&', $qs));
     }
     return $url;
 }
-function prettyPrintJson($value='')
+
+function prettyPrintJson($value = '')
 {
     return stripcslashes(json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 }
-function settings($name,$default = '')
+
+function settings($name, $default = '')
 {
-	if (!is_array(config('settings.'.$name)) && json_decode(config('settings.'.$name),1)) {
-		return json_decode(config('settings.'.$name),1)? json_decode(config('settings.'.$name),1):$default;
-	}
-	return config('settings.'.$name, $default);
+    if (!is_array(config('settings.' . $name)) && json_decode(config('settings.' . $name), 1)) {
+        return json_decode(config('settings.' . $name), 1) ? json_decode(config('settings.' . $name), 1) : $default;
+    }
+    return config('settings.' . $name, $default);
 }
+
 function rebuildUrl($url, $params = [])
 {
     if (count($params)) {
@@ -34,11 +37,13 @@ function rebuildUrl($url, $params = [])
     }
     return $url;
 }
+
 function findHashTag($string)
 {
     preg_match_all("/#(\\w+)/", $string, $matches);
     return $matches[1];
 }
+
 // flash message to session [class, message]
 if (!function_exists('flash')) {
     function flash($data = [])
@@ -66,5 +71,16 @@ if (!function_exists('activity')) {
             'message' => $message,
             'data' => $data ? $data : null,
         ]);
+    }
+}
+
+// Equivalent to trans () function with default value only (Only works for lang.lap file)
+if (!function_exists('__l')) {
+    function __l($key, $default, $replace = [], $locale = null)
+    {
+        if (isset(Lang::get('lap')[$key]))
+            return trans('lap.' . $key, $replace, $locale);
+
+        return $default;
     }
 }

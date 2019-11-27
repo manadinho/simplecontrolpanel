@@ -26,9 +26,16 @@ class CrudConfig extends Command
             $this->files->makeDirectory($config_path, 0755, true);
         }
 
+        //Ability to override config.stub file
+        //It also provides compatibility checks with previous versions of the package.
+        $config_stubs_patch = config('lap.crud_paths.stubs') . '/config.stub';
+        if (!$this->files->exists($config_stubs_patch)) {
+            $config_stubs_patch = __DIR__ . '/../../resources/stubs/crud/config.stub';
+        }
+
         // create crud config file
         $config_file = $config_path . '/' . $this->argument('model') . '.php';
-        $this->files->copy(__DIR__ . '/../../resources/stubs/crud/config.stub', $config_file);
+        $this->files->copy($config_stubs_patch, $config_file);
         $this->line('Config file created: <info>' . $config_file . '</info>');
     }
 }
