@@ -88,13 +88,34 @@ Create directories in terminal:
 
 Add this in your composer.json under scripts section:
 
+    "require-dev": {
+        "wikichua/simplecontrolpanel": "*"
+    },
+
     "repositories": {
-        "wikichua-simplecontrolpanel": {
+        "wikichua/simplecontrolpanel": {
             "type": "path",
             "url": "/path/to/your/appName/packages/wikichua/simplecontrolpanel"
         }
     }
 
+### Alternative installation 2:
+
+Need packager to ease your work
+
+    $ composer require jeroen-g/laravel-packager --dev
+
+Import package from github
+
+    $ php artisan packager:git git@github.com:wikichua/simplecontrolpanel.git
+
+Add this in your composer.json under scripts section:
+
+    "require-dev": {
+        "wikichua/simplecontrolpanel": "*"
+    },
+
+Run composer update
 
 ### Logging In
 
