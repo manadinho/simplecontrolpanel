@@ -6,6 +6,7 @@
 Route::group(['middleware' => 'web','prefix' => config('lap.route_prefix','admin')], function () {
     // backend
     Route::get('/', config('lap.controllers.backend') . '@index')->name('admin');
+    Route::get('/locale/{locale}', config('lap.controllers.backend') . '@locale')->name('admin.locale');
     Route::get('dashboard', config('lap.controllers.backend') . '@dashboard')->name('admin.dashboard');
     Route::get('settings', config('lap.controllers.backend') . '@settingsForm')->name('admin.settings');
     Route::patch('settings', config('lap.controllers.backend') . '@settings');

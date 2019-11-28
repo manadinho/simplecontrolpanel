@@ -76,11 +76,28 @@ if (!function_exists('activity')) {
 
 // Equivalent to trans () function with default value only (Only works for lang.lap file)
 if (!function_exists('__l')) {
-    function __l($key, $default, $replace = [], $locale = null)
+    function __l($key, $default = '', $replace = [], $locale = null)
     {
-        if (isset(Lang::get('lap')[$key]))
-            return trans('lap.' . $key, $replace, $locale);
+        if (Lang::has('lap.' . $key, $locale))
+            return __('lap.' . $key, $replace, $locale);
 
-        return $default;
+        if (Lang::has($key, $locale))
+            return __($key, $replace, $locale);
+
+        return !empty($default)? $default:$key;
+    }
+}
+
+if (!function_exists('scan_langs_dir')) {
+    function scan_langs_dir()
+    {
+        $locales = [];
+        $iterator = new DirectoryIterator(resource_path('lang'));
+        foreach ($iterator as $fileinfo) {
+            if (!$fileinfo->isDot()) {
+                $locales[] = $fileinfo->getFilename();
+            }
+        }
+        return $locales;
     }
 }

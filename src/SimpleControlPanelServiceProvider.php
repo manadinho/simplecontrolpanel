@@ -72,23 +72,22 @@ class SimpleControlPanelServiceProvider extends ServiceProvider
      */
     protected function bootForConsole()
     {
-        // Publishing the configuration file.
-        $this->publishes([__DIR__.'/../config/simplecontrolpanel.php' => config_path('lap.php')], 'lap.install.config');
-        $this->publishes([__DIR__.'/../config/seotools.php' => config_path('seotools.php')], 'lap.install.config');
-        $this->publishes([__DIR__ . '/../public' => public_path('lap')], 'lap.install.public');
-        $this->publishes([__DIR__ . '/../resources/views' => resource_path('views/vendor/lap')], 'lap.install.view.all');
+        $this->publishes([__DIR__.'/../config/simplecontrolpanel.php' => config_path('lap.php')], 'lap.install.general');
+        $this->publishes([__DIR__.'/../config/seotools.php' => config_path('seotools.php')], 'lap.install.general');
+        $this->publishes([__DIR__ . '/../public' => public_path('lap')], 'lap.install.general');
+        $this->publishes([__DIR__ . '/../resources/lang' => resource_path('lang')], 'lap.install.general');
+        $this->publishes([__DIR__ . '/../resources/views/layouts' => resource_path('views/vendor/lap/layouts')], 'lap.install.general');
+        $this->publishes([__DIR__ . '/../resources/views/auth' => resource_path('views/vendor/lap/auth')], 'lap.install.general');
+        $this->publishes([__DIR__ . '/../resources/views/backend' => resource_path('views/vendor/lap/backend')], 'lap.install.general');
+        $this->publishes([__DIR__ . '/../resources/views/users' => resource_path('views/vendor/lap/users')], 'lap.install.general');
 
-        $this->publishes([__DIR__ . '/../resources/views/layouts' => resource_path('views/vendor/lap/layouts')], 'lap.install.view.general');
-        $this->publishes([__DIR__ . '/../resources/views/auth' => resource_path('views/vendor/lap/auth')], 'lap.install.view.general');
-        $this->publishes([__DIR__ . '/../resources/views/backend' => resource_path('views/vendor/lap/backend')], 'lap.install.view.general');
-        $this->publishes([__DIR__ . '/../resources/views/users' => resource_path('views/vendor/lap/users')], 'lap.install.view.general');
-        $this->publishes([__DIR__ . '/../resources/lang' => resource_path('lang')], 'lap.install.lang.general');
+        $this->publishes([__DIR__ . '/../resources/views' => resource_path('views/vendor/lap')], 'lap.install.all.view');
+        $this->publishes([__DIR__ . '/routes.php' => resource_path('../'.config('lap.crud_paths.route').'/routes.php')], 'lap.install.route');
 
         $files = new Filesystem;
         if (!$files->exists(config('lap.crud_paths.route'))) {
             $files->makeDirectory(config('lap.crud_paths.route'), 0755, true);
         }
-        $this->publishes([__DIR__ . '/routes.php' => resource_path('../'.config('lap.crud_paths.route').'/routes.php')], 'lap.install.route');
         if (file_exists(resource_path('../'.config('lap.crud_paths.route').'/routes.php'))) {
             $routes = $files->get(config('lap.crud_paths.routes'));
             $route_content = PHP_EOL . "include_once(resource_path('../".config('lap.crud_paths.route')."/routes.php'));";
