@@ -15,6 +15,11 @@ class BackendController extends Controller
     {
         return redirect()->route('admin.' . (auth()->check() ? 'dashboard' : 'login'));
     }
+    public function locale($locale = 'en')
+    {
+        \App::setLocale($locale);
+        return back()->with(['flash' => ['success', 'Locale Changed to '.$locale.'!']]);
+    }
     public function dashboard()
     {
         return view('lap::backend.dashboard');

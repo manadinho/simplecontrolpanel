@@ -2,8 +2,10 @@
 
 return [
 
-    // menu icon (fontawesome class)
+    // menu icon (fontawesome class) Icon link -> https://fontawesome.com/v4.7.0/icons/
     'icon' => 'fa-link',
+
+    'need_seo' => false,
 
     // model attributes
     'attributes' => [
@@ -41,154 +43,140 @@ return [
             ],
         ],
 
-        /* Add on begins here */
-
-        'content' => [
+        'image' => [
             'primary' => false,
             'migrations' => [
-                'string:content|nullable',
+                'text:image|nullable',
             ],
             'validations' => [
                 'create' => 'required',
                 'update' => 'required',
             ],
-            'datatable' => [
-                'title' => 'Content',
-                'data' => 'content',
-            ],
-            'exporttable' => 'content',
+            'exporttable' => 'image',
             'input' => [
-                'type' => 'textarea',
-                'class' => 'summernote',
+                'type' => 'file',
             ],
         ],
 
-        'testdate' => [
+        'images' => [
             'primary' => false,
             'migrations' => [
-                'datetime:testdate|nullable',
+                'json:images|nullable',
+            ],
+            'validations' => [
+                'create' => 'required',
+                'update' => 'required',
+            ],
+            'exporttable' => 'images',
+            'casts' => 'array',
+            'input' => [
+                'type' => 'file',
+                'multiple' => true,
+            ],
+        ],
+
+        'tags' => [
+            'primary' => false,
+            'migrations' => [
+                'json:tags|nullable',
+            ],
+            'validations' => [
+                'create' => 'required',
+                'update' => 'required',
+            ],
+            'casts' => 'array',
+            'input' => [
+                'tags' => true,
+                'type' => 'text',
+            ],
+        ],
+
+        'datepicker' => [
+            'primary' => false,
+            'migrations' => [
+                'date:datepicker|nullable',
             ],
             'validations' => [
                 'create' => '',
                 'update' => '',
             ],
             'datatable' => [
-                'title' => 'date',
-                'data' => 'testdate',
+                'title' => 'datepicker',
+                'data' => 'datepicker',
             ],
-            'exporttable' => 'testdate',
+            'exporttable' => 'datepicker',
             'input' => [
                 'type' => 'text',
                 'class' => 'datepicker'
-            ],
-            'casts' => 'datetime:Y-m-d',
-            'mutators' => [
-                // 'get' => 'return \Carbon\Carbon::parse($value);',
-                'set' => '$this->attributes[\'testdate\'] = \Carbon\Carbon::parse($value);',
             ]
         ],
 
-        'testdaterange_start' => [
+        'datetimepicker' => [
             'primary' => false,
             'migrations' => [
-                'datetime:testdaterange_start|nullable',
+                'datetime:datetimepicker|nullable',
             ],
             'validations' => [
                 'create' => '',
                 'update' => '',
             ],
-            // 'datatable' => [
-            //     'title' => 'date',
-            //     'data' => 'testdaterange_start',
-            // ],
-            // 'exporttable' => 'testdaterange_start',
+            'datatable' => [
+                'title' => 'datetimepicker',
+                'data' => 'datetimepicker',
+            ],
+            'exporttable' => 'datetimepicker',
+            'input' => [
+                'type' => 'text',
+                'class' => 'datetimepicker'
+            ],
+            'mutators' => [
+                // 'get' => 'return \Carbon\Carbon::parse($value);',
+                'set' => '$this->attributes[\'datetimepicker\'] = \Carbon\Carbon::parse($value);',
+            ]
+        ],
+
+        // daterangepicker daterangepicker_start everything to be done here
+        //  mutator set to make sure value seperated to both daterangepicker_start & daterangepicker_end
+        'daterangepicker_start' => [
+            'primary' => false,
+            'migrations' => [
+                'date:daterangepicker_start|nullable',
+            ],
+            'validations' => [
+                'create' => 'required',
+                'update' => 'required',
+            ],
             'input' => [
                 'type' => 'text',
                 'class' => 'rangedatepicker'
             ],
-            'casts' => 'datetime:Y-m-d',
             'mutators' => [
-                'get' => 'return $this->attributes[\'testdaterange_start\'] ." - ".$this->attributes[\'testdaterange_end\'];',
                 'set' => '
                     list($start,$end) = explode(\' - \',$value);
-                    $this->attributes[\'testdaterange_start\'] = \Carbon\Carbon::parse(trim($start));
-                    $this->attributes[\'testdaterange_end\'] = \Carbon\Carbon::parse(trim($end));
+                    $this->attributes[\'daterangepicker_start\'] = \Carbon\Carbon::parse(trim($start));
+                    $this->attributes[\'daterangepicker_end\'] = \Carbon\Carbon::parse(trim($end));
                 ',
             ]
         ],
-
-        'testdaterange_end' => [
+        // daterangepicker end just to capture in db
+        'daterangepicker_end' => [
             'primary' => false,
             'migrations' => [
-                'datetime:testdaterange_end|nullable',
+                'date:daterangepicker_end|nullable',
             ],
-            // 'validations' => [
-            //     'create' => '',
-            //     'update' => '',
-            // ],
-            // 'datatable' => [
-            //     'title' => 'date',
-            //     'data' => 'testdaterange_end',
-            // ],
-            // 'exporttable' => 'testdaterange_end',
-            // 'input' => [
-            //     'type' => 'text',
-            //     'class' => 'rangedatepicker'
-            // ],
-            'casts' => 'datetime:Y-m-d',
-            'mutators' => [
-                'get' => 'return $this->attributes[\'testdaterange_start\'] ." - ".$this->attributes[\'testdaterange_end\'];',
-                'set' => '
-                    list($start,$end) = explode(\' - \',$value);
-                    $this->attributes[\'testdaterange_start\'] = \Carbon\Carbon::parse(trim($start));
-                    $this->attributes[\'testdaterange_end\'] = \Carbon\Carbon::parse(trim($end));
-                ',
-            ]
         ],
-
-        'testdaterange' => [
+        // append only to mutating the combine of daterangepicker_start - daterangepicker_end 'daterangepicker' => [
             'primary' => false,
-            // 'migrations' => [
-            //     'datetime:testdaterange_start|nullable',
-            //     'datetime:testdaterange_end|nullable',
-            // ],
-            // 'validations' => [
-            //     'create' => '',
-            //     'update' => '',
-            // ],
             'datatable' => [
-                'title' => 'date',
-                'data' => 'testdaterange',
+                'title' => 'daterangepicker',
+                'data' => 'daterangepicker',
             ],
-            // 'exporttable' => 'testdaterange',
-            // 'input' => [
-            //     'type' => 'text',
-            //     'class' => 'rangedatepicker'
-            // ],
-            'appends' => true,
+            'exporttable' => 'daterangepicker',
+            'appends' => 'daterangepicker',
             'mutators' => [
-                'get' => 'return $this->attributes[\'testdaterange_start\'] ." - ".$this->attributes[\'testdaterange_end\'];',
-                
+                'get' => 'return $this->attributes[\'daterangepicker_start\'] ." - ".$this->attributes[\'daterangepicker_end\'];',
             ]
         ],
-
-        'metas' => [
-            'primary' => false,
-            'migrations' => [
-                'json:metas|nullable',
-            ],
-            'validations' => [
-                'create' => '',
-                'update' => '',
-            ],
-            'input' => [
-                'type' => 'text',
-                'tags' => true,
-            ],
-            'casts' => 'array'
-        ],
-
-        /* Add on stop here */
 
         'status' => [
             'primary' => false,
@@ -197,7 +185,7 @@ return [
             ],
             'datatable' => [
                 'title' => 'Status',
-                'data' => 'status',
+                'data' => 'status_name',
             ],
             'exporttable' => 'status',
             'input' => [
@@ -209,6 +197,10 @@ return [
                     ],
                 ],
             ],
+            'appends' => 'status_name',
+            'mutators' => [
+                'get' => 'return settings(\'{model_variable}_status\')[$this->attributes[\'status\']];',
+            ]
         ],
 
         'created_by' => [

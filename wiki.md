@@ -6,19 +6,35 @@ Require via composer:
 
 Publish install files:
 
-    php artisan vendor:publish --tag=lap.install.config
-    php artisan vendor:publish --tag=lap.install.public
-    php artisan vendor:publish --tag=lap.install.view.general
-    php artisan vendor:publish --tag=lap.install.route
+    php artisan vendor:publish --tag=lap.general
 
-Publish advanced files:
+General install including:
 
-    php artisan vendor:publish --tag=lap.install.migrations
-    php artisan vendor:publish --tag=lap.install.stubs
+- public
+- lang
+- layouts
+- auth
+- backend
+- users
+
+Publish advanced files (1 by 1):
+
+    php artisan vendor:publish --tag=lap.config
+    php artisan vendor:publish --tag=lap.seo.config
+    php artisan vendor:publish --tag=lap.public
+    php artisan vendor:publish --tag=lap.lang
+    php artisan vendor:publish --tag=lap.layouts
+    php artisan vendor:publish --tag=lap.auth.view
+    php artisan vendor:publish --tag=lap.backend.view
+    php artisan vendor:publish --tag=lap.users.view
 
 Publish all views files:
 
-    php artisan vendor:publish --tag=lap.install.view.general
+    php artisan vendor:publish --tag=lap.all.view
+
+Publish admin route files:
+
+    php artisan vendor:publish --tag=lap.admin.route
 
 Add the `AdminUser`, `DynamicFillable`, and `UserTimezone` traits to your `User` model:
 
@@ -55,6 +71,10 @@ Create directories in terminal:
 
 Add this in your composer.json under scripts section:
 
+    "require-dev": {
+        "wikichua/simplecontrolpanel": "*"
+    },
+    
     "repositories": {
         "wikichua-simplecontrolpanel": {
             "type": "path",
@@ -62,6 +82,23 @@ Add this in your composer.json under scripts section:
         }
     }
 
+### Alternative installation 2:
+
+Need packager to ease your work
+
+    $ composer require jeroen-g/laravel-packager --dev
+
+Import package from github
+
+    $ php artisan packager:git git@github.com:wikichua/simplecontrolpanel.git
+
+Add this in your composer.json under scripts section:
+
+    "require-dev": {
+        "wikichua/simplecontrolpanel": "*"
+    },
+
+Run composer update
 
 ### Logging In
 
@@ -260,6 +297,24 @@ Multiple attribute available in input type select, file & checkbox.
         'live_search' => false, //option to select. Default true 
     ],
 
+Tags! Sometime we need to able to tags data into json in ur db.
+
+    'tags' => [
+        'primary' => false,
+        'migrations' => [
+            'json:tags|nullable',
+        ],
+        'validations' => [
+            'create' => 'required',
+            'update' => 'required',
+        ],
+        'casts' => 'array',
+        'input' => [
+            'tags' => true,
+            'type' => 'text',
+        ],
+    ],
+
 Mutator
 
     'mutators' => [
@@ -305,138 +360,9 @@ Appends
 
     'appends' => true,
 
+    'appends' => 'custom_name',
+
 To append the field name
-
-Sample:
-
-    'content' => [
-            'primary' => false,
-            'migrations' => [
-                'string:content|nullable',
-            ],
-            'validations' => [
-                'create' => 'required',
-                'update' => 'required',
-            ],
-            'datatable' => [
-                'title' => 'Content',
-                'data' => 'content',
-            ],
-            'exporttable' => 'content',
-            'input' => [
-                'type' => 'textarea',
-                'class' => 'summernote',
-            ],
-        ],
-
-        'testdate' => [
-            'primary' => false,
-            'migrations' => [
-                'datetime:testdate|nullable',
-            ],
-            'validations' => [
-                'create' => '',
-                'update' => '',
-            ],
-            'datatable' => [
-                'title' => 'date',
-                'data' => 'testdate',
-            ],
-            'exporttable' => 'testdate',
-            'input' => [
-                'type' => 'text',
-                'class' => 'datepicker'
-            ],
-            'casts' => 'datetime:Y-m-d',
-            'mutators' => [
-                // 'get' => 'return \Carbon\Carbon::parse($value);',
-                'set' => '$this->attributes[\'testdate\'] = \Carbon\Carbon::parse($value);',
-            ]
-        ],
-
-        'testdaterange_start' => [
-            'primary' => false,
-            'migrations' => [
-                'datetime:testdaterange_start|nullable',
-            ],
-            'validations' => [
-                'create' => '',
-                'update' => '',
-            ],
-            // 'datatable' => [
-            //     'title' => 'date',
-            //     'data' => 'testdaterange_start',
-            // ],
-            // 'exporttable' => 'testdaterange_start',
-            'input' => [
-                'type' => 'text',
-                'class' => 'rangedatepicker'
-            ],
-            'casts' => 'datetime:Y-m-d',
-            'mutators' => [
-                'get' => 'return $this->attributes[\'testdaterange_start\'] ." - ".$this->attributes[\'testdaterange_end\'];',
-                'set' => '
-                    list($start,$end) = explode(\' - \',$value);
-                    $this->attributes[\'testdaterange_start\'] = \Carbon\Carbon::parse(trim($start));
-                    $this->attributes[\'testdaterange_end\'] = \Carbon\Carbon::parse(trim($end));
-                ',
-            ]
-        ],
-
-        'testdaterange_end' => [
-            'primary' => false,
-            'migrations' => [
-                'datetime:testdaterange_end|nullable',
-            ],
-            // 'validations' => [
-            //     'create' => '',
-            //     'update' => '',
-            // ],
-            // 'datatable' => [
-            //     'title' => 'date',
-            //     'data' => 'testdaterange_end',
-            // ],
-            // 'exporttable' => 'testdaterange_end',
-            // 'input' => [
-            //     'type' => 'text',
-            //     'class' => 'rangedatepicker'
-            // ],
-            'casts' => 'datetime:Y-m-d',
-            'mutators' => [
-                'get' => 'return $this->attributes[\'testdaterange_start\'] ." - ".$this->attributes[\'testdaterange_end\'];',
-                'set' => '
-                    list($start,$end) = explode(\' - \',$value);
-                    $this->attributes[\'testdaterange_start\'] = \Carbon\Carbon::parse(trim($start));
-                    $this->attributes[\'testdaterange_end\'] = \Carbon\Carbon::parse(trim($end));
-                ',
-            ]
-        ],
-
-        'testdaterange' => [
-            'primary' => false,
-            // 'migrations' => [
-            //     'datetime:testdaterange_start|nullable',
-            //     'datetime:testdaterange_end|nullable',
-            // ],
-            // 'validations' => [
-            //     'create' => '',
-            //     'update' => '',
-            // ],
-            'datatable' => [
-                'title' => 'date',
-                'data' => 'testdaterange',
-            ],
-            // 'exporttable' => 'testdaterange',
-            // 'input' => [
-            //     'type' => 'text',
-            //     'class' => 'rangedatepicker'
-            // ],
-            'appends' => true,
-            'mutators' => [
-                'get' => 'return $this->attributes[\'testdaterange_start\'] ." - ".$this->attributes[\'testdaterange_end\'];',
-                
-            ]
-        ],
 
 ### Use
 **Generate config file**

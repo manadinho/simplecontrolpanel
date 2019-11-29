@@ -21,6 +21,16 @@
                         </form>
                     </div>
                 </li>
+                <li class="nav-item dropdown font-weight-bold">
+                    <a href="#" id="localeDropdown" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                        <span class="d-none d-md-inline text-uppercase">{{ \App::getLocale() }}</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="localeDropdown">
+                        @foreach (scan_langs_dir() as $locale)
+                        <a href="{{ route('admin.locale',[$locale]) }}" class="dropdown-item text-uppercase">{{ $locale }}</a>
+                        @endforeach
+                    </div>
+                </li>
             </ul>
         </div>
     </nav>

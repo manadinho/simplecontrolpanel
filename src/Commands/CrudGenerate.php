@@ -13,6 +13,8 @@ class CrudGenerate extends Command
     protected $files;
     protected $config;
     protected $replaces = [];
+    protected $controller_request_creates = [];
+    protected $controller_request_updates = [];
 
     public function __construct(Filesystem $files)
     {
@@ -164,7 +166,10 @@ class CrudGenerate extends Command
             // validations (create & update)
             if (!empty($values['validations'])) {
                 foreach ($values['validations'] as $method => $rules) {
-                    $validations[$method][] = $this->indent(3) . '"' . $attribute . '" => "' . $rules . '",';
+                    if (isset($values['input']['type']) && $values['input']['type'] == 'file')
+                        $validations[$method][] = $this->indent(3) . '"' . $attribute . '_file" => "' . $rules . '",';
+                    else 
+                        $validations[$method][] = $this->indent(3) . '"' . $attribute . '" => "' . $rules . '",';
                 }
             }
 
@@ -231,31 +236,50 @@ class CrudGenerate extends Command
         }
         else if ($input['type'] == 'file') {
             $form_enctype = ' enctype="multipart/form-data"';
-            $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/file.stub');
+            if ($method == 'update') {
+                $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/file_update_single.stub');
+                if (!empty($input['multiple'])) {
+                    $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/file_update_multiple.stub');
+                }
+            } else {
+                $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/file_create_single.stub');
+                if (!empty($input['multiple'])) {
+                    $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/file_create_multiple.stub');
+                }
+            }
             $replaces['{input_name}'] = $attribute;
             $replaces['{input_id}'] = $attribute;
             $replaces['{input_multiple}'] = !empty($input['multiple']) ? ' multiple' : '';
             $replaces['{input_class}'] = isset($input['class']) && $input['class'] != ''? ' '.$input['class']:'';
+            $replaces['{input_value}'] = $method == 'update' ? '$' . $this->replaces['{model_variable}'] . '->' . $attribute . '' : '';
             $attribute_file = $attribute.'_file';
             $model_variables = $this->replaces['{model_variables}'];
 
-            $this->controller_request_creates = [];
-            $this->controller_request_creates[] =
-<<<EOF
+            if (empty($input['multiple'])) {
+                $this->controller_request_updates[] = $this->controller_request_creates[] =
+<<<EOT
         if (request()->hasFile('$attribute_file')) {
             request()->merge([
                 '$attribute' => str_replace('public', 'storage', request()->file('$attribute_file')->store('public/$model_variables')),
             ]);
         }
-EOF;
-            $this->controller_request_updates[] =
-<<<EOF
+EOT;
+            } else {
+                $this->controller_request_updates[] = $this->controller_request_creates[] =
+<<<EOT
+        \$uploaded_files = [];
         if (request()->hasFile('$attribute_file')) {
+            foreach(request()->file('$attribute_file') as \$key => \$file)
+            {
+                \$uploaded_files[] = str_replace('public', 'storage', request()->file('$attribute_file.'.\$key)->store('public/$model_variables'));
+            }
             request()->merge([
-                '$attribute' => str_replace('public', 'storage', request()->file('$attribute_file')->store('public/$model_variables')),
+                '$attribute' => \$uploaded_files,
             ]);
         }
-EOF;
+EOT;
+            }
+
         }
         else if ($input['type'] == 'select') {
             $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/select.stub');
@@ -463,9 +487,18 @@ EOF;
         foreach ($this->files->allFiles($this->lap['stubs'] . '/views/models') as $file) {
             if ($file->getFilename() != 'widget.stub') {
                 $new_file = $view_path . '/' . ltrim($file->getRelativePath() . '/' . str_replace('.stub', '.blade.php', $file->getFilename()), '/');
-                if ($this->prompt($new_file)) {
-                    $this->files->put($new_file, $this->replace($file->getContents()));
-                    $this->line('View files created: <info>' . $new_file . '</info>');
+                if ($file->getFilename() == 'seo_action.stub') {
+                    if ($this->config['need_seo']) {
+                        if ($this->prompt($new_file)) {
+                            $this->files->put($new_file, $this->replace($file->getContents()));
+                            $this->line('View files created: <info>' . $new_file . '</info>');
+                        }
+                    }
+                } else {
+                    if ($this->prompt($new_file)) {
+                        $this->files->put($new_file, $this->replace($file->getContents()));
+                        $this->line('View files created: <info>' . $new_file . '</info>');
+                    }
                 }
             }
         }
