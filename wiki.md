@@ -28,6 +28,14 @@ Publish advanced files (1 by 1):
     php artisan vendor:publish --tag=lap.backend.view
     php artisan vendor:publish --tag=lap.users.view
 
+Publish all migrations files:
+
+    php artisan vendor:publish --tag=lap.migrations
+
+Publish all stubs files:
+
+    php artisan vendor:publish --tag=lap.stubs
+
 Publish all views files:
 
     php artisan vendor:publish --tag=lap.all.view
