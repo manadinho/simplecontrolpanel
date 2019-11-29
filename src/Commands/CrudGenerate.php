@@ -13,6 +13,8 @@ class CrudGenerate extends Command
     protected $files;
     protected $config;
     protected $replaces = [];
+    protected $controller_request_creates = [];
+    protected $controller_request_updates = [];
 
     public function __construct(Filesystem $files)
     {
@@ -164,7 +166,10 @@ class CrudGenerate extends Command
             // validations (create & update)
             if (!empty($values['validations'])) {
                 foreach ($values['validations'] as $method => $rules) {
-                    $validations[$method][] = $this->indent(3) . '"' . $attribute . '" => "' . $rules . '",';
+                    if (isset($values['input']['type']) && $values['input']['type'] == 'file')
+                        $validations[$method][] = $this->indent(3) . '"' . $attribute . '_file" => "' . $rules . '",';
+                    else 
+                        $validations[$method][] = $this->indent(3) . '"' . $attribute . '" => "' . $rules . '",';
                 }
             }
 
@@ -246,24 +251,31 @@ class CrudGenerate extends Command
             $attribute_file = $attribute.'_file';
             $model_variables = $this->replaces['{model_variables}'];
 
-            $this->controller_request_creates = [];
-            $this->controller_request_creates[] =
-<<<EOF
+            if (empty($input['multiple'])) {
+                $this->controller_request_updates[] = $this->controller_request_creates[] =
+<<<EOT
         if (request()->hasFile('$attribute_file')) {
             request()->merge([
                 '$attribute' => str_replace('public', 'storage', request()->file('$attribute_file')->store('public/$model_variables')),
             ]);
         }
-EOF;
-            $this->controller_request_updates = [];
-            $this->controller_request_updates[] =
-<<<EOF
+EOT;
+            } else {
+                $this->controller_request_updates[] = $this->controller_request_creates[] =
+<<<EOT
+        \$uploaded_files = [];
         if (request()->hasFile('$attribute_file')) {
+            foreach(request()->file('$attribute_file') as \$key => \$file)
+            {
+                \$uploaded_files[] = str_replace('public', 'storage', request()->file('$attribute_file')->store('public/$model_variables'));
+            }
             request()->merge([
-                '$attribute' => str_replace('public', 'storage', request()->file('$attribute_file')->store('public/$model_variables')),
+                '$attribute' => \$uploaded_files,
             ]);
         }
-EOF;
+EOT;
+            }
+
         }
         else if ($input['type'] == 'select') {
             $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/select.stub');
