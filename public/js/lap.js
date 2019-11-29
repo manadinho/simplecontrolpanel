@@ -239,12 +239,26 @@ $(document).ready(function () {
     // show file names in label when selected
     $(document).on('change', '.custom-file-input', function() {
         let files = [];
-
-        for (let i = 0; i < $(this)[0].files.length; i++) {
-            files.push($(this)[0].files[i].name);
+        let input = $(this)[0];
+        let placeToInsertImagePreview = $(this).closest('.custom-file').next('.custom-file-gallery');
+        // for (let i = 0; i < input.files.length; i++) {
+        //     files.push(input.files[i].name);
+        // }
+        // Multiple images preview in browser
+        if (input.files) {
+            let filesAmount = input.files.length;
+            placeToInsertImagePreview.html('');
+            for (i = 0; i < filesAmount; i++) {
+                let reader = new FileReader();
+                let name = input.files[i].name;
+                reader.onload = function(event) {
+                    $($.parseHTML('<div class="col-2"><img class="img-fluid img-thumb" title="'+name+'" src="'+event.target.result+'"></div>')).appendTo(placeToInsertImagePreview);
+                }
+                reader.readAsDataURL(input.files[i]);
+            }
         }
 
-        $(this).next('.custom-file-label').html(files.join(', '));
+        // $(this).next('.custom-file-label').html(files.join(', '));
     });
 
     // set user timezone on login
@@ -285,7 +299,14 @@ $(document).ready(function () {
     $('.datepicker').on('cancel.daterangepicker', function(ev, picker) {
         $(this).val('');
     });
-
+    $('.datetimepicker').daterangepicker({
+        singleDatePicker: true,
+        timePicker: true,
+        autoApply: true,
+        locale: {
+          format: 'YYYY-MM-DD hh:mm A'
+        }
+    });
     $('.rangedatepicker').daterangepicker({
         autoUpdateInput: false,
         ranges: {
@@ -302,7 +323,7 @@ $(document).ready(function () {
     $('.rangedatepicker').on('cancel.daterangepicker', function(ev, picker) {
         $(this).val('');
     });
-    
+
     $summernote = $('.summernote').summernote({
         height: 300,
         minHeight: null,

@@ -297,6 +297,24 @@ Multiple attribute available in input type select, file & checkbox.
         'live_search' => false, //option to select. Default true 
     ],
 
+Tags! Sometime we need to able to tags data into json in ur db.
+
+    'tags' => [
+        'primary' => false,
+        'migrations' => [
+            'json:tags|nullable',
+        ],
+        'validations' => [
+            'create' => 'required',
+            'update' => 'required',
+        ],
+        'casts' => 'array',
+        'input' => [
+            'tags' => true,
+            'type' => 'text',
+        ],
+    ],
+
 Mutator
 
     'mutators' => [

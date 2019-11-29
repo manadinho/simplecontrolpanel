@@ -232,10 +232,17 @@ class CrudGenerate extends Command
         else if ($input['type'] == 'file') {
             $form_enctype = ' enctype="multipart/form-data"';
             $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/file.stub');
+            if ($method == 'update') {
+                $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/file_update_single.stub');
+                if (!empty($input['multiple'])) {
+                    $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/file_update_multiple.stub');
+                }
+            }
             $replaces['{input_name}'] = $attribute;
             $replaces['{input_id}'] = $attribute;
             $replaces['{input_multiple}'] = !empty($input['multiple']) ? ' multiple' : '';
             $replaces['{input_class}'] = isset($input['class']) && $input['class'] != ''? ' '.$input['class']:'';
+            $replaces['{input_value}'] = $method == 'update' ? '$' . $this->replaces['{model_variable}'] . '->' . $attribute . '' : '';
             $attribute_file = $attribute.'_file';
             $model_variables = $this->replaces['{model_variables}'];
 
@@ -248,6 +255,7 @@ class CrudGenerate extends Command
             ]);
         }
 EOF;
+            $this->controller_request_updates = [];
             $this->controller_request_updates[] =
 <<<EOF
         if (request()->hasFile('$attribute_file')) {
@@ -463,9 +471,18 @@ EOF;
         foreach ($this->files->allFiles($this->lap['stubs'] . '/views/models') as $file) {
             if ($file->getFilename() != 'widget.stub') {
                 $new_file = $view_path . '/' . ltrim($file->getRelativePath() . '/' . str_replace('.stub', '.blade.php', $file->getFilename()), '/');
-                if ($this->prompt($new_file)) {
-                    $this->files->put($new_file, $this->replace($file->getContents()));
-                    $this->line('View files created: <info>' . $new_file . '</info>');
+                if ($file->getFilename() == 'seo_action.stub') {
+                    if ($this->config['need_seo']) {
+                        if ($this->prompt($new_file)) {
+                            $this->files->put($new_file, $this->replace($file->getContents()));
+                            $this->line('View files created: <info>' . $new_file . '</info>');
+                        }
+                    }
+                } else {
+                    if ($this->prompt($new_file)) {
+                        $this->files->put($new_file, $this->replace($file->getContents()));
+                        $this->line('View files created: <info>' . $new_file . '</info>');
+                    }
                 }
             }
         }
