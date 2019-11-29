@@ -76,8 +76,6 @@ class CrudGenerate extends Command
             '{seo_action}' => isset($this->config['need_seo']) && $this->config['need_seo'] ? "@include('{$view_prefix_name}{$model_variables}.datatable.seo_action')" : '',
             '{seo_init}' => isset($this->config['need_seo']) && $this->config['need_seo'] ? '$this->initSeo(\''.$model_namespace.'\\'.$model_class.'\', $'.$model_variable.'->id);' : '',
         ];
-dd($model_variables);
-exit(__FILE__ . ' LINE -> ' . __LINE__);
     }
 
     public function setAttributeReplaces()
