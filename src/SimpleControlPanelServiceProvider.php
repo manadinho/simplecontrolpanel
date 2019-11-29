@@ -72,17 +72,31 @@ class SimpleControlPanelServiceProvider extends ServiceProvider
      */
     protected function bootForConsole()
     {
-        $this->publishes([__DIR__.'/../config/simplecontrolpanel.php' => config_path('lap.php')], 'lap.install.general');
-        $this->publishes([__DIR__.'/../config/seotools.php' => config_path('seotools.php')], 'lap.install.general');
-        $this->publishes([__DIR__ . '/../public' => public_path('lap')], 'lap.install.general');
-        $this->publishes([__DIR__ . '/../resources/lang' => resource_path('lang')], 'lap.install.general');
-        $this->publishes([__DIR__ . '/../resources/views/layouts' => resource_path('views/vendor/lap/layouts')], 'lap.install.general');
-        $this->publishes([__DIR__ . '/../resources/views/auth' => resource_path('views/vendor/lap/auth')], 'lap.install.general');
-        $this->publishes([__DIR__ . '/../resources/views/backend' => resource_path('views/vendor/lap/backend')], 'lap.install.general');
-        $this->publishes([__DIR__ . '/../resources/views/users' => resource_path('views/vendor/lap/users')], 'lap.install.general');
+        // install general
+        $this->publishes([
+            __DIR__ . '/../public' => public_path('lap'),
+            __DIR__ . '/../resources/lang' => resource_path('lang'),
+            __DIR__ . '/../resources/views/layouts' => resource_path('views/vendor/lap/layouts'),
+            __DIR__ . '/../resources/views/auth' => resource_path('views/vendor/lap/auth'),
+            __DIR__ . '/../resources/views/backend' => resource_path('views/vendor/lap/backend'),
+            __DIR__ . '/../resources/views/users' => resource_path('views/vendor/lap/users'),
+        ], 'lap.general');
 
-        $this->publishes([__DIR__ . '/../resources/views' => resource_path('views/vendor/lap')], 'lap.install.all.view');
-        $this->publishes([__DIR__ . '/routes.php' => resource_path('../'.config('lap.crud_paths.route').'/routes.php')], 'lap.install.route');
+        // install all views
+        $this->publishes([__DIR__ . '/../resources/views' => resource_path('views/vendor/lap')], 'lap.all.view');
+
+        // in case want to customized the routes
+        $this->publishes([__DIR__ . '/routes.php' => resource_path('../'.config('lap.crud_paths.route').'/routes.php')], 'lap.admin.route');
+        
+        // advanced. if u know what to do, install 1 by 1
+        $this->publishes([__DIR__.'/../config/simplecontrolpanel.php' => config_path('lap.php')], 'lap.config');
+        $this->publishes([__DIR__.'/../config/seotools.php' => config_path('seotools.php')], 'lap.seo.config');
+        $this->publishes([__DIR__ . '/../public' => public_path('lap')], 'lap.public');
+        $this->publishes([__DIR__ . '/../resources/lang' => resource_path('lang')], 'lap.lang');
+        $this->publishes([__DIR__ . '/../resources/views/layouts' => resource_path('views/vendor/lap/layouts')], 'lap.layouts');
+        $this->publishes([__DIR__ . '/../resources/views/auth' => resource_path('views/vendor/lap/auth')], 'lap.auth.view');
+        $this->publishes([__DIR__ . '/../resources/views/backend' => resource_path('views/vendor/lap/backend')], 'lap.backend.view');
+        $this->publishes([__DIR__ . '/../resources/views/users' => resource_path('views/vendor/lap/users')], 'lap.users.view');
 
         $files = new Filesystem;
         if (!$files->exists(config('lap.crud_paths.route'))) {
@@ -96,8 +110,8 @@ class SimpleControlPanelServiceProvider extends ServiceProvider
             }
         }
 
-        $this->publishes([__DIR__ . '/../database/migrations' => database_path('migrations')], 'lap.install.migrations');
-        $this->publishes([__DIR__ . '/../resources/stubs/crud/default' => resource_path('stubs/crud/default')], 'lap.install.stubs');
+        $this->publishes([__DIR__ . '/../database/migrations' => database_path('migrations')], 'lap.migrations');
+        $this->publishes([__DIR__ . '/../resources/stubs/crud/default' => resource_path('stubs/crud/default')], 'lap.stubs');
 
         // Registering package commands.
         $this->commands([

@@ -6,17 +6,35 @@ Require via composer:
 
 Publish install files:
 
-    php artisan vendor:publish --tag=lap.install.general
+    php artisan vendor:publish --tag=lap.general
 
-Publish advanced files:
+General install including:
 
-    php artisan vendor:publish --tag=lap.install.route
-    php artisan vendor:publish --tag=lap.install.migrations
-    php artisan vendor:publish --tag=lap.install.stubs
+- public
+- lang
+- layouts
+- auth
+- backend
+- users
+
+Publish advanced files (1 by 1):
+
+    php artisan vendor:publish --tag=lap.config
+    php artisan vendor:publish --tag=lap.seo.config
+    php artisan vendor:publish --tag=lap.public
+    php artisan vendor:publish --tag=lap.lang
+    php artisan vendor:publish --tag=lap.layouts
+    php artisan vendor:publish --tag=lap.auth.view
+    php artisan vendor:publish --tag=lap.backend.view
+    php artisan vendor:publish --tag=lap.users.view
 
 Publish all views files:
 
-    php artisan vendor:publish --tag=lap.install.all.view
+    php artisan vendor:publish --tag=lap.all.view
+
+Publish admin route files:
+
+    php artisan vendor:publish --tag=lap.admin.route
 
 Add the `AdminUser`, `DynamicFillable`, and `UserTimezone` traits to your `User` model:
 
