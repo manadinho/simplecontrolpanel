@@ -289,6 +289,7 @@ $(document).ready(function () {
 
     $('.datepicker').daterangepicker({
         singleDatePicker: true,
+        autoUpdateInput: false,
         locale: {
           format: 'YYYY-MM-DD'
         }
@@ -300,12 +301,19 @@ $(document).ready(function () {
         $(this).val('');
     });
     $('.datetimepicker').daterangepicker({
+        autoUpdateInput: false,
         singleDatePicker: true,
         timePicker: true,
         autoApply: true,
         locale: {
           format: 'YYYY-MM-DD hh:mm A'
         }
+    });
+    $('.datetimepicker').on('apply.daterangepicker', function(ev, picker) {
+        $(this).val(picker.startDate.format('YYYY-MM-DD hh:mm A'));
+    });
+    $('.datetimepicker').on('cancel.daterangepicker', function(ev, picker) {
+        $(this).val('');
     });
     $('.rangedatepicker').daterangepicker({
         autoUpdateInput: false,
@@ -321,6 +329,26 @@ $(document).ready(function () {
         $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
     });
     $('.rangedatepicker').on('cancel.daterangepicker', function(ev, picker) {
+        $(this).val('');
+    });
+    $('.date_filter_range').daterangepicker({
+        autoUpdateInput: false,
+        ranges: {
+           'Today': [moment(), moment()],
+           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+           'This Month': [moment().startOf('month'), moment().endOf('month')],
+           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        },
+        locale: {
+          format: 'YYYY-MM-DD'
+        }
+    });
+    $('.date_filter_range').on('apply.daterangepicker', function(ev, picker) {
+        $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
+    });
+    $('.date_filter_range').on('cancel.daterangepicker', function(ev, picker) {
         $(this).val('');
     });
 

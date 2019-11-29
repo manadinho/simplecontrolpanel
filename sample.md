@@ -1,5 +1,7 @@
 ### Sample CRUD CONFIG
 
+    <?php
+
     return [
 
         // menu icon (fontawesome class) Icon link -> https://fontawesome.com/v4.7.0/icons/
@@ -165,7 +167,8 @@
                     'date:daterangepicker_end|nullable',
                 ],
             ],
-            // append only to mutating the combine of daterangepicker_start - daterangepicker_end 'daterangepicker' => [
+            // append only to mutating the combine of daterangepicker_start - daterangepicker_end 
+            'daterangepicker' => [
                 'primary' => false,
                 'datatable' => [
                     'title' => 'daterangepicker',

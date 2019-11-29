@@ -97,6 +97,7 @@ class CrudGenerate extends Command
         $form_enctype = '';
         $inputs_create = [];
         $inputs_update = [];
+        $inputs_filter = [];
 
         foreach ($attributes as $attribute => $values) {
             // model primary attribute
@@ -202,6 +203,9 @@ class CrudGenerate extends Command
                 $inputs_create[] = str_replace('{attribute_input}', $this->inputContent($values['input'], 'create', $attribute, $form_enctype), $input_stub) . PHP_EOL;
                 $inputs_update[] = str_replace('{attribute_input}', $this->inputContent($values['input'], 'update', $attribute, $form_enctype), $input_stub) . PHP_EOL;
             }
+            if (!empty($values['filter'])) {
+                $inputs_filter[] = $this->indent(5) . $this->filterContent($values['filter'], $values['input'], $attribute) . PHP_EOL;
+            }
         }
 
         $this->replaces['{model_casts}'] = $model_casts ? 'protected $casts = [' . implode(', ', $model_casts) . '];' : '';
@@ -218,9 +222,33 @@ class CrudGenerate extends Command
         $this->replaces['{read_attributes}'] = $read_attributes ? trim(implode(PHP_EOL, $read_attributes)) : '';
         $this->replaces['{form_enctype}'] = $form_enctype;
         $this->replaces['{inputs_create}'] = $inputs_create ? trim(implode(PHP_EOL, $inputs_create)) : '';
-        $this->replaces['{inputs_update}'] = $inputs_create ? trim(implode(PHP_EOL, $inputs_update)) : '';
+        $this->replaces['{inputs_update}'] = $inputs_update ? trim(implode(PHP_EOL, $inputs_update)) : '';
+        $this->replaces['{inputs_filter}'] = $inputs_filter ? trim(implode(PHP_EOL, $inputs_filter)) : '';
         $this->replaces['{controller_request_creates}'] = isset($this->controller_request_creates) && is_array($this->controller_request_creates)? trim(implode(PHP_EOL, array_unique($this->controller_request_creates))):'';
         $this->replaces['{controller_request_updates}'] = isset($this->controller_request_updates) && is_array($this->controller_request_updates)? trim(implode(PHP_EOL, array_unique($this->controller_request_updates))):'';
+    }
+
+    public function filterContent($filter, $input, $attribute)
+    {
+        $replaces = [];
+        $replaces['{input_label}'] = ucwords(str_replace('_', ' ', $attribute));
+        if (in_array($filter['type'], ['text','date','date_range'])) {
+            $stub = $this->files->get($this->lap['stubs'] . '/views/filters/'.trim(strtolower($filter['type'])).'.stub');
+            $replaces['{input_name}'] = $attribute;
+            $replaces['{input_id}'] = $attribute;
+        } elseif ($filter['type'] == 'select') {
+            $stub = $this->files->get($this->lap['stubs'] . '/views/filters/select.stub');
+            if (!empty($input['multiple'])) {        
+                $replaces['{input_name_sign}'] = '[]';
+            }
+            $replaces['{input_name}'] = $attribute;
+            $replaces['{input_id}'] = $attribute;
+            $replaces = $this->inputSelectOptions($attribute, $input, 'create', $replaces);
+        }
+
+        $stub = str_replace(array_keys($this->replaces), $this->replaces, str_replace(array_keys($replaces), $replaces, $stub));
+
+        return trim($stub);
     }
 
     public function inputContent($input, $method, $attribute, &$form_enctype)
@@ -283,6 +311,9 @@ EOT;
         }
         else if ($input['type'] == 'select') {
             $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/select.stub');
+            if (!empty($input['multiple'])) {        
+                $replaces['{input_name_sign}'] = '[]';
+            }
             $replaces['{input_name}'] = $attribute;
             $replaces['{input_id}'] = $attribute;
             $replaces = $this->inputSelectOptions($attribute, $input, $method, $replaces);

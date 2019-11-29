@@ -27,10 +27,13 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="{{__l('close', 'Close')}}"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
-                    {inputs_filter}
                     <div class="form-group">
-                        <label for="created_at_range">{{__l('date', 'Created Date')}}</label>
-                        <input type="text" class="form-control filterInput date_filter_range" name="created_at_range" id="created_at_range" value="{{ old('filter.created_at_range') }}">
+                        <label for="name">{{__l('name', 'Name')}}</label>
+                        <input type="text" class="form-control filterInput" name="name" id="name" value="{{ old('filter.name') }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="created_at_range">{{__l('date', 'Date')}}</label>
+                        <input type="text" class="form-control filterInput" name="created_at_range" id="created_at_range" value="{{ old('filter.created_at_range') }}">
                     </div>
                     <div class="form-group">
                         <label for="status">{{__l('status', 'Status')}}</label>
@@ -53,4 +56,28 @@
 @push('scripts')
 {!! $html->scripts() !!}
 @include('lap::layouts.datatable_scripts',compact('dtid','export_url'))
+<script type="text/javascript">
+(function(window, $) {
+    $('#created_at_range').daterangepicker({
+        ranges: {
+           '{{__l('today', 'Today')}}': [moment(), moment()],
+           '{{__l('yesterday', 'Yesterday')}}': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+           '{{__l('last_7_days', 'Last 7 Days')}}': [moment().subtract(6, 'days'), moment()],
+           '{{__l('last_30_days', 'Last 30 Days')}}': [moment().subtract(29, 'days'), moment()],
+           '{{__l('this_month', 'This Month')}}': [moment().startOf('month'), moment().endOf('month')],
+           '{{__l('last_month', 'Last Month')}}': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        },
+        autoUpdateInput: false,
+        locale: {
+          format: 'YYYY-MM-DD'
+        }
+    });
+    $('#created_at_range').on('apply.daterangepicker', function(ev, picker) {
+        $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
+    });
+    $('#created_at_range').on('cancel.daterangepicker', function(ev, picker) {
+        $(this).val('');
+    });
+})(window, jQuery);
+</script>
 @endpush

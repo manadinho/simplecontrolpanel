@@ -1,0 +1,4 @@
+                    <div class="form-group">
+                        <label for="{input_name}_date_range">{{__l('{input_name}', '{input_label}')}}</label>
+                        <input type="text" class="form-control filterInput date_filter_range" name="{input_name}_date_range" id="{input_id}_date_range" value="{{ old('filter.{input_name}_date_range') }}">
+                    </div>

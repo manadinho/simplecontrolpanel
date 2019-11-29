@@ -8,6 +8,7 @@ use Artesaos\SEOTools\Facades\OpenGraph;
 use Artesaos\SEOTools\Facades\TwitterCard;
 use Artesaos\SEOTools\Facades\JsonLd;
 use Rap2hpoutre\FastExcel\FastExcel;
+use Carbon\Carbon;
 
 trait Controller
 {
@@ -26,6 +27,9 @@ trait Controller
                         } elseif (preg_match('/_at_range$/i', $key)) {
                             $value = explode(' - ', $value);
                             $object->whereBetween(str_replace('_range', '', $key),[Carbon::parse($value[0]),Carbon::parse($value[1])->addDay()]);
+                        } elseif (preg_match('/_date_range$/i', $key)) {
+                            $value = explode(' - ', $value);
+                            $object->whereBetween(str_replace('_date_range', '', $key),[Carbon::parse($value[0]),Carbon::parse($value[1])->addDay()]);
                         } else {
                             $object->where($key,'like','%'.$value.'%');
                         }
