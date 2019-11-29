@@ -236,11 +236,15 @@ class CrudGenerate extends Command
         }
         else if ($input['type'] == 'file') {
             $form_enctype = ' enctype="multipart/form-data"';
-            $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/file.stub');
             if ($method == 'update') {
                 $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/file_update_single.stub');
                 if (!empty($input['multiple'])) {
                     $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/file_update_multiple.stub');
+                }
+            } else {
+                $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/file_create_single.stub');
+                if (!empty($input['multiple'])) {
+                    $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/file_create_multiple.stub');
                 }
             }
             $replaces['{input_name}'] = $attribute;
@@ -267,7 +271,7 @@ EOT;
         if (request()->hasFile('$attribute_file')) {
             foreach(request()->file('$attribute_file') as \$key => \$file)
             {
-                \$uploaded_files[] = str_replace('public', 'storage', request()->file('$attribute_file')->store('public/$model_variables'));
+                \$uploaded_files[] = str_replace('public', 'storage', request()->file('$attribute_file.'.\$key)->store('public/$model_variables'));
             }
             request()->merge([
                 '$attribute' => \$uploaded_files,

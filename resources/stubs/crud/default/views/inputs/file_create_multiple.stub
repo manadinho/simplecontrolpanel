@@ -2,10 +2,4 @@
                             <input type="file" name="{input_name}_file[]" class="custom-file-input{input_class}"{input_multiple} required id="{input_id}_file" aria-describedby="{input_name}_file">
                             <label class="custom-file-label" for="{input_id}_file">Choose Image ONLY (584px × 515px)</label>
                         </div>
-                        <div class="mt-2 row custom-file-gallery">
-                        	@foreach ({input_value} as $file)
-	                        <div class="col-2">
-	                        	<img class="img-fluid img-thumb" title="{{ asset($file) }}" src="{{ asset($file) }}">
-	                        </div>
-                        	@endforeach
-                        </div>
+                        <div class="mt-2 row custom-file-gallery"></div>
