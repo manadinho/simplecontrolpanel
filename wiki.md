@@ -340,6 +340,14 @@ Summernote
         'class' => 'summernote'
     ],
 
+Advanced Filter Inputs
+
+    'filters' => [
+        'type' => 'text', // select, text, date, date_range
+    ]
+
+At the moment, just support select, text, date, date_range.
+
 If you need editor. Just add summernote to your class.
 
 Date Picker

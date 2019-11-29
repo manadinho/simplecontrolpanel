@@ -43,6 +43,9 @@
                 'input' => [
                     'type' => 'text',
                 ],
+                'filter' => [
+                    'type' => 'text',
+                ],
             ],
 
             'image' => [
@@ -110,6 +113,9 @@
                 'input' => [
                     'type' => 'text',
                     'class' => 'datepicker'
+                ],
+                'filter' => [
+                    'type' => 'date',
                 ]
             ],
 
@@ -134,6 +140,9 @@
                 'mutators' => [
                     // 'get' => 'return \Carbon\Carbon::parse($value);',
                     'set' => '$this->attributes[\'datetimepicker\'] = \Carbon\Carbon::parse($value);',
+                ],
+                'filter' => [
+                    'type' => 'date_range',
                 ]
             ],
 
@@ -178,6 +187,31 @@
                 'appends' => 'daterangepicker',
                 'mutators' => [
                     'get' => 'return $this->attributes[\'daterangepicker_start\'] ." - ".$this->attributes[\'daterangepicker_end\'];',
+                ]
+            ],
+
+            'color' => [
+                'primary' => false,
+                'migrations' => [
+                    'string:colors|nullable|default:A',
+                ],
+                'datatable' => [
+                    'title' => 'Color',
+                    'data' => 'color',
+                ],
+                'exporttable' => 'color',
+                'input' => [
+                    'type' => 'select',
+                    'option_return' => 'array', // array / object
+                    'options' => [
+                        'Red' => 'Red',
+                        'Green' => 'Green',
+                        'Blue' => 'Blue',
+                    ],
+                    'multiple' => true,
+                ],
+                'filter' => [
+                    'type' => 'select',
                 ]
             ],
 
