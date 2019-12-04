@@ -101,3 +101,19 @@ if (!function_exists('scan_langs_dir')) {
         return $locales;
     }
 }
+
+if (!function_exists('pushered')) {
+    function pushered($data = [], $channel = '', $event = 'general')
+    {
+        $pusher = new \Pusher\Pusher(
+            env('PUSHER_APP_KEY'),
+            env('PUSHER_APP_SECRET'),
+            env('PUSHER_APP_ID'),
+            [
+                'cluster' => env('PUSHER_APP_CLUSTER'),
+                'useTLS' => true
+            ]
+        );
+        $pusher->trigger((sha1($channel != ''? $channel:env("APP_NAME"))), sha1($event), $data);
+    }
+}

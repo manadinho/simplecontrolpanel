@@ -3,20 +3,12 @@
 //     return redirect()->route('admin.login');
 // })->name('login');
 
-Route::group(['middleware' => 'web','prefix' => config('lap.route_prefix','admin')], function () {
-    // backend
-    Route::get('/', config('lap.controllers.backend') . '@index')->name('admin');
-    Route::get('/locale/{locale}', config('lap.controllers.backend') . '@locale')->name('admin.locale');
-    Route::get('dashboard', config('lap.controllers.backend') . '@dashboard')->name('admin.dashboard');
-    Route::get('settings', config('lap.controllers.backend') . '@settingsForm')->name('admin.settings');
-    Route::patch('settings', config('lap.controllers.backend') . '@settings');
-    Route::post('summernote/image/upload', config('lap.controllers.backend') . '@summernoteImageUpload')->name('admin.summernote.imageUpload');
-    Route::get('logs', config('lap.controllers.backend').'@view_logs')->name('admin.log');
+Route::group(['middleware' => ['web','https_protocol']], function () {
 
     // auth
     Route::get('login', config('lap.controllers.auth.login') . '@loginForm')->name('admin.login');
-    Route::post('login', config('lap.controllers.auth.login') . '@login');
-    Route::post('logout', config('lap.controllers.auth.login') . '@logout')->name('admin.logout');
+    Route::post('login', config('lap.controllers.auth.login') . '@login')->name('admin.login');
+    Route::any('logout', config('lap.controllers.auth.login') . '@logout')->name('admin.logout');
     Route::get('profile', config('lap.controllers.auth.profile') . '@updateForm')->name('admin.profile');
     Route::patch('profile', config('lap.controllers.auth.profile') . '@update');
     Route::get('password/change', config('lap.controllers.auth.change_password') . '@changeForm')->name('admin.password.change');
@@ -25,6 +17,19 @@ Route::group(['middleware' => 'web','prefix' => config('lap.route_prefix','admin
     Route::post('password/email', config('lap.controllers.auth.forgot_password') . '@sendResetLinkEmail')->name('admin.password.email');
     Route::get('password/reset/{token?}', config('lap.controllers.auth.reset_password') . '@resetForm')->name('admin.password.reset');
     Route::post('password/reset', config('lap.controllers.auth.reset_password') . '@reset')->name('admin.password.update');
+
+});
+
+Route::group(['middleware' => ['web','https_protocol'],'prefix' => config('lap.route_prefix','admin')], function () {
+    // backend
+    Route::get('/', config('lap.controllers.backend') . '@index')->name('admin');
+    Route::get('/locale/{locale}', config('lap.controllers.backend') . '@locale')->name('admin.locale');
+    Route::get('dashboard', config('lap.controllers.backend') . '@dashboard')->name('admin.dashboard');
+    Route::get('settings', config('lap.controllers.backend') . '@settingsForm')->name('admin.settings');
+    Route::patch('settings', config('lap.controllers.backend') . '@settings');
+    Route::post('summernote/image/upload', config('lap.controllers.backend') . '@summernoteImageUpload')->name('admin.summernote.imageUpload');
+    Route::get('logs', config('lap.controllers.backend').'@view_logs')->name('admin.log');
+    Route::get('test', config('lap.controllers.backend').'@test')->name('admin.test');
 
     // role
     Route::get('roles', config('lap.controllers.role') . '@index')->name('admin.roles');

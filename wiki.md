@@ -380,6 +380,18 @@ Appends
 
 To append the field name
 
+Desktop/Web Push
+    
+    pushered([
+        'title' => 'General Notification', 
+        'message' => 'Hello World!',
+        'icon' => '',
+        'link' => '',
+        'timeout' => '',
+    ]);
+
+Simply include this section to where you want to fire notification in your controller.
+
 ### Use
 **Generate config file**
 ```php

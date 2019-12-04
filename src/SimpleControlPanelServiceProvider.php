@@ -26,6 +26,7 @@ class SimpleControlPanelServiceProvider extends ServiceProvider
         $this->app['router']->aliasMiddleware('not_admin_role', 'Wikichua\Simplecontrolpanel\Middleware\NotAdminRole');
         $this->app['router']->aliasMiddleware('not_system_doc', 'Wikichua\Simplecontrolpanel\Middleware\NotSystemDoc');
         $this->app['router']->aliasMiddleware('api_logger', 'Wikichua\Simplecontrolpanel\Middleware\ApiLogger');
+        $this->app['router']->aliasMiddleware('https_protocol', 'Wikichua\Simplecontrolpanel\Middleware\HttpsProtocol');
 
         $this->mergeConfigFrom(__DIR__.'/../config/simplecontrolpanel.php', 'lap');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'lap');

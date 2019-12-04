@@ -28,7 +28,11 @@ class LoginController extends Controller
 
         activity('Logged In');
 
-        return response()->json(['redirect' => session()->pull('url.intended', route('admin.dashboard'))]);
+        if (auth()->user()->can('Access Admin Panel')) {
+            return response()->json(['redirect' => session()->pull('url.intended', route('admin.dashboard'))]);
+        }
+        return response()->json(['redirect' => session()->pull('url.intended', '/')]);
+
     }
 
     protected function loggedOut(Request $request)

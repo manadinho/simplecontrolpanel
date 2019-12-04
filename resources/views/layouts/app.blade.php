@@ -47,7 +47,56 @@
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.js"></script>
 <script type="text/javascript" src="//www.jqueryscript.net/demo/Bootstrap-4-Tag-Input-Plugin-jQuery/tagsinput.js"></script>
+<script type="text/javascript" src="//js.pusher.com/5.0/pusher.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/push.js/1.0.12/push.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/push.js/1.0.12/serviceWorker.min.js"></script>
 <script type="text/javascript" src="{{ asset('lap/js/lap.js') }}"></script>
 @routes
+<script type="text/javascript">
+$(function() {
+    @if (env('BROADCAST_DRIVER') == 'pusher')
+    let pusher = new Pusher('{{ env("PUSHER_APP_KEY") }}', {
+      cluster: '{{ env("PUSHER_APP_CLUSTER") }}',
+      forceTLS: true
+    });
+    let pusher_callback = function(data) {
+        let icon = '{{ asset('lap/logo.png') }}';
+        if (data.icon != '') {
+            icon = data.icon;
+        }
+        let link = '';
+        if (data.link != '') {
+            link = data.link;
+        }
+        let timeout = 5000;
+        if (data.timeout != '') {
+            timeout = data.timeout;
+        }
+        Push.create(data.title, {
+            body: data.message,
+            icon: icon,
+            link: link,
+            timeout: timeout,
+            onClick: function () {
+                window.focus();
+                this.close();
+            }
+        });
+    }
+    let channel = pusher.subscribe('{{ sha1(env("APP_NAME")) }}');
+    channel.bind('{{ sha1('general') }}', pusher_callback);
+
+    @if (auth()->check())
+    @php
+        $groups = array_unique(auth()->user()->flatPermissions()->pluck('group')->toArray());
+    @endphp
+    @foreach ($groups as $group)
+    channel.bind('{{ sha1($group) }}', pusher_callback);
+    @endforeach
+    @endif
+
+    @endif
+});
+</script>
 @stack('scripts')
 </html>
