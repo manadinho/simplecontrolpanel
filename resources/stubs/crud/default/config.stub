@@ -5,7 +5,7 @@ return [
     // menu icon (fontawesome class) Icon link -> https://fontawesome.com/v4.7.0/icons/
     'icon' => 'fa-link',
 
-    'need_seo' => true,
+    'need_seo' => false,
 
     // model attributes
     'attributes' => [
