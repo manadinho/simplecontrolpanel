@@ -20,6 +20,7 @@ return [
         'setting' => '\Wikichua\Simplecontrolpanel\Controllers\SettingController',
         'user' => '\Wikichua\Simplecontrolpanel\Controllers\UserController',
         'seotool' => '\Wikichua\Simplecontrolpanel\Controllers\SeotoolController',
+        'swagger' => '\Wikichua\Simplecontrolpanel\Controllers\SwaggerController',
         'api' => '\Wikichua\Simplecontrolpanel\Controllers\ApiController',
     ],
 
