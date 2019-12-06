@@ -454,3 +454,26 @@ and your api.php route
     Route::middleware('auth:api')->group(function() {
         Route::any('/', 'ApiController@index')->name('api.verify');
     }
+
+Use Swagger Package?
+
+    composer require darkaonline/l5-swagger
+    php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
+
+You can access your documentation at /api/documentation endpoint.
+
+For annotations 
+    
+    https://github.com/DarkaOnLine/L5-Swagger/blob/master/tests/storage/annotations/OpenApi/Anotations.php
+
+Once you done putting in the annotations in your api controller
+    
+    php artisan l5-swagger:generate
+
+This basically generate your json in a directory you set in /config/l5-swagger.php and create api-docs.json in your api-docs directory.
+
+Alternative...
+ 
+    php artisan crud:swagger <ControllerFile>.php <JsonFile>.json
+
+I made this to allow specifically generate json file based on controller you want. And prevent the entire api-docs directory deleted.

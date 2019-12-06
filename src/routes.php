@@ -94,3 +94,7 @@ Route::group(['middleware' => ['web','https_protocol'],'prefix' => config('lap.r
 });
 
 Route::get('docs/{id?}/{slug?}', config('lap.controllers.doc') . '@frontend')->name('docs');
+
+if (class_exists('\L5Swagger\Http\Controllers\SwaggerController')) {
+    Route::any(config('l5-swagger.routes.docs').'/{jsonFile?}', 'SwaggerController@docs')->middleware(config('l5-swagger.routes.middleware.docs', []))->name('l5-swagger.docs');
+}
