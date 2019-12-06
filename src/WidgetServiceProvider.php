@@ -24,11 +24,6 @@ class WidgetServiceProvider extends ServiceProvider
             $this->commands([
                 Commands\CrudWidget::class,
             ]);
-            if (class_exists('\L5Swagger\Http\Controllers\SwaggerController')) {
-                $this->commands([
-                    Commands\CrudSwagger::class,
-                ]);
-            }
         }
     }
 

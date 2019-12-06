@@ -17,4 +17,4 @@ Route::group(['middleware' => ['web','https_protocol'],'prefix' => config('lap.r
 	Route::any('{model_variables}/export', '{controller_route}{model_class}Controller@export')->name('{view_prefix_name}{model_variables}.export');
 	//reorder
 	Route::any('{model_variables}/reorder', '{controller_route}{model_class}Controller@reorder')->name('{view_prefix_name}{model_variables}.reorder');
-)}
+});
