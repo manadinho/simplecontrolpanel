@@ -71,7 +71,7 @@ class SeotoolController extends Controller
     {
         $model = app(urldecode($model_name))->find($model_id);
         $this->validate(request(), []);
-        
+
         $og_images = [];
         if (request()->hasFile('og_images_file')) {
             foreach(request()->file('og_images_file') as $key => $file)
@@ -125,7 +125,7 @@ class SeotoolController extends Controller
     public function update($id)
     {
         $seotool = app(config('lap.models.seotool'))->find($id);
-        $model = app($seotool->name)->find($seotool->model_id);
+        $model = app($seotool->getOriginal('model'))->find($seotool->model_id);
         $this->validate(request(), []);
 
         $og_images = $seotool->og_images;
@@ -196,6 +196,6 @@ class SeotoolController extends Controller
         }
         return response()->json([
             'reload_datatables' => true,
-        ]);        
+        ]);
     }
 }
