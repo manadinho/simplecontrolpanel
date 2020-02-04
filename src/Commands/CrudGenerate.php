@@ -69,14 +69,14 @@ class CrudGenerate extends Command
             '{model_strings}' => $model_strings = str_plural($model_string),
             '{model_variable}' => $model_variable = strtolower(str_replace(' ', '_', $model_string)),
             '{model_variables}' => $model_variables = strtolower(str_replace(' ', '_', $model_strings)),
-            '{l_model_string}' => "__l('" . $model_variable . "', '". $model_string ."')",
-            '{l_model_strings}' => "__l('" . $model_variable . "', '". $model_strings ."')",
+            '{l_model_string}' => "__l('" . $model_variable . "', '" . $model_string . "')",
+            '{l_model_strings}' => "__l('" . $model_variable . "', '" . $model_strings . "')",
             '{model_primary_attribute}' => 'id',
             '{model_icon}' => isset($this->config['icon']) ? $this->config['icon'] : 'fa-link',
             '{view_prefix_url}' => $view_prefix_url = ltrim(str_replace('resources/views', '', $this->lap['views']) . '/', '/'),
             '{view_prefix_name}' => $view_prefix_name = str_replace('/', '.', $view_prefix_url),
             '{seo_action}' => isset($this->config['need_seo']) && $this->config['need_seo'] ? "@include('{$view_prefix_name}{$model_variables}.datatable.seo_action')" : '',
-            '{seo_init}' => isset($this->config['need_seo']) && $this->config['need_seo'] ? '$this->initSeo(\''.$model_namespace.'\\'.$model_class.'\', $'.$model_variable.'->id);' : '',
+            '{seo_init}' => isset($this->config['need_seo']) && $this->config['need_seo'] ? '$this->initSeo(\'' . $model_namespace . '\\' . $model_class . '\', $' . $model_variable . '->id);' : '',
         ];
     }
 
@@ -115,7 +115,7 @@ class CrudGenerate extends Command
                 if ($values['appends'] === true) {
                     $model_appends[] = "'$attribute'";
                 } else {
-                    $model_appends[] = "'".trim($values['appends'])."'";
+                    $model_appends[] = "'" . trim($values['appends']) . "'";
                     $mutator_name = trim($values['appends']);
                 }
             }
@@ -141,18 +141,18 @@ class CrudGenerate extends Command
             if (!empty($values['mutators']['get'])) {
                 $mutators[] = $this->indent() . 'public function get' . studly_case($mutator_name) . 'Attribute($value)';
                 $mutators[] = $this->indent() . '{';
-                $lines = explode("\n",trim($values['mutators']['get']));
+                $lines = explode("\n", trim($values['mutators']['get']));
                 foreach ($lines as $line) {
-                    $mutators[] = $this->indent() . '    '.trim($line);
+                    $mutators[] = $this->indent() . '    ' . trim($line);
                 }
                 $mutators[] = $this->indent() . '}' . PHP_EOL;
             }
             if (!empty($values['mutators']['set'])) {
                 $mutators[] = $this->indent() . 'public function set' . studly_case($mutator_name) . 'Attribute($value)';
                 $mutators[] = $this->indent() . '{';
-                $lines = explode("\n",trim($values['mutators']['set']));
+                $lines = explode("\n", trim($values['mutators']['set']));
                 foreach ($lines as $line) {
-                    $mutators[] = $this->indent() . '    '.trim($line);
+                    $mutators[] = $this->indent() . '    ' . trim($line);
                 }
                 $mutators[] = $this->indent() . '}' . PHP_EOL;
             }
@@ -169,7 +169,7 @@ class CrudGenerate extends Command
                 foreach ($values['validations'] as $method => $rules) {
                     if (isset($values['input']['type']) && $values['input']['type'] == 'file')
                         $validations[$method][] = $this->indent(3) . '"' . $attribute . '_file" => "' . $rules . '",';
-                    else 
+                    else
                         $validations[$method][] = $this->indent(3) . '"' . $attribute . '" => "' . $rules . '",';
                 }
             }
@@ -190,7 +190,7 @@ class CrudGenerate extends Command
             $read_stub = $this->files->get($this->lap['stubs'] . '/views/layouts/read.stub');
             $read_stub = str_replace('{attribute_label}', "__l('{$attribute}','{$attribute_label}')", $read_stub);
 
-            $read_stub = str_replace('{attribute_value}', '{{ ' . (isset($values['casts']) && $values['casts'] == 'array'? "is_array($attribute_value)? implode(', ', $attribute_value):''" : $attribute_value) . ' }}', $read_stub);
+            $read_stub = str_replace('{attribute_value}', '{{ ' . (isset($values['casts']) && $values['casts'] == 'array' ? "is_array($attribute_value)? implode(', ', $attribute_value):''" : $attribute_value) . ' }}', $read_stub);
 
             $read_attributes[] = $read_stub . PHP_EOL;
 
@@ -224,21 +224,21 @@ class CrudGenerate extends Command
         $this->replaces['{inputs_create}'] = $inputs_create ? trim(implode(PHP_EOL, $inputs_create)) : '';
         $this->replaces['{inputs_update}'] = $inputs_update ? trim(implode(PHP_EOL, $inputs_update)) : '';
         $this->replaces['{inputs_filter}'] = $inputs_filter ? trim(implode(PHP_EOL, $inputs_filter)) : '';
-        $this->replaces['{controller_request_creates}'] = isset($this->controller_request_creates) && is_array($this->controller_request_creates)? trim(implode(PHP_EOL, array_unique($this->controller_request_creates))):'';
-        $this->replaces['{controller_request_updates}'] = isset($this->controller_request_updates) && is_array($this->controller_request_updates)? trim(implode(PHP_EOL, array_unique($this->controller_request_updates))):'';
+        $this->replaces['{controller_request_creates}'] = isset($this->controller_request_creates) && is_array($this->controller_request_creates) ? trim(implode(PHP_EOL, array_unique($this->controller_request_creates))) : '';
+        $this->replaces['{controller_request_updates}'] = isset($this->controller_request_updates) && is_array($this->controller_request_updates) ? trim(implode(PHP_EOL, array_unique($this->controller_request_updates))) : '';
     }
 
     public function filterContent($filter, $input, $attribute)
     {
         $replaces = [];
         $replaces['{input_label}'] = ucwords(str_replace('_', ' ', $attribute));
-        if (in_array($filter['type'], ['text','date','date_range'])) {
-            $stub = $this->files->get($this->lap['stubs'] . '/views/filters/'.trim(strtolower($filter['type'])).'.stub');
+        if (in_array($filter['type'], ['text', 'date', 'date_range'])) {
+            $stub = $this->files->get($this->lap['stubs'] . '/views/filters/' . trim(strtolower($filter['type'])) . '.stub');
             $replaces['{input_name}'] = $attribute;
             $replaces['{input_id}'] = $attribute;
         } elseif ($filter['type'] == 'select') {
             $stub = $this->files->get($this->lap['stubs'] . '/views/filters/select.stub');
-            if (!empty($input['multiple'])) {        
+            if (!empty($input['multiple'])) {
                 $replaces['{input_name_sign}'] = '[]';
             }
             $replaces['{input_name}'] = $attribute;
@@ -261,8 +261,7 @@ class CrudGenerate extends Command
             $replaces['{input_name}'] = $attribute . ($input['type'] == 'checkbox' && !empty($input['options']) ? '[]' : '');
             $replaces['{input_id}'] = $attribute . '_{{ $loop->index }}';
             $replaces = $this->inputCheckOptions($attribute, $input, $method, $replaces);
-        }
-        else if ($input['type'] == 'file') {
+        } else if ($input['type'] == 'file') {
             $form_enctype = ' enctype="multipart/form-data"';
             if ($method == 'update') {
                 $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/file_update_single.stub');
@@ -278,14 +277,14 @@ class CrudGenerate extends Command
             $replaces['{input_name}'] = $attribute;
             $replaces['{input_id}'] = $attribute;
             $replaces['{input_multiple}'] = !empty($input['multiple']) ? ' multiple' : '';
-            $replaces['{input_class}'] = isset($input['class']) && $input['class'] != ''? ' '.$input['class']:'';
+            $replaces['{input_class}'] = isset($input['class']) && $input['class'] != '' ? ' ' . $input['class'] : '';
             $replaces['{input_value}'] = $method == 'update' ? '$' . $this->replaces['{model_variable}'] . '->' . $attribute . '' : '';
-            $attribute_file = $attribute.'_file';
+            $attribute_file = $attribute . '_file';
             $model_variables = $this->replaces['{model_variables}'];
 
             if (empty($input['multiple'])) {
                 $this->controller_request_updates[] = $this->controller_request_creates[] =
-<<<EOT
+                    <<<EOT
         if (request()->hasFile('$attribute_file')) {
             request()->merge([
                 '$attribute' => str_replace('public', 'storage', request()->file('$attribute_file')->store('public/$model_variables')),
@@ -294,7 +293,7 @@ class CrudGenerate extends Command
 EOT;
             } else {
                 $this->controller_request_updates[] = $this->controller_request_creates[] =
-<<<EOT
+                    <<<EOT
         \$uploaded_files = [];
         if (request()->hasFile('$attribute_file')) {
             foreach(request()->file('$attribute_file') as \$key => \$file)
@@ -308,24 +307,21 @@ EOT;
 EOT;
             }
 
-        }
-        else if ($input['type'] == 'select') {
+        } else if ($input['type'] == 'select') {
             $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/select.stub');
-            if (!empty($input['multiple'])) {        
+            if (!empty($input['multiple'])) {
                 $replaces['{input_name_sign}'] = '[]';
             }
             $replaces['{input_name}'] = $attribute;
             $replaces['{input_id}'] = $attribute;
             $replaces = $this->inputSelectOptions($attribute, $input, $method, $replaces);
-        }
-        else if ($input['type'] == 'textarea') {
+        } else if ($input['type'] == 'textarea') {
             $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/textarea.stub');
             $replaces['{input_name}'] = $attribute;
             $replaces['{input_id}'] = $attribute;
             $replaces['{input_value}'] = $method == 'update' ? '{{ $' . $this->replaces['{model_variable}'] . '->' . $attribute . ' }}' : '';
-            $replaces['{input_class}'] = isset($input['class']) && $input['class'] != ''? ' '.$input['class']:'';
-        }
-        else {
+            $replaces['{input_class}'] = isset($input['class']) && $input['class'] != '' ? ' ' . $input['class'] : '';
+        } else {
             $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/text.stub');
             if (isset($input['tags']) && $input['tags']) {
                 $stub = $this->files->get($this->lap['stubs'] . '/views/inputs/tags.stub');
@@ -333,7 +329,7 @@ EOT;
             $replaces['{input_type}'] = $input['type'];
             $replaces['{input_name}'] = $attribute;
             $replaces['{input_id}'] = $attribute;
-            $replaces['{input_class}'] = isset($input['class']) && $input['class'] != ''? ' '.$input['class']:'';
+            $replaces['{input_class}'] = isset($input['class']) && $input['class'] != '' ? ' ' . $input['class'] : '';
             $model_preinput = '$' . $this->replaces['{model_variable}'] . '->' . $attribute;
             $replaces['{input_value}'] = $method == 'update' ? ' value="{{ ' . $model_preinput . ' }}"' : '';
             if (isset($input['tags']) && $input['tags']) {
@@ -355,8 +351,14 @@ EOT;
             $replaces['{input_option_value}'] = '{{ $option }}';
             $replaces['{input_option_label}'] = !empty($input['label']) ? $input['label'] : ucwords(str_replace('_', ' ', $attribute));
             $replaces['{input_option_checked}'] = $this->inputOptionChecked($method, $input, $attribute, '$option');
-        }
-        else if (is_array(array_values($input['options'])[0])) {
+        } else if (is_string($input['options'])) {
+            // relationship checks
+            $replaces['{input_options}'] = $input['options'];
+            $replaces['{input_option}'] = '$key => $val';
+            $replaces['{input_option_value}'] = '{{ $key }}';
+            $replaces['{input_option_label}'] = '{{ __l(strtolower($val), $val) }}';
+            $replaces['{input_option_checked}'] = $this->inputOptionChecked($method, $input, $attribute, '$key');
+        } else if (is_array(array_values($input['options'])[0])) {
             // relationship checks
             $key = array_keys($input['options'])[0];
             $value = array_keys($input['options'][$key])[0];
@@ -367,16 +369,14 @@ EOT;
             $replaces['{input_option_value}'] = '{{ $model->' . $value . ' }}';
             $replaces['{input_option_label}'] = '{{ $model->' . $label . ' }}';
             $replaces['{input_option_checked}'] = $this->inputOptionChecked($method, $input, $attribute, '$model->' . $value);
-        }
-        else if (array_keys($input['options']) !== range(0, count($input['options']) - 1)) {
+        } else if (array_keys($input['options']) !== range(0, count($input['options']) - 1)) {
             // checks are associative array (key is defined)
             $replaces['{input_options}'] = $this->flattenArray($input['options']);
             $replaces['{input_option}'] = '$value => $label';
             $replaces['{input_option_value}'] = '{{ $value }}';
             $replaces['{input_option_label}'] = '{{ $label }}';
             $replaces['{input_option_checked}'] = $this->inputOptionChecked($method, $input, $attribute, '$value');
-        }
-        else {
+        } else {
             // checks are sequential array (key = 0, 1, 2, 3)
             $replaces['{input_options}'] = "['" . implode("', '", $input['options']) . "']";
             $replaces['{input_option}'] = '$option';
@@ -393,20 +393,26 @@ EOT;
         if ($method == 'update') {
             if (empty($input['options']) || $input['type'] == 'radio') {
                 return '{{ ' . $value . ' == $' . $this->replaces['{model_variable}'] . '->' . $attribute . " ? ' checked' : '' }}";
-            }
-            else {
+            } else {
                 return '{{ !empty($' . $this->replaces['{model_variable}'] . '->' . $attribute . ') && in_array(' . $value . ', $' . $this->replaces['{model_variable}']
                     . '->' . $attribute . ") ? ' checked' : '' }}";
             }
-        }
-        else {
+        } else {
             return '';
         }
     }
 
     public function inputSelectOptions($attribute, $input, $method, $replaces)
     {
-        if (is_array(array_values($input['options'])[0])) {
+        if (is_string($input['options'])) {
+            // relationship checks
+            $replaces['{input_options}'] = $input['options'];
+            $replaces['{input_option}'] = '$value => $label';
+            $replaces['{input_option_value}'] = '{{ $value }}';
+            $replaces['{input_option_label}'] = '{{ $label }}';
+            $replaces['{input_option_selected}'] = $method == 'update' ? '{{ $value == $' . $this->replaces['{model_variable}'] . '->' . $attribute . " ? ' selected' : '' }}" : '';
+
+        } else if (is_array(array_values($input['options'])[0])) {
             // relationship options
             $key = array_keys($input['options'])[0];
             $value = array_keys($input['options'][$key])[0];
@@ -425,16 +431,14 @@ EOT;
                 $replaces['{input_option_selected}'] = $method == 'update' ? '{{ $model->' . $value . ' == $' . $this->replaces['{model_variable}'] . '->' . $attribute . " ? ' selected' : '' }}" : '';
             }
 
-        }
-        else if (array_keys($input['options']) !== range(0, count($input['options']) - 1)) {
+        } else if (array_keys($input['options']) !== range(0, count($input['options']) - 1)) {
             // options are associative array (key is defined)
             $replaces['{input_options}'] = $this->flattenArray($input['options']);
             $replaces['{input_option}'] = '$value => $label';
             $replaces['{input_option_value}'] = '{{ $value }}';
             $replaces['{input_option_label}'] = '{{ $label }}';
             $replaces['{input_option_selected}'] = $method == 'update' ? '{{ $value == $' . $this->replaces['{model_variable}'] . '->' . $attribute . " ? ' selected' : '' }}" : '';
-        }
-        else {
+        } else {
             // options are sequential array (key = 0, 1, 2, 3)
             $replaces['{input_options}'] = "['" . implode("', '", $input['options']) . "']";
             $replaces['{input_option}'] = '$option';
@@ -443,7 +447,7 @@ EOT;
             $replaces['{input_option_selected}'] = $method == 'update' ? '{{ $option == $' . $this->replaces['{model_variable}'] . '->' . $attribute . " ? ' selected' : '' }}" : '';
         }
         $replaces['{input_multiple}'] = !empty($input['multiple']) ? ' multiple' : '';
-        $replaces['{input_class}'] = isset($input['class']) && $input['class'] != ''? ' '.$input['class']:'';
+        $replaces['{input_class}'] = isset($input['class']) && $input['class'] != '' ? ' ' . $input['class'] : '';
         $replaces['{live_search}'] = isset($input['live_search']) && $input['live_search'] ? 'true' : 'false';
 
         return $replaces;
@@ -503,7 +507,7 @@ EOT;
     public function createMigrationFile()
     {
         // create migration file
-        $migrations_file = $this->lap['migrations'] . '/' . date('Y_00_00_000000') .'_create_' . $this->replaces['{model_variable}'] . '_table.php';
+        $migrations_file = $this->lap['migrations'] . '/' . date('Y_00_00_000000') . '_create_' . $this->replaces['{model_variable}'] . '_table.php';
         if ($this->prompt($migrations_file)) {
             $migrations_stub = $this->files->get($this->lap['stubs'] . '/migrations.stub');
             $this->files->put($migrations_file, $this->replace($migrations_stub));
@@ -545,7 +549,7 @@ EOT;
             $this->line('Menu item file created: <info>' . $menu_file . '</info>');
 
             $layout_menu = $this->files->get($this->lap['layout_menu']);
-            $menu_content = PHP_EOL . '@include(\'lap::layouts.menu.'.$this->replaces['{model_variable}'] . '\')';
+            $menu_content = PHP_EOL . '@include(\'lap::layouts.menu.' . $this->replaces['{model_variable}'] . '\')';
             if (strpos($layout_menu, $menu_content) === false) {
                 $search = '{{-- menu inject start --}}';
                 $index = strpos($layout_menu, $search);
@@ -627,11 +631,11 @@ EOT;
         }
         $this->info($file);
         if (file_exists($file)) {
-            if (!$this->confirm('Overwrite? At your own RISK!',false)) {
+            if (!$this->confirm('Overwrite? At your own RISK!', false)) {
                 return false;
             }
         } else {
-            if (!$this->confirm('Create?',true)) {
+            if (!$this->confirm('Create?', true)) {
                 return false;
             }
         }
