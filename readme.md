@@ -36,6 +36,10 @@ Require via composer:
 
     composer require wikichua/simplecontrolpanel master-dev
 
+For Laravel 7.x
+
+    composer require laravel/ui
+
 Publish install files:
 
     php artisan vendor:publish --tag=lap.general
