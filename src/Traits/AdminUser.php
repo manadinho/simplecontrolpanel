@@ -42,7 +42,7 @@ trait AdminUser
     // use admin url in password reset email link
     public function sendPasswordResetNotification($token)
     {
-        if (request()->is('admin/password/email')) {
+        if (request()->route()->getName('admin.password.email')) {
             $this->notify(new ResetAdminPassword($token));
         }
         else {

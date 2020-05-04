@@ -54,5 +54,6 @@ return [
         'Docs',
         'Settings',
     ],
+    'init_seo' => false,
 
 ];

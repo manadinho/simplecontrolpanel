@@ -30,6 +30,12 @@ class CreateUsersColumns extends Migration
 
         // create permissions
         app(config('lap.models.permission'))->createGroup('Users', ['Create Users', 'Read Users', 'Update Users', 'Delete Users']);
+
+        Schema::create('password_resets', function (Blueprint $table) {
+            $table->string('email')->index();
+            $table->string('token')->index();
+            $table->timestamp('created_at');
+        });
     }
 
     public function down()
@@ -42,5 +48,7 @@ class CreateUsersColumns extends Migration
 
         // delete permissions
         app(config('lap.models.permission'))->where('group', 'Users')->delete();
+
+        Schema::drop('password_resets');
     }
 }
