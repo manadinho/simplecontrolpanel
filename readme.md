@@ -34,7 +34,7 @@ Assets used:
 
 Require via composer:
 
-    composer require wikichua/simplecontrolpanel master-dev
+    composer require wikichua/simplecontrolpanel @dev
 
 For Laravel 7.x
 
