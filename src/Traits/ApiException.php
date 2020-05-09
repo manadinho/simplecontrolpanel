@@ -4,7 +4,7 @@ namespace Wikichua\Simplecontrolpanel\Traits;
 
 trait ApiException
 {
-    protected function handleApiException($request, Exception $exception)
+    protected function handleApiException($request, \Exception $exception)
     {
         $exception = $this->prepareException($exception);
         if ($exception instanceof \Illuminate\Http\Exception\HttpResponseException) {

@@ -425,8 +425,10 @@ In case using API, just add this into Exceptions/Handler.php,
             if ($exception) {
                 if ($exception->getCode()) {
                     return $this->handleApiException($request, $exception);
-                }             
-                return response()->json(['status' => 'failed', 'error' => 'Exception Error', 'message' => $exception->getMessage()]);
+                }
+                return response()->json(['status' => 'failed', 'error' => (
+                    json_decode($exception->getMessage())? json_decode($exception->getMessage(),1):$exception->getMessage()
+                )]);
             }
             return response()->json(['status' => 'failed', 'error' => 'Intruder detected!']);
         }
