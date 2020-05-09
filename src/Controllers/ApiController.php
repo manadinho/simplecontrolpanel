@@ -5,6 +5,7 @@ namespace Wikichua\Simplecontrolpanel\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Validator;
 
 class ApiController extends Controller
 {
