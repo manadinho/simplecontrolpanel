@@ -60,7 +60,7 @@ class ApiController extends Controller
     {
     	$validator = Validator::make(request()->all(), $rules);
         if ($validator->fails()) {
-			throw new \Exception(json_encode(['status' => 'failed', 'error' => $validator->errors()]), 1);
+			abort(response()->json($validator->errors(), 422));
         }
     }
 }
