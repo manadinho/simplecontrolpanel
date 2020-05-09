@@ -56,9 +56,9 @@ class ApiController extends Controller
 		}
 		return response()->json($failed_response);
 	}
-    public function validator($rules = [])
+    public function validator($rules = [], $messages = [])
     {
-    	$validator = Validator::make(request()->all(), $rules);
+    	$validator = Validator::make(request()->all(), $rules, $messages);
         if ($validator->fails()) {
 			abort(response()->json(['status' => 'failed', 'error' => $validator->errors()], 422));
         }
