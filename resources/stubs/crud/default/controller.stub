@@ -39,9 +39,7 @@ class {model_class}Controller extends Controller
                 ->setRowAttr(['data-id' => '{{ $id }}', 'data-seq' => '{{ $seq }}'])
                 ->setRowClass('sortable_row')
                 ->editColumn('actions', function (${model_variable}) {
-                    $seotool = app(config('lap.models.seotool'))
-                        ->query()->where('model','{model_namespace}\{model_class}')
-                        ->where('model_id',${model_variable}->id)->first();
+                    $seotool = {seo_action_compact};
                     return view('{view_prefix_name}{model_variables}.datatable.actions', compact('{model_variable}','seotool'));
                 })
                 ->rawColumns(['actions','seq'])
@@ -67,11 +65,13 @@ class {model_class}Controller extends Controller
         ]);
         $html->parameters([
             'bFilter' => false,
-            'dom' => '<"toolbar">lfrtip'
+            {batch_delete_datatable_parameter}
         ]);
         $export_url = route('{view_prefix_name}{model_variables}.export');
         $reorder_url = route('{view_prefix_name}{model_variables}.reorder');
-        return view('{view_prefix_name}{model_variables}.index', compact('html','dtid','export_url','reorder_url'));
+        $batchDelete = {batch_delete_action};
+        $model_primary_attribute = '{model_primary_attribute}';
+        return view('{view_prefix_name}{model_variables}.index', compact('html','dtid','export_url','reorder_url','batchDelete','model_primary_attribute'));
     }
 
     public function createForm()
@@ -148,6 +148,20 @@ class {model_class}Controller extends Controller
 
             return redirect()->route('admin.{model_variables}');
         }
+    }
+
+    public function batch_delete()
+    {
+        ${model_variables} = {model_class}::query()->whereIn('{model_primary_attribute}',request()->get('{model_primary_attribute}'))->get();
+        foreach (${model_variables} as ${model_variable}) {
+            ${model_variable}->delete();
+            activity('Deleted {model_string}: ' . ${model_variable}->{model_primary_attribute}, ${model_variable}->toArray());
+        }
+        $flash = ['success', '{model_strings} deleted!'];
+        return response()->json([
+                    'flash' => $flash,
+                    'reload_datatables' => true,
+                ]);
     }
 
     public function reorder()

@@ -1,11 +1,15 @@
 <script type="text/javascript">
 (function(window, $) {
     let filterBtnHtml = '<button type="button" class="btn btn-outline-secondary btn-sm mr-1" data-toggle="modal" data-target="#filterModalCenter"><i class="fal fa-search mr-2"></i>Advanced Filter</button>';
-    let exportBtnHtml = '<button type="button" class="btn btn-outline-secondary btn-sm" id="exportBtn"><i class="fal fa-file-spreadsheet mr-2"></i>Export</button>';
+    let exportBtnHtml = '<button type="button" class="btn btn-outline-secondary btn-sm mr-1" id="exportBtn"><i class="fal fa-file-spreadsheet mr-2"></i>Export</button>';
+    let deleteBtnHtml = '<button type="button" class="btn btn-outline-secondary btn-sm mr-1" id="deleteBtn" value="reload_datatables" data-confirm><i class="fal fa-trash-alt mr-2"></i>Delete</button>';
     let toolbarHtml = '<div class="float-right">';
     toolbarHtml = toolbarHtml + filterBtnHtml;
     @if (isset($export_url) && $export_url != '')
     toolbarHtml = toolbarHtml + exportBtnHtml;
+    @endif
+    @if (isset($batchDelete) && $batchDelete != '')
+    toolbarHtml = toolbarHtml + deleteBtnHtml;
     @endif
     toolbarHtml = toolbarHtml + '</div>';
 
@@ -78,5 +82,20 @@
         }
     });
     @endif
+
+    $(document).on('click', '#deleteBtn', function(event) {
+        event.preventDefault();
+        let table = window.LaravelDataTables["{{ $dtid }}"];
+        if (table.rows('.selected').data().length > 0) {
+            let form = $('#batchDeleteForm');
+            let table = window.LaravelDataTables["{{ $dtid }}"];
+            $.each(table.rows('.selected').data(), function(index, val) {
+                $(form).append(
+                    $('<input>').attr('type', 'hidden').attr('name', '{{ $model_primary_attribute }}[]').val(val.{{ $model_primary_attribute }})
+                );
+            });
+            form.submit();
+        }
+    });
 })(window, jQuery);
 </script>

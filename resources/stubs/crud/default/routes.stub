@@ -13,6 +13,8 @@ Route::group(['middleware' => ['web','https_protocol'],'prefix' => config('lap.r
 	Route::patch('{model_variables}/update/{{model_variable}}', '{controller_route}{model_class}Controller@update');
 	//delete
 	Route::delete('{model_variables}/delete/{{model_variable}}', '{controller_route}{model_class}Controller@delete')->name('{view_prefix_name}{model_variables}.delete');
+	//delete
+	Route::delete('{model_variables}/batch/delete', '{controller_route}{model_class}Controller@batch_delete')->name('{view_prefix_name}{model_variables}.batch.delete');
 	//export
 	Route::any('{model_variables}/export', '{controller_route}{model_class}Controller@export')->name('{view_prefix_name}{model_variables}.export');
 	//reorder

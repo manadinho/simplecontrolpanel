@@ -58,7 +58,6 @@ class CrudGenerate extends Command
 
     public function setSimpleReplaces()
     {
-
         // set simple replacement searches for stubs
         $this->replaces = [
             '{controller_namespace}' => $controller_namespace = ucfirst(str_replace('/', '\\', $this->lap['controller'])),
@@ -77,6 +76,9 @@ class CrudGenerate extends Command
             '{view_prefix_name}' => $view_prefix_name = str_replace('/', '.', $view_prefix_url),
             '{seo_action}' => isset($this->config['need_seo']) && $this->config['need_seo'] ? "@include('{$view_prefix_name}{$model_variables}.datatable.seo_action')" : '',
             '{seo_init}' => isset($this->config['need_seo']) && $this->config['need_seo'] ? '$this->initSeo(\'' . $model_namespace . '\\' . $model_class . '\', $' . $model_variable . '->id);' : '',
+            '{seo_action_compact}' => isset($this->config['need_seo']) && $this->config['need_seo'] ? "app(config('lap.models.seotool'))->query()->where('model','$model_namespace\\$model_class')->where('model_id',$".$model_variable."->id)->first()" : "''",
+            '{batch_delete_action}' => isset($this->config['batch_delete_action']) && $this->config['batch_delete_action']? 'true':'false',
+            '{batch_delete_datatable_parameter}' => isset($this->config['batch_delete_action']) && $this->config['batch_delete_action']? "'select' => ['style' => 'multi'],\n\t\t\t'dom' => '<\"toolbar\">lBfrtip',\n\t\t\t\t'buttons' => [\n\t\t\t\t\t'selectAll',\n\t\t\t\t\t'selectNone'\n\t\t\t\t],":"",
         ];
     }
 

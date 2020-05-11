@@ -16,6 +16,10 @@
     <div class="card shadow">
         <div class="card-body">
             {!! $html->table() !!}
+            <form id="batchDeleteForm" method="POST" action="{{ route('{view_prefix_name}{model_variables}.batch.delete') }}" class="d-inline-block" novalidate data-ajax-form>
+            @csrf
+            @method('DELETE')
+            </form>
         </div>
     </div>
 
