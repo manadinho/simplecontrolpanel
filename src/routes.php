@@ -3,7 +3,7 @@
 //     return redirect()->route('admin.login');
 // })->name('login');
 
-Route::get('login', config('lap.controllers.auth.socialite') . '@loginForm')->name('admin.login');
+Route::get('login', config('lap.controllers.auth.socialite') . '@loginForm')->name('social.login');
 Route::get('logout', config('lap.controllers.auth.socialite') . '@logout')->name('social.logout');
 Route::get('oauth/{driver}', config('lap.controllers.auth.socialite') . '@redirectToProvider')->name('social.oauth');
 Route::get('oauth/{driver}/callback', config('lap.controllers.auth.socialite') . '@handleProviderCallback')->name('social.callback');
