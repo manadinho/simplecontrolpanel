@@ -81,6 +81,7 @@ class SimpleControlPanelServiceProvider extends ServiceProvider
             __DIR__ . '/../resources/views/auth' => resource_path('views/vendor/lap/auth'),
             __DIR__ . '/../resources/views/backend' => resource_path('views/vendor/lap/backend'),
             __DIR__ . '/../resources/views/users' => resource_path('views/vendor/lap/users'),
+            __DIR__ . '/../resources/views/socialites' => resource_path('views/vendor/lap/socialites'),
         ], 'lap.general');
 
         // install all views
@@ -98,6 +99,7 @@ class SimpleControlPanelServiceProvider extends ServiceProvider
         $this->publishes([__DIR__ . '/../resources/views/auth' => resource_path('views/vendor/lap/auth')], 'lap.auth.view');
         $this->publishes([__DIR__ . '/../resources/views/backend' => resource_path('views/vendor/lap/backend')], 'lap.backend.view');
         $this->publishes([__DIR__ . '/../resources/views/users' => resource_path('views/vendor/lap/users')], 'lap.users.view');
+        $this->publishes([__DIR__ . '/../resources/views/socialites' => resource_path('views/vendor/lap/socialites')], 'lap.socialites.view');
 
         $files = new Filesystem;
         if (!$files->exists(config('lap.crud_paths.route'))) {

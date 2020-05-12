@@ -3,8 +3,16 @@
 //     return redirect()->route('admin.login');
 // })->name('login');
 
-Route::group(['middleware' => ['web','https_protocol']], function () {
+Route::get('login', config('lap.controllers.auth.socialite') . '@loginForm')->name('admin.login');
+Route::get('logout', config('lap.controllers.auth.socialite') . '@logout')->name('social.logout');
+Route::get('oauth/{driver}', config('lap.controllers.auth.socialite') . '@redirectToProvider')->name('social.oauth');
+Route::get('oauth/{driver}/callback', config('lap.controllers.auth.socialite') . '@handleProviderCallback')->name('social.callback');
 
+Route::group(['middleware' => ['auth:social','https_protocol']], function () {
+    Route::get('/', config('lap.controllers.frontend') . '@index')->name('home');
+});
+
+Route::group(['middleware' => ['web','https_protocol'],'prefix' => config('lap.route_prefix','admin')], function () {
     // auth
     Route::get('login', config('lap.controllers.auth.login') . '@loginForm')->name('admin.login');
     Route::post('login', config('lap.controllers.auth.login') . '@login')->name('admin.login');
@@ -50,6 +58,11 @@ Route::group(['middleware' => ['web','https_protocol'],'prefix' => config('lap.r
     Route::get('users/password/{id}', config('lap.controllers.user') . '@passwordForm')->name('admin.users.password');
     Route::patch('users/password/{id}', config('lap.controllers.user') . '@password');
     Route::delete('users/delete/{id}', config('lap.controllers.user') . '@delete')->name('admin.users.delete');
+
+    // socialite
+    Route::get('socialites', config('lap.controllers.socialite') . '@index')->name('admin.socialites');
+    Route::get('socialites/read/{id}', config('lap.controllers.socialite') . '@read')->name('admin.socialites.read');
+    Route::delete('socialites/delete/{id}', config('lap.controllers.socialite') . '@delete')->name('admin.socialites.delete');
 
     // activity_logs
     Route::get('activity_logs', config('lap.controllers.activity_log') . '@index')->name('admin.activity_logs');
