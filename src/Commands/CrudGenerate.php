@@ -95,6 +95,7 @@ class CrudGenerate extends Command
         $migrations = [];
         $validations = [];
         $datatable = [];
+        $fillable_array = [];
         $read_attributes = [];
         $form_enctype = '';
         $inputs_create = [];
@@ -102,6 +103,9 @@ class CrudGenerate extends Command
         $inputs_filter = [];
 
         foreach ($attributes as $attribute => $values) {
+            // fillable
+            $fillable_array[] = "'$attribute'";
+            
             // model primary attribute
             if (!empty($values['primary'])) {
                 $this->replaces['{model_primary_attribute}'] = $attribute;
@@ -220,6 +224,7 @@ class CrudGenerate extends Command
         $this->replaces['{validations_create}'] = isset($validations['create']) ? trim(implode(PHP_EOL, $validations['create'])) : '';
         $this->replaces['{validations_update}'] = isset($validations['update']) ? trim(implode(PHP_EOL, $validations['update'])) : '';
         $this->replaces['{datatable}'] = $datatable ? trim(implode(PHP_EOL, $datatable)) : '';
+        $this->replaces['{fillable_array}'] = $fillable_array ? trim(implode(', ', $fillable_array)) : '';
         $this->replaces['{exporttable}'] = $exporttable ? trim(implode(PHP_EOL, $exporttable)) : '';
         $this->replaces['{read_attributes}'] = $read_attributes ? trim(implode(PHP_EOL, $read_attributes)) : '';
         $this->replaces['{form_enctype}'] = $form_enctype;

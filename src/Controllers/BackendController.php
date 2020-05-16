@@ -8,7 +8,7 @@ class BackendController extends Controller
 {
     public function __construct()
     {
-        // $this->middleware(['auth_admin', 'can:Access Admin Panel'])->except('index');
+        $this->middleware(['auth_admin', 'can:Access Admin Panel'])->except('index');
         $this->middleware('can:Update Settings')->only(['settingsForm', 'settings']);
     }
     public function index()

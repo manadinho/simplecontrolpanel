@@ -11,6 +11,9 @@ class {model_class} extends Eloquent
 {
     use SoftDeletes, DynamicFillable, UserTimezone;
     protected $dates = ['deleted_at'];
+    protected $fillable = [
+        {fillable_array}
+    ];
 
     {model_appends}
 
