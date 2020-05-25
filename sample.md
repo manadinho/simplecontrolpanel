@@ -1,5 +1,5 @@
 ### Sample CRUD CONFIG
-
+ 
     <?php
 
     return [
